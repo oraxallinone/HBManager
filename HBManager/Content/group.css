@@ -1,0 +1,133 @@
+﻿.wd-btn {
+    width: 75px;
+}
+
+.custom-tbl {
+    font-size: 13px;
+    font-family: 'Times New Roman';
+    width:100% !important;
+}
+
+
+
+
+
+
+.row-g1 {
+    background-color: red;
+}
+
+.row-g2 {
+    background-color: yellow;
+}
+
+.row-g3 {
+    background-color: aqua;
+}
+
+.row-g4 {
+    background-color: greenyellow;
+}
+
+.row-g0 {
+}
+
+
+
+/* ------------------ Fixed header (scrollable body) ------------------
+       - Keep the current <div class="table-responsive" style="height: ..."> wrapper.
+       - This CSS makes the wrapper scrollable and sticks the thead to top when you
+         scroll the tbody. Works well with Bootstrap and preserves column widths.
+       - Ensure this style block is included after Bootstrap CSS (it is, in the view).
+    --------------------------------------------------------------------- */
+
+/* make the responsive wrapper scrollable (use the same height you had) */
+.table-responsive {
+    max-height: 70vh; /* same as current inline value; move here if preferred 75vh */
+    overflow: auto;
+}
+
+    /* stick the header to top of the scrollable area */
+    .table-responsive #gridTableGroup thead th {
+        position: sticky;
+        top: 0;
+        z-index: 5;
+        color: white;
+        background-color: #175787cf;
+        box-shadow: 0 2px 3px rgba(0,0,0,.08);
+    }
+
+    /* optional: keep header text readable and prevent wrapping */
+    .table-responsive #gridTableGroup thead th {
+        white-space: nowrap;
+    }
+
+/* optional: ensure cells maintain alignment with header during horizontal scroll */
+#gridTableGroup {
+    width: 100%;
+    table-layout: auto; /* or `fixed` if you want fixed column widths */
+}
+
+.table-header-yellow {
+    background-color: yellow; /* Set header background to yellow */
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Extra Small (XS) - Mobile < 576px */
+@media (max-width: 575.98px) {
+    .table-responsive {
+        max-height: 62vh; /* same as current inline value; move here if preferred */
+        overflow: auto;
+        background-color: orange;
+    }
+}
+
+/* Small (SM) - ≥ 576px and < 768px */
+@media (min-width: 576px) and (max-width: 767.98px) {
+    .table-responsive {
+        max-height: 62vh; /* same as current inline value; move here if preferred */
+        overflow: auto;
+        background-color: green;
+    }
+}
+
+/* Medium (MD) - ≥ 768px and < 992px */
+@media (min-width: 768px) and (max-width: 991.98px) {
+    .table-responsive {
+        max-height: 62vh; /* same as current inline value; move here if preferred */
+        overflow: auto;
+        background-color: yellow;
+    }
+}
+
+/* Large (LG) - ≥ 992px and < 1200px */
+@media (min-width: 992px) and (max-width: 1199.98px) {
+    .table-responsive {
+        max-height: 62vh; /* same as current inline value; move here if preferred */
+        overflow: auto;
+        background-color: blue;
+    }
+}
+
+/* Extra Large (XL) - ≥ 1200px */
+@media (min-width: 1200px) {
+    .table-responsive {
+        max-height: 70vh; /* same as current inline value; move here if preferred */
+        overflow: auto;
+        flex-direction: column-reverse;
+    }
+}

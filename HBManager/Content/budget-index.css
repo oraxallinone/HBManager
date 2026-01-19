@@ -1,0 +1,481 @@
+﻿/* ------------------ Global ------------------
+       - global like txt color, width etc
+   --------------------------------------------------------------------- */
+.txt-remain {
+    color: green;
+}
+
+.txt-spend {
+    color: red;
+}
+
+
+
+/* ------------------ Fixed header (scrollable body) ------------------
+       - Keep the current <div class="div-responsive" style="height: ..."> wrapper.
+       - This CSS makes the wrapper scrollable and sticks the thead to top when you
+         scroll the tbody. Works well with Bootstrap and preserves column widths.
+       - Ensure this style block is included after Bootstrap CSS (it is, in the view).
+    --------------------------------------------------------------------- */
+
+/* make the responsive wrapper scrollable (use the same height you had) */
+.div-responsive {
+    /*max-height: 72vh;*/ /* same as current inline value; move here if preferred 69vh*/
+    overflow: auto;
+}
+    /* stick the header to top of the scrollable area */
+    .div-responsive #gridTableGroup thead th {
+        position: sticky;
+        top: 0;
+        z-index: 5;
+        background: #ffffff; /* set header background to override table rows */
+        box-shadow: 0 2px 3px rgba(0,0,0,.08);
+    }
+    /* optional: keep header text readable and prevent wrapping */
+    .div-responsive #gridTableGroup thead th {
+        white-space: nowrap;
+    }
+/* optional: ensure cells maintain alignment with header during horizontal scroll */
+#gridTableGroup {
+    width: 100%;
+    table-layout: auto; /* or `fixed` if you want fixed column widths */
+}
+
+.table-header-yellow {
+    background-color: yellow; /* Set header background to yellow */
+}
+
+
+/* ------------------ update and save button ----------------------- */
+.wd-btn {
+    width: 75px;
+}
+
+
+/* ------------------ table tr style ------------------
+       - 
+   --------------------------------------------------------------------- */
+
+.custom-tbl-common {
+    font-size: 13px;
+    font-family: 'Times New Roman';
+    width: 100%;
+}
+
+    .custom-tbl-common tr {
+        border: 1px solid #8b8888 !important;
+        height: 34px !important;
+    }
+
+        .custom-tbl-common tr:hover {
+            background-color: #17578747;
+        }
+
+
+
+
+/* ------------------ table >>>>>>Action	Date	Amt	Details		G1	G2	G3	G4 --------
+    -table related all css, 
+    -like rows, bg for all
+    -------------------------------------------------------------------------------------- */
+
+.bg-main-day-sun {
+    background: #f9f133 !important;
+}
+
+.bg-main-day-mon {
+    background: #c0c0c0 !important;
+}
+
+.bg-main-day-tue {
+    background: #ffc0cb !important;
+}
+
+.bg-main-day-wed {
+    color: white !important;
+    background: #008000b5 !important;
+}
+
+.bg-main-day-thu {
+    /*background: #ffd700 !important;*/
+    background-image: linear-gradient(to right, #beae2694 0%, #f9d423 100%);
+}
+
+.bg-main-day-fri {
+    /*background: #add8e6 !important;*/
+    background-image: linear-gradient(60deg, #64b3f4 0%, #c2e59c 100%) !important;
+}
+
+.bg-main-day-sat {
+    background-image: linear-gradient(to right, #827f7c 0%, #304352 100%);
+    color: white !important;
+}
+
+
+
+
+/* ------------------  section salary  ------------------
+       - side to update and save button we have salary section                         tdddddddddddddddddddd
+   --------------------------------------------------------------------- */
+.section-salary-div {
+    border: 1px solid #cc2be8 !important;
+    color: #b628ce;
+    font-weight: 900;
+    height: 33px;
+    text-align: center; /* horizontal center for text content */
+    display: flex; /* optional: enables better centering of child elements */
+    align-items: center; /* vertical centering (safe to keep) */
+    justify-content: center; /* horizontal centering for flex children */
+}
+
+
+/* 1st column */
+#tblSalarySummary td:nth-child(1) {
+    width: 30%;
+    text-align: center;
+    padding: 0px 0px 0px 10px;
+}
+
+/* 2nd column */
+#tblSalarySummary td:nth-child(2) {
+    width: 10%;
+    text-align: right;
+}
+
+
+/* 3rd column */
+#tblSalarySummary td:nth-child(3) {
+    width: 25%;
+    text-align: center;
+}
+/* 3rd column */
+#tblSalarySummary td:nth-child(4) {
+    width: 10%;
+    text-align: center;
+}
+
+#tblSalarySummary td:nth-child(5) {
+    width: 25%;
+    text-align: center;
+}
+
+/* ------------------ search ddl g1,2,3,4 ------------------
+       - 
+   --------------------------------------------------------------------- */
+.search-ddl-g-all {
+    border: none;
+    border-left: 4px solid #007bff;
+    background: #f1f1f1;
+    font-size: 15px;
+    border-radius: 4px;
+    appearance: none;
+    width: 140px;
+}
+
+
+
+/* ------------------ gridTableBudget budget table grid column ------------------ thhhhhhhhhhhhhhhhh
+       -apply column wise all td css
+   --------------------------------------------------------------------- */
+
+
+/* 1st column Date*/
+#gridTableBudget th:nth-child(1) {
+    text-align: center;
+    width: 10%;
+    background-color: #1d68a0;
+    color: white;
+}
+
+
+/* 2nd column #1*/
+#gridTableBudget th:nth-child(2) {
+    width: 5%;
+    text-align: center;
+    background-color: #1d68a0;
+    color: white;
+}
+/* 3rd column #2*/
+#gridTableBudget th:nth-child(3) {
+    width: 5%;
+    text-align: center;
+    background-color: #1d68a0;
+    color: white;
+}
+/* 4th column #3*/
+#gridTableBudget th:nth-child(4) {
+    width: 5%;
+    text-align: center;
+    background-color: #1d68a0;
+    color: white;
+}
+
+
+
+/* 5th column Amt*/
+#gridTableBudget th:nth-child(5) {
+    width: 8%;
+    background-color: #1d68a0;
+    text-align: right;
+    color: white;
+}
+/* 6th column Details*/
+#gridTableBudget th:nth-child(6) {
+    background-color: #1d68a0;
+    width: 25%;
+    color: white;
+}
+/* 7th G1 column ----*/
+#gridTableBudget th:nth-child(7) {
+    width: 10%;
+    background-color: #1d68a0;
+    text-align: center;
+    color: white;
+}
+/* 8th G2 column ----*/
+#gridTableBudget th:nth-child(8) {
+    width: 12%;
+    background-color: #1d68a0;
+    text-align: center;
+    color: white;
+}
+/* 9th G3 column ----*/
+#gridTableBudget th:nth-child(9) {
+    width: 10%;
+    background-color: #1d68a0;
+    text-align: center;
+    color: white;
+}
+/* 10th G4 column ----*/
+#gridTableBudget th:nth-child(10) {
+    width: 10%;
+    background-color: #1d68a0;
+    text-align: center;
+    color: white;
+}
+
+
+
+/* 1.Date*/
+#gridTableBudget td:nth-child(1) {
+    text-align: center;
+}
+
+/* 2.#*/
+#gridTableBudget td:nth-child(2) {
+    text-align: right;
+}
+/* 3.#*/
+#gridTableBudget td:nth-child(3) {
+    text-align: right;
+}
+/* 4.#*/
+#gridTableBudget td:nth-child(4) {
+    text-align: right;
+}
+
+
+/* 5.Amt*/
+#gridTableBudget td:nth-child(5) {
+    text-align: right;
+}
+
+/* 6.Details*/
+#gridTableBudget td:nth-child(6) {
+    text-align: left;
+}
+/* 7.G1*/
+#gridTableBudget td:nth-child(7) {
+    text-align: center;
+}
+/* 8.G2*/
+#gridTableBudget td:nth-child(8) {
+    text-align: center;
+}
+/* 9.G3*/
+#gridTableBudget td:nth-child(9) {
+    text-align: center;
+}
+/* 10.G4*/
+#gridTableBudget td:nth-child(10) {
+    text-align: center;
+}
+
+
+
+
+/* ------------------ gridTableBudget dynamic css apply to table ------------------
+       -budget dynamic css apply
+   --------------------------------------------------------------------- */
+/*6	Beer*/ /*10	CreditCard*/ /*15	EMI*/
+.div-g1-c6, .div-g1-c10, .div-g1-c15 {
+    box-shadow: rgb(248 13 219 / 71%) 0px 2px 5px -1px, rgb(0 0 0 / 57%) 0px 1px 3px -1px;
+    margin-right: 7px;
+    background-color: #ab194bc2;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 27px;
+    border-radius: 5px;
+}
+
+
+/*12	Saving*/
+.div-g1-c12 {
+    box-shadow: rgb(137 191 38) 0px 2px 5px -1px, rgb(12 235 125 / 86%) 0px 1px 3px -1px;
+    margin-right: 7px;
+    background: linear-gradient(90deg, #9ebd13 0%, #1fcd8a 100%);
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 27px;
+    border-radius: 5px;
+}
+
+/*8	HouseRent*/ /*14	Essential5k*/ /*11	Oil*/ /*13	Extra10k*/ /*9	Borrowed From Me_*/
+/*16	I Borrowed_*/ /*17	Vehicle*/ /*18	I Returned_*/ /*19	Return To Me_*/ /*23	ElectricBill*/
+/*26	WaterBill*/ /*29	Internet Bill*/ /*34	Ceiling*/ /*35	Dress*/ /*36	FromSaving 60k*/
+/*38	House Holdings*/ /*39	Medical*/ /*40	Mrg*/ /*41	Mrg2*/ /*42	Other*/ /*44	Taxi*/ /*45	Unplaned*/
+.div-g1-c8, .div-g1-c14, .div-g1-c11, .div-g1-c13, .div-g1-c9, .div-g1-c16, .div-g1-c17,
+.div-g1-c18, .div-g1-c19, .div-g1-c23, .div-g1-c26, .div-g1-c29, .div-g.div-g1-c121-c34, .div-g1-c35,
+.div-g1-c36, .div-g1-c38, .div-g1-c39, .div-g1-c40, .div-g1-c41, .div-g1-c42, .div-g1-c44, .div-g1-c45,
+.div-g1-c48, .div-g1-c50 {
+    box-shadow: rgb(50 50 93 / 26%) 0px 2px 5px -1px, rgb(0 0 0 / 57%) 0px 1px 3px -1px;
+    margin-right: 7px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 27px;
+    border-radius: 5px;
+}
+
+.div-g3-c27, .iv-g3-c1, .iv-g3-c20, .iv-g3-c21, .iv-g3-c22, .iv-g3-c24, .iv-g3-c25, .iv-g3-c27, .iv-g3-c28, .iv-g3-c30, .iv-g3-c31, .div-g3-c49, .div-g3-c20, .div-g3-c30, .div-g3-c25, .div-g3-c1, .div-g3-c21, .div-g3-c22, .div-g3-c28, .div-g3-c24 {
+    box-shadow: rgb(50 50 93 / 26%) 0px 2px 5px -1px, rgb(0 0 0 / 57%) 0px 1px 3px -1px;
+    margin-right: 7px;
+    margin-left: 7px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 4px;
+    height: 27px;
+}
+
+/*43	Rameswaram*/
+/*37	Goa*/
+
+/* c7 Food  ----*/
+.div-g1-c7 {
+    background-image: linear-gradient(to right, #fff35d9e 0%, #c8c5a19e 100%);
+    box-shadow: #fcc100 0px 2px 5px -1px, #00000091 0px 1px 3px -1px;
+    margin-right: 7px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 27px;
+    border-radius: 5px;
+}
+
+
+/* c2 Need /Essential Spend.  ----*/
+.div-g2-c2 {
+    padding: 5px 45px;
+    transition: 0.5s;
+    background-size: 200% auto;
+    color: white;
+    box-shadow: 0 0 14px #eee;
+    border-radius: 4px;
+    display: block;
+    background-image: linear-gradient(to right, #43cea2 0%, #185a9d 51%, #43cea2 100%);
+}
+    .div-g2-c2:hover {
+        background-position: right center; /* change the direction of the change here */
+        color: #fff;
+        text-decoration: none;
+    }
+
+/* c3 Save / (Savings / Invest.)  ----*/
+.div-g2-c3 {
+    text-align: center;
+    background: linear-gradient(90deg, #224a24 0%, #28672a 35%, #a1d465 100%);
+    height: 31px;
+    color: white;
+    border-radius: 3px 3px 3px 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* c4 Want / (Lifestyle / luxury)  ----*/
+.div-g2-c4 {
+    text-align: center;
+    border-radius: 21px 0px 21px 0px;
+    background: red;
+    box-shadow: -2px -2px 0px 0px #8a05a1;
+    color: white;
+    background-image: linear-gradient(-225deg, #A445B2 0%, #D41872 52%, #FF0066 100%);
+    /* Add these for vertical centering */
+    display: flex;
+    align-items: center; /* vertical center */
+    justify-content: center; /* horizontal center */
+}
+
+/*repeat*/
+.div-g4-c5 {
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+    background: #fff;
+    display: inline-block;
+    position: relative;
+    width: 100%;
+    background-color: #9C27B0;
+    color: white;
+    border-radius: 21px 0px 21px 0px;
+}
+
+/* ------------------ topic ------------------
+       - 
+   --------------------------------------------------------------------- */
+
+
+
+/* ------------------ topic ------------------
+       - 
+   --------------------------------------------------------------------- */
+
+
+
+/* ------------------ topic ------------------
+       - 
+   --------------------------------------------------------------------- */
+
+
+
+/* ------------------ topic ------------------
+       - 
+   --------------------------------------------------------------------- */
+
+
+
+/* ------------------ topic ------------------
+       - 
+   --------------------------------------------------------------------- */
+
+
+
+/* ------------------ topic ------------------
+       - 
+   --------------------------------------------------------------------- */
+
+
+
+/* ------------------ topic ------------------
+       - 
+   --------------------------------------------------------------------- */
+
+
+
+

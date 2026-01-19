@@ -1,0 +1,64 @@
+﻿.calendar-wrapper {
+    display: flex;
+    gap: 30px;
+}
+
+.calendar-container {
+    width: 500px;
+}
+
+.calendar-header {
+    text-align: center;
+    font-size: 22px;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+.calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+}
+
+.day {
+    border: 1px solid #ccc;
+    padding: 5px;
+    height: 46px;
+    text-align: center;
+    position: relative;
+    border-radius: 6px;
+    box-shadow: 2px 2px #d5d5d5;
+}
+
+.day-head {
+    border: 1px solid #ccc;
+    padding: 4px 0px 0px 0px;
+    height: 27px;
+    text-align: center;
+    position: relative;
+    border-radius: 6px;
+    box-shadow: 2px 2px #850808;
+    font-size: 14px;
+    font-family: timesnewroman;
+}
+
+.header {
+    font-weight: bold;
+    background: #a6a2a2;
+}
+
+.spending {
+    font-size: 12px;
+    font-weight: bolder;
+    margin-top: 0px;
+    color: #240ea5;
+}
+
+.highlight {
+    background-color: #00BCD4;
+    color: white;
+}
+
+.wd-std {
+    width: 150px;
+}

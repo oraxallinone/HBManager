@@ -1,0 +1,264 @@
+﻿.table {
+    width: 700px;
+    font-family: 'Times New Roman';
+    font-size: 14px;
+    border-spacing: 0;
+    border-width: 0;
+    padding: 0;
+    border-width: 0;
+}
+
+.tableBorderColaps {
+    height: 73px;
+    border-spacing: 0;
+    border-width: 0;
+    padding: 0;
+    border-width: 0;
+}
+
+.bgLight {
+    background-color: #e0f7faa1;
+}
+
+.textCenter {
+    text-align: center;
+}
+
+.textRight {
+    text-align: right;
+}
+
+.textLeft {
+    text-align: left;
+}
+
+.fontHeader {
+    font-size: 25px;
+    font-weight: bolder;
+}
+
+.fontSubHeader {
+    font-size: 15px;
+    font-weight: bolder;
+}
+
+.fontMenuHeader {
+    font-size: 13px;
+    font-weight: bolder;
+    height: 40px;
+    background-color: #e0f7faa1;
+}
+
+.fontMenuHeader2 {
+    font-size: 13px;
+    font-weight: bolder;
+    height: 20px;
+    background-color: #e0f7faa1;
+}
+
+.bg1 {
+    background-color: #e0f7faa1;
+}
+
+.border-top0 {
+    border-top: 0px !important;
+}
+
+.border-bottom0 {
+    border-bottom: 0px !important;
+}
+
+.border-right0 {
+    border-right: 0px !important;
+}
+
+.border-left0 {
+    border-left: 0px !important;
+}
+
+.fontMenuBody {
+    font-size: 12px;
+}
+/* .fontMenuBody>td{
+    text-align: center;
+} */
+
+.marginLeft {
+    margin-left: 20px;
+}
+
+.marginRight {
+    margin-right: 75px;
+}
+
+.footerHeight {
+    height: 125px;
+}
+
+.border-theme {
+    border: 1px solid #9bcad0a1;
+}
+
+.bg-theme {
+    background-color: #e0f7faa1;
+}
+
+
+body {
+    background: #f8fafc;
+}
+
+#tblInvoice {
+    max-width: 794px; /* A4 width in px at 96dpi */
+    margin: 0 auto;
+    background: #fff;
+    box-shadow: 0 2px 8px #e0e0e0;
+    padding: 16px 12px 24px 12px;
+}
+
+body, table, td, th {
+    font-family: 'Segoe UI', 'Calibri', 'Arial', sans-serif;
+    font-size: 12px;
+    color: #222;
+}
+
+.table {
+    border-collapse: collapse;
+    width: 100%;
+    background: #f8fafc;
+    min-width: 700px;
+    max-width: 770px;
+    margin: 0 auto;
+}
+
+    .table tr {
+        height: 22px;
+    }
+
+        .table tr.fontMenuHeader, .table tr.fontMenuHeader2 {
+            height: 26px;
+        }
+
+td, th {
+    border: 1.5px solid #b0b8c1;
+    padding: 5px 8px;
+}
+
+.fontHeader {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1a355e;
+    letter-spacing: 1px;
+}
+
+.fontSubHeader {
+    font-size: 12px;
+    font-weight: 600;
+    color: #2d3e50;
+}
+
+.fontMenuHeader, .fontMenuHeader2 {
+    font-size: 12px;
+    font-weight: 600;
+    background: #e3eaf6;
+    color: #1a355e;
+}
+
+.fontMenuBody {
+    font-size: 12px;
+    background: #fff;
+}
+
+.bgLight, .bg1 {
+    background: #f0f4fa !important;
+}
+
+.textCenter {
+    text-align: center;
+}
+
+.textRight {
+    text-align: right;
+}
+
+.textLeft {
+    text-align: left;
+}
+
+.marginLeft {
+    margin-left: 20px;
+}
+
+.marginRight {
+    margin-right: 75px;
+}
+
+.footerHeight {
+    height: 125px;
+}
+
+.border-theme {
+    border: 1.5px solid #b0b8c1;
+}
+
+.bg-theme {
+    background: #e3eaf6;
+}
+
+.tableBorderColaps {
+    border-collapse: collapse;
+}
+
+.border0-bottom {
+    border-bottom: none !important;
+}
+
+.border0-right {
+    border-right: none !important;
+}
+
+#printFooter tfoot td {
+    border: 1.5px solid #b0b8c1;
+}
+
+
+input.btn-success {
+    font-family: 'Segoe UI', 'Calibri', 'Arial', sans-serif;
+    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 4px;
+    border: none;
+    background: #1a355e;
+    color: #fff;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+
+    input.btn-success:hover {
+        background: #274a7d;
+    }
+
+a {
+    color: #1a355e;
+    text-decoration: underline;
+}
+
+    a:hover {
+        color: #274a7d;
+    }
+
+.font-size-2 {
+    font-size: 11px;
+}
+
+.fontMenuBody > td, .fontMenuHeader > td, .fontMenuHeader2 > td {
+    height: 17px !important;
+    padding-top: 2px !important;
+    padding-bottom: 2px !important;
+    padding-left: 4px !important;
+    padding-right: 4px !important;
+}
+
+.fontMenuBody, .fontMenuHeader, .fontMenuHeader2 {
+    height: 22px !important;
+}

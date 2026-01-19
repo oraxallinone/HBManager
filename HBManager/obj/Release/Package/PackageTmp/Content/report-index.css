@@ -1,0 +1,286 @@
+﻿button {
+    position: absolute;
+    left: 1em;
+    top: 1em;
+    color: hsl(0 0 100% / 0.8);
+    background: hsl(0 0 0% / 0.4);
+    border: var(--border-width) solid currentColor;
+    border-radius: calc(var(--border-radius) / 2);
+    padding: 1em;
+    text-transform: uppercase;
+    line-height: 1;
+}
+
+.background {
+    --bgColor: hsl(175 50% 30%);
+    background: var(--bgColor) 100%/100% no-repeat;
+    background-image: var(--bgImage);
+    background-position: 50%;
+    background-size: cover;
+    background-size: 120%;
+    overflow: auto;
+    z-index: -2;
+}
+
+.grid {
+    display: grid;
+    place-content: start;
+    box-sizing: border-box;
+    padding: 2vh 2vw;
+    gap: 2vmin;
+    background-image: url(img/bg22.jpg);
+    height: 78vh;
+    background-repeat: no-repeat;
+    background-size: 100% auto;
+
+    @media (min-width: 70em) {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+:host,
+:root {
+    font-size: 100%;
+    --blur: 0.4rem;
+    --border-radius: var(--uimc-border-radius-2, 0.5rem);
+    --border-width: var(--uimc-border-width-1, 0.0625rem);
+    --border-color: hsl(0 0 100% / 0.1);
+    --border-glow: hsl(0 0% 100% / 0.2);
+    --corner-glow: hsl(0 0% 100% / 0.6);
+    --corner-glow-size: 1;
+    --padding-inline: var(--uimc-spacing-6, 1.5em);
+    --padding-block: var(--uimc-spacing-6, 3em);
+    --text-color: var(--uimc-color-text, hsl(0 0 100%));
+    --background-color: hsl(0 0 0% / 10%);
+    --width: initial;
+    width: var(--width);
+    display: block;
+    container-type: inline-size;
+}
+/* panel */
+.panel {
+    position: relative;
+    box-sizing: border-box;
+    background: linear-gradient(var(--background-color), var(--background-color)) border-box;
+    background-blend-mode: overlay;
+    color: var(--text-color);
+    border-radius: var(--border-radius);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding-inline: var(--padding-inline);
+    padding-block: var(--padding-block);
+    text-shadow: 0 0 1.5em black;
+}
+
+/* glass background */
+.glass {
+    position: relative;
+    border-radius: var(--border-radius);
+    background-color: var(--background-color);
+    backdrop-filter: blur(var(--blur));
+    background-blend-mode: plus-lighter;
+    box-shadow: 0 0 0 var(--border-width) var(--border-color) inset,
+    /* inset border */ 0 0 3rem -1rem hsl(0 0 0 / 0.2), 0 0 1rem -0.5rem hsl(0 0 0 / 0.2), 0 0 3rem 0 hsl(0 0 100% / 0.15) inset, 0 0 0.25rem 0 hsl(0 0 100% / 0.15) inset;
+}
+
+    /* shiny border */
+    .glass:before {
+        content: "";
+        display: block;
+        position: absolute;
+        inset: calc(var(--border-width) * -0); /* no need to offset border */
+        border: var(--border-width) solid transparent; /* mask applies to box-model */
+        pointer-events: none;
+        border-radius: inherit;
+        background: conic-gradient( from -100deg at center in oklch, transparent 0%, var(--border-glow) 10%, transparent 50%, var(--border-glow), transparent 70% ) border-box;
+        mask: linear-gradient(transparent), linear-gradient(white);
+        mask-clip: content-box, border-box;
+        mask-composite: subtract;
+        mask-repeat: no-repeat;
+    }
+    /* shiny corner */
+    .glass:after {
+        content: "";
+        display: block;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: min(100%, calc(var(--border-radius) * var(--corner-glow-size)));
+        height: min(100%, calc(var(--border-radius) * var(--corner-glow-size)));
+        padding: min(100%, calc(var(--border-radius) * var(--corner-glow-size)));
+        border: var(--border-width) solid transparent; /* mask applies to box-model */
+        pointer-events: none;
+        border-radius: inherit;
+        background: conic-gradient( from -90deg at center in oklch, transparent 8%, var(--corner-glow), transparent 17% ) border-box;
+        mask-image: linear-gradient(transparent), linear-gradient(white);
+        mask-clip: padding-box, border-box;
+        mask-composite: subtract;
+        mask-repeat: no-repeat;
+    }
+
+/* noise applied as mask on the background */
+/* needs noise image set as url in the --noise variable */
+.patterned {
+    --background-color: hsl(0 0 0% / 10%);
+    --border-color: hsl(0 0 100% / 0);
+    --border-glow: hsl(0 0% 100% / 0.15); /* also increases pattern visibility */
+    --corner-glow: hsl(0 0% 100% / 0.5);
+}
+
+    .patterned::before {
+        filter: url(#scratch); /* apply SVG filter */
+        mask: var(--noise), /*  use png noise images as mask */ linear-gradient(white);
+        mask-size: 8em;
+        mask-clip: padding-box, border-box;
+        mask-composite: intersect;
+        mask-repeat: repeat;
+    }
+
+/* Noise svg pattern added as pseudo element */
+.frosted {
+    --blur: 1rem;
+    --background-color: hsl(0 0 100% / 20%);
+    --border-color: hsl(0 0 100% / 0);
+    --corner-glow: hsl(0 0 100% / 1);
+    --border-glow: hsl(0 0 100% / 0.8);
+    --corner-glow-size: 2; /* use corner glow as border glow */
+}
+
+    .frosted > * {
+        position: relative;
+        z-index: 1;
+    }
+
+    .frosted .filter {
+        border-radius: inherit;
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        mask: linear-gradient(white);
+        mask-clip: padding-box;
+        mask-composite: intersect;
+        mask-repeat: repeat;
+        filter: url(#ice); /* apply SVG filter to the pseudo element */
+    }
+
+.lighter {
+    --blur: 0.8rem;
+    --background-color: hsl(0 0 100% / 15%);
+    --border-color: hsl(0 0 100% / 0.1);
+    --border-glow: hsl(0 0 100% / 0.3);
+    --corner-glow: hsl(0 0 100% / 1);
+}
+
+.darker {
+    --blur: 0.3rem;
+    --background-color: hsl(0 0 0% / 30%);
+    --border-color: hsl(0 0 100% / 0);
+    --border-glow: hsl(0 0 100% / 0.1);
+    --corner-glow: hsl(0 0 100% / 0.4);
+}
+
+.neon {
+    --border-radius: 3rem;
+    --blur: 0.1rem;
+    --border-width: 2px;
+    --background-color: hsl(280 100% 10% / 0.2);
+    --corner-glow-size: 6;
+    --corner-glow: hsl(330 100% 50% / 1);
+    --border-glow: hsl(300 100% 40% / 1);
+    --border-color: hsl(210 100% 40% / 1);
+    box-shadow: 0 0 0 var(--border-width) var(--border-color) inset,
+    /* inset border */ 0 0 3rem -1rem hsl(320 100% 50% / 0.6), 0 0 1rem -0.5rem hsl(320 100% 50% / 0.6), 0 0 3rem 0 hsl(210 100% 40% / 0.6) inset, 0 0 0.25rem 0 hsl(210 100% 40% / 0.6) inset;
+    opacity: 0.1;
+    transition: opacity 0.3s;
+    &:hover;
+
+{
+    opacity: 1;
+}
+
+}
+
+.vivid {
+    --blur: 1em;
+    --border-color: hsl(0 0 100% / 0.2);
+    border: var(--border-width) outset var(--border-color);
+    border-radius: calc(var(--border-radius) + var(--border-width));
+    min-height: calc(1.66em + var(--padding-block) * 2);
+    box-shadow:
+    /* 0 0 0 var(--border-width) var(--border-color), /* inset border */ 0 0 3rem -1rem hsl(0 0 0 / 0.2), 0 0 1rem -0.5rem hsl(0 0 0 / 0.2), 0 0 3rem 0 hsl(0 0 100% / 0.15) inset, 0 0 0.25rem 0 hsl(0 0 100% / 0.15) inset;
+}
+
+    .vivid > * {
+        position: relative;
+        z-index: 1;
+    }
+    /* vivid background at the edge */
+    .vivid::before {
+        --offset: var(--blur);
+        content: "";
+        position: absolute;
+        pointer-events: none;
+        height: calc(100% + (var(--offset) * 2));
+        width: calc(100% + (var(--offset) * 2));
+        top: calc(-1 * var(--offset));
+        left: calc(-1 * var(--offset));
+        border: calc(1 * var(--offset)) solid transparent;
+        backdrop-filter: blur(var(--blur)) contrast(250%) grayscale(20%);
+        box-sizing: border-box;
+        border-radius: calc(var(--border-radius) + var(--offset));
+        mask: linear-gradient(white);
+        mask-clip: padding-box;
+        mask-composite: subtract;
+    }
+    /* blurred background in center */
+    .vivid::after {
+        content: "";
+        position: absolute;
+        pointer-events: none;
+        z-index: 0;
+        height: calc(100% - var(--blur));
+        width: calc(100% - var(--blur));
+        top: calc(var(--blur) / 2);
+        left: calc(var(--blur) / 2);
+        border-radius: inherit;
+        background-image: var(--bgImage);
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+        background-attachment: fixed;
+        filter: blur(var(--blur)) contrast(110%) grayscale(20%);
+        mix-blend-mode: normal;
+    }
+
+.liquid-glass {
+    --border-radius: 3rem;
+    --border-glow: hsl(0 0 100% / 0.4);
+    --corner-glow: hsl(0 0 100% / 0.4);
+    isolation: isolate;
+}
+    /* edge style */
+    .liquid-glass::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+        border-radius: inherit;
+        box-shadow: inset 2px 2px 0px -2px var(--corner-glow), inset 0 0 3px 1px var(--border-glow);
+    }
+
+.background {
+    z-index: -2; /* to put liquid between background and z-index 0 */
+}
+/* liquid filter */
+.liquid-glass::after {
+    content: "";
+    position: absolute;
+    z-index: -1; /* separate liquid from border and content  */
+    inset: 0;
+    border-radius: inherit;
+    backdrop-filter: blur(0px);
+    filter: url(#liquid-glass);
+    -filter: url(#refraction);
+    overflow: hidden;
+}

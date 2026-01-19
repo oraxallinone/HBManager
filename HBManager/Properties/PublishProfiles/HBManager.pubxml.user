@@ -6,14 +6,35 @@ by editing this MSBuild file. In order to learn more about this please visit htt
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <TimeStampOfAssociatedLegacyPublishXmlFile />
-    <_PublishTargetUrl>D:\sync with git hub\After 2025 Oct 24\pb&amp;up&amp;dt__\combineMano_budget\publish\19jan2026_9</_PublishTargetUrl>
+    <_PublishTargetUrl>D:\sync with git hub\After 2025 Oct 24\pb&amp;up&amp;dt__\combineMano_budget\publish\19jan2026_11</_PublishTargetUrl>
   </PropertyGroup>
   <ItemGroup>
+    <File Include="Areas/GstBill/Models/Model1.edmx.diagram">
+      <publishTime>01/19/2026 20:22:15</publishTime>
+    </File>
+    <File Include="Areas/GstBill/Views/Product/CustomerAdd.cshtml">
+      <publishTime>01/19/2026 21:16:12</publishTime>
+    </File>
+    <File Include="Areas/GstBill/Views/Product/CustomerList.cshtml">
+      <publishTime>01/19/2026 21:17:48</publishTime>
+    </File>
+    <File Include="Areas/GstBill/Views/Product/Index.cshtml">
+      <publishTime>01/19/2026 21:22:14</publishTime>
+    </File>
+    <File Include="Areas/GstBill/Views/web.config">
+      <publishTime>01/19/2026 20:14:42</publishTime>
+    </File>
     <File Include="bin/Antlr3.Runtime.dll">
       <publishTime>02/22/2013 08:43:40</publishTime>
     </File>
+    <File Include="bin/EntityFramework.dll">
+      <publishTime>06/16/2024 20:46:24</publishTime>
+    </File>
+    <File Include="bin/EntityFramework.SqlServer.dll">
+      <publishTime>06/16/2024 20:47:02</publishTime>
+    </File>
     <File Include="bin/HBManager.dll">
-      <publishTime>01/19/2026 18:50:22</publishTime>
+      <publishTime>01/19/2026 21:24:02</publishTime>
     </File>
     <File Include="bin/Microsoft.Web.Infrastructure.dll">
       <publishTime>04/23/2012 15:23:58</publishTime>
@@ -42,14 +63,248 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     <File Include="bin/WebGrease.dll">
       <publishTime>09/10/2013 17:28:38</publishTime>
     </File>
+    <File Include="Content/application-css/common-date-format.css">
+      <publishTime>01/17/2026 13:23:13</publishTime>
+    </File>
+    <File Include="Content/application-css/loader.css">
+      <publishTime>01/17/2026 13:23:13</publishTime>
+    </File>
+    <File Include="Content/barchart.css">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
     <File Include="Content/bootstrap.css">
       <publishTime>01/19/2026 18:46:48</publishTime>
     </File>
     <File Include="Content/bootstrap.min.css">
       <publishTime>01/19/2026 18:46:48</publishTime>
     </File>
+    <File Include="Content/budget-grouping-index.css">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/budget-index.css">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/budget-overview.css">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/calender-css.css">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/common.css">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/dashboard.css">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/group.css">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/img/bg1.jpg">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/img/bg22.jpg">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/img/delete.png">
+      <publishTime>01/18/2026 10:05:11</publishTime>
+    </File>
+    <File Include="Content/img/financep1.png">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/img/log-in.png">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/img/stats.png">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/login.css">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/notes.css">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/report-index.css">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/salary.css">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
     <File Include="Content/Site.css">
       <publishTime>01/19/2026 18:46:45</publishTime>
+    </File>
+    <File Include="Content/spinner.css">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/theme/assets/img/AdminLTEFullLogo.png">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/theme/assets/img/AdminLTELogo.png">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/theme/assets/img/avatar.png">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/theme/assets/img/avatar2.png">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/theme/assets/img/avatar3.png">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/theme/assets/img/avatar4.png">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/theme/assets/img/avatar5.png">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/theme/assets/img/boxed-bg.jpg">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/theme/assets/img/boxed-bg.png">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/theme/assets/img/credit/american-express.png">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/theme/assets/img/credit/cirrus.png">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/theme/assets/img/credit/mastercard.png">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/theme/assets/img/credit/paypal.png">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/theme/assets/img/credit/paypal2.png">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/theme/assets/img/credit/visa.png">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/theme/assets/img/default-150x150.png">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/theme/assets/img/icons.png">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/theme/assets/img/photo1.png">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/theme/assets/img/photo2.png">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/theme/assets/img/photo3.jpg">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/theme/assets/img/photo4.jpg">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/theme/assets/img/prod-1.jpg">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/theme/assets/img/prod-2.jpg">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/theme/assets/img/prod-3.jpg">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/theme/assets/img/prod-4.jpg">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/theme/assets/img/prod-5.jpg">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/theme/assets/img/user1-128x128.jpg">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/theme/assets/img/user2-160x160.jpg">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/theme/assets/img/user2-160x160.png">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/theme/assets/img/user3-128x128.jpg">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/theme/assets/img/user4-128x128.jpg">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/theme/assets/img/user5-128x128.jpg">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/theme/assets/img/user6-128x128.jpg">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/theme/assets/img/user7-128x128.jpg">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/theme/assets/img/user8-128x128.jpg">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/theme/css/adminlte.css">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/theme/css/adminlte.css.map">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/theme/css/adminlte.min.css">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/theme/css/adminlte.min.css.map">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/theme/css/adminlte.rtl.css">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/theme/css/adminlte.rtl.css.map">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/theme/css/adminlte.rtl.min.css">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/theme/css/adminlte.rtl.min.css.map">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/theme/css/fontsource.css">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/theme/css/overlayscrollbars.min.css">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/theme/fontswesome/fontawesome.css">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/theme/fontswesome/fontawesome.js">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/theme/img/budget.png">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/theme/img/round restaurent icon png.png">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/theme/js/adminFormValidation.js">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/theme/js/adminlte.js">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/theme/js/adminlte.js.map">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/theme/js/adminlte.min.js">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/theme/js/adminlte.min.js.map">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/theme/js/popper.min.js">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/theme/js/SidebarWrapper.js">
+      <publishTime>01/19/2026 10:26:59</publishTime>
+    </File>
+    <File Include="Content/upload.css">
+      <publishTime>01/19/2026 10:26:59</publishTime>
     </File>
     <File Include="favicon.ico">
       <publishTime>01/19/2026 18:46:45</publishTime>
@@ -70,13 +325,46 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>01/19/2026 18:46:45</publishTime>
     </File>
     <File Include="packages.config">
-      <publishTime>01/19/2026 18:46:58</publishTime>
+      <publishTime>01/19/2026 19:03:41</publishTime>
+    </File>
+    <File Include="Scripts/application-js/common.js">
+      <publishTime>01/18/2026 11:40:26</publishTime>
+    </File>
+    <File Include="Scripts/application-js/gst-invoice-create.js">
+      <publishTime>01/19/2026 14:58:00</publishTime>
+    </File>
+    <File Include="Scripts/barchart.js">
+      <publishTime>01/19/2026 10:27:00</publishTime>
+    </File>
+    <File Include="Scripts/birthday.js">
+      <publishTime>01/19/2026 10:27:00</publishTime>
     </File>
     <File Include="Scripts/bootstrap.js">
       <publishTime>01/19/2026 18:46:48</publishTime>
     </File>
     <File Include="Scripts/bootstrap.min.js">
       <publishTime>01/19/2026 18:46:48</publishTime>
+    </File>
+    <File Include="Scripts/budget.js">
+      <publishTime>01/19/2026 10:27:00</publishTime>
+    </File>
+    <File Include="Scripts/budgetGrouping.js">
+      <publishTime>01/19/2026 10:27:00</publishTime>
+    </File>
+    <File Include="Scripts/budgetOverview.js">
+      <publishTime>01/19/2026 10:27:00</publishTime>
+    </File>
+    <File Include="Scripts/calender.js">
+      <publishTime>01/19/2026 10:27:00</publishTime>
+    </File>
+    <File Include="Scripts/dashboard.js">
+      <publishTime>01/19/2026 14:58:00</publishTime>
+    </File>
+    <File Include="Scripts/group.js">
+      <publishTime>01/19/2026 14:57:59</publishTime>
+    </File>
+    <File Include="Scripts/jquery-3.6.0.js">
+      <publishTime>01/17/2026 13:23:15</publishTime>
     </File>
     <File Include="Scripts/jquery.validate.js">
       <publishTime>01/19/2026 18:46:54</publishTime>
@@ -90,14 +378,92 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     <File Include="Scripts/jquery.validate.unobtrusive.min.js">
       <publishTime>01/19/2026 18:46:54</publishTime>
     </File>
+    <File Include="Scripts/login.js">
+      <publishTime>01/19/2026 11:04:37</publishTime>
+    </File>
+    <File Include="Scripts/note.js">
+      <publishTime>01/19/2026 10:27:00</publishTime>
+    </File>
     <File Include="Scripts/respond.js">
       <publishTime>01/19/2026 18:46:53</publishTime>
     </File>
     <File Include="Scripts/respond.min.js">
       <publishTime>01/19/2026 18:46:53</publishTime>
     </File>
+    <File Include="Scripts/salary.js">
+      <publishTime>01/19/2026 10:27:00</publishTime>
+    </File>
     <File Include="Scripts/_references.js">
-      <publishTime>01/19/2026 18:46:45</publishTime>
+      <publishTime>01/19/2026 19:49:06</publishTime>
+    </File>
+    <File Include="theme/adminlte.css">
+      <publishTime>01/17/2026 13:23:15</publishTime>
+    </File>
+    <File Include="theme/adminlte.min.css">
+      <publishTime>01/17/2026 13:23:15</publishTime>
+    </File>
+    <File Include="theme/adminlte.min.js">
+      <publishTime>01/17/2026 13:23:15</publishTime>
+    </File>
+    <File Include="theme/bootstrap.bundle.min.js">
+      <publishTime>01/17/2026 13:23:15</publishTime>
+    </File>
+    <File Include="theme/bs-custom-file-input.min.js">
+      <publishTime>01/17/2026 13:23:15</publishTime>
+    </File>
+    <File Include="theme/customeCss.css">
+      <publishTime>01/17/2026 13:23:15</publishTime>
+    </File>
+    <File Include="theme/demo.js">
+      <publishTime>01/17/2026 13:23:15</publishTime>
+    </File>
+    <File Include="theme/fontawesome.css">
+      <publishTime>01/17/2026 13:23:15</publishTime>
+    </File>
+    <File Include="theme/fontawesome.js">
+      <publishTime>01/17/2026 13:23:15</publishTime>
+    </File>
+    <File Include="theme/fontcss.css">
+      <publishTime>01/17/2026 13:23:15</publishTime>
+    </File>
+    <File Include="theme/img/11zon_cropped.png">
+      <publishTime>01/17/2026 13:23:15</publishTime>
+    </File>
+    <File Include="theme/img/AdminLTELogo.png">
+      <publishTime>01/17/2026 13:23:15</publishTime>
+    </File>
+    <File Include="theme/img/favicon.ico">
+      <publishTime>01/17/2026 13:23:15</publishTime>
+    </File>
+    <File Include="theme/img/WhatsApp Image 2022-09-21 at 4.57.32 PM.jpeg">
+      <publishTime>01/17/2026 13:23:15</publishTime>
+    </File>
+    <File Include="theme/jquery.min.js">
+      <publishTime>01/17/2026 13:23:15</publishTime>
+    </File>
+    <File Include="theme/printBillStyle.css">
+      <publishTime>01/17/2026 23:32:35</publishTime>
+    </File>
+    <File Include="theme/sweetalert.min.js">
+      <publishTime>01/17/2026 13:23:15</publishTime>
+    </File>
+    <File Include="Upload/Salary slip tracker.xlsx">
+      <publishTime>01/19/2026 10:27:00</publishTime>
+    </File>
+    <File Include="Upload/similipala.xlsx">
+      <publishTime>01/19/2026 10:27:00</publishTime>
+    </File>
+    <File Include="Upload/sonali preparation.xlsx">
+      <publishTime>01/19/2026 10:27:00</publishTime>
+    </File>
+    <File Include="Upload/_Finaance_16Jan.sql">
+      <publishTime>01/19/2026 10:27:00</publishTime>
+    </File>
+    <File Include="Upload/_Finaance_8Jan.sql">
+      <publishTime>01/19/2026 10:27:00</publishTime>
+    </File>
+    <File Include="Views/Default/Dashboard.cshtml">
+      <publishTime>01/19/2026 19:59:17</publishTime>
     </File>
     <File Include="Views/Home/About.cshtml">
       <publishTime>01/19/2026 18:46:45</publishTime>
@@ -108,11 +474,23 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     <File Include="Views/Home/Index.cshtml">
       <publishTime>01/19/2026 18:46:45</publishTime>
     </File>
+    <File Include="Views/Login/LoginIndex.cshtml">
+      <publishTime>01/19/2026 19:36:18</publishTime>
+    </File>
     <File Include="Views/Shared/Error.cshtml">
       <publishTime>01/19/2026 18:46:45</publishTime>
     </File>
+    <File Include="Views/Shared/_GstLayout.cshtml">
+      <publishTime>01/19/2026 21:15:09</publishTime>
+    </File>
     <File Include="Views/Shared/_Layout.cshtml">
       <publishTime>01/19/2026 18:46:45</publishTime>
+    </File>
+    <File Include="Views/Shared/_LoginLayout.cshtml">
+      <publishTime>01/19/2026 19:34:28</publishTime>
+    </File>
+    <File Include="Views/Shared/_WebLayout.cshtml">
+      <publishTime>01/19/2026 20:04:50</publishTime>
     </File>
     <File Include="Views/Web.config">
       <publishTime>01/19/2026 18:46:45</publishTime>
@@ -121,7 +499,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>01/19/2026 18:46:45</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>01/19/2026 18:50:34</publishTime>
+      <publishTime>01/19/2026 21:24:02</publishTime>
     </File>
   </ItemGroup>
 </Project>

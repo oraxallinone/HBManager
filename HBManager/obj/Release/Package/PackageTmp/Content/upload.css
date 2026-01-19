@@ -1,0 +1,252 @@
+/* Upload Page Styles */
+
+/* File Input and Button Container */
+.file-upload-container {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 15px;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+/* Files Table Grid Layout */
+#filesTable {
+    display: grid;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#filesTable thead {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 2fr;
+    background-color: #f8f9fa;
+    font-weight: 600;
+    border-bottom: 2px solid #dee2e6;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+#filesTable thead th {
+    padding: 12px 15px;
+    text-align: left;
+    color: #333;
+    font-size: 0.75rem;
+}
+
+#filesTable tbody {
+    display: grid;
+    grid-template-columns: 1fr;
+}
+
+#filesTable tbody tr {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 2fr;
+    padding: 0;
+    border-bottom: 1px solid #dee2e6;
+    transition: background-color 0.2s ease-in-out;
+}
+
+/* Row Highlight on Mouse Over */
+#filesTable tbody tr:hover {
+    background-color: #cce5ff !important;
+    box-shadow: inset 0 0 0 1px #4d94ff;
+}
+
+#filesTable tbody tr:hover td {
+    background-color: #cce5ff !important;
+    color: #000;
+}
+
+#filesTable tbody td {
+    padding: 6px 10px;
+    vertical-align: middle;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 0.8rem;
+}
+
+/* Excel Preview Modal Styles */
+#excelModal {
+    display: none;
+}
+
+#excelModal.show {
+    display: block !important;
+}
+
+#excelModal .modal-dialog {
+    width: 100vw;
+    height: 100vh;
+    max-width: 100%;
+    margin: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+#excelModal .modal-content {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    border-radius: 0;
+}
+
+#excelModal .modal-header {
+    padding: 15px 20px;
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #dee2e6;
+    flex-shrink: 0;
+}
+
+#excelModal .modal-body {
+    flex: 1;
+    overflow: auto;
+    padding: 20px;
+    background-color: #fff;
+}
+
+#excelPreview {
+    overflow-x: auto;
+    overflow-y: auto;
+    height: 100%;
+}
+
+#excelPreview table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 0.65rem;
+    background-color: #fff;
+}
+
+#excelPreview table thead {
+    background-color: #e8e8e8;
+    font-weight: 600;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    color: #333;
+}
+
+#excelPreview table th {
+    border: 1px solid #999;
+    padding: 12px 10px;
+    text-align: center;
+    background-color: #e8e8e8;
+    font-weight: 700;
+}
+
+#excelPreview table td {
+    border: 1px solid #999;
+    padding: 12px 10px;
+    text-align: left;
+    word-break: break-word;
+    background-color: #fff;
+}
+
+/* Row highlight on hover */
+#excelPreview table tbody tr:hover td {
+    background-color: #28a745;
+    color: #ffffff;
+}
+
+/* Colored cell highlights */
+#excelPreview table td {
+    position: relative;
+}
+
+/* Orange/Peach highlighting for specific patterns */
+#excelPreview table td:contains-text("mouce hover css"),
+#excelPreview table td:contains-text("table row mouse over") {
+    background-color: #f4d4b8;
+}
+
+/* Green highlighting for D1, D2, special content */
+#excelPreview table td:contains-text("D1"),
+#excelPreview table td:contains-text("D2"),
+#excelPreview table td:contains-text("SEP") {
+    background-color: #90ee90;
+    color: #000;
+    font-weight: 500;
+}
+
+/* Button Styles */
+.btn-view,
+.btn-delete {
+    white-space: nowrap;
+    padding: 4px 8px !important;
+    font-size: 0.7rem !important;
+}
+
+#filesTable .btn-secondary {
+    padding: 4px 8px !important;
+    font-size: 0.7rem !important;
+}
+
+.btn-view {
+    background-color: #17a2b8;
+    color: white;
+}
+
+.btn-view:hover {
+    background-color: #138496;
+    color: white;
+}
+
+.btn-delete {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-delete:hover {
+    background-color: #c82333;
+    color: white;
+}
+
+/* Card Container */
+.card-body {
+    padding: 25px;
+}
+
+/* File Input Styling */
+#fileInput {
+    border: 2px solid #dee2e6;
+    border-radius: 4px;
+    padding: 4px 8px !important;
+    font-size: 0.85rem !important;
+    transition: border-color 0.3s ease-in-out;
+}
+
+#fileInput:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Upload Button Styling */
+#btnUpload {
+    padding: 4px 12px !important;
+    font-size: 0.85rem !important;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    #filesTable thead,
+    #filesTable tbody tr {
+        grid-template-columns: 1fr;
+    }
+
+    #filesTable thead th,
+    #filesTable tbody td {
+        padding: 10px 12px;
+        font-size: 0.9rem;
+    }
+
+    #excelPreview table th,
+    #excelPreview table td {
+        padding: 8px 10px;
+        font-size: 0.85rem;
+    }
+}

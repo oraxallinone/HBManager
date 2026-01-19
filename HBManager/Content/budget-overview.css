@@ -1,0 +1,88 @@
+﻿
+/* Grid - Group Overview */
+#gridGroupOverview {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Segoe UI', 'Segoe UI Emoji', Arial, sans-serif;
+    font-size: 12px;
+    table-layout: fixed; /* keeps columns aligned */
+    color: #222;
+}
+
+/* sticky header */
+#gridGroupOverview thead {
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    background: linear-gradient(180deg, #0d6efd 0%, #0b5ed7 100%);
+    color: #ffffff;
+    box-shadow: 0 2px 4px rgba(13,110,253,0.12);
+}
+
+#gridGroupOverview thead th {
+    padding: 10px 12px;
+    text-align: left;
+    vertical-align: middle;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* scrollable tbody */
+.div-responsive #gridGroupOverview tbody {
+    display: block;
+    max-height: 400px; /* height control per user */
+    overflow-y: auto;
+    width: 100%;
+}
+
+/* Keep table rows as table cells so widths align with thead */
+#gridGroupOverview thead, 
+#gridGroupOverview tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+
+#gridGroupOverview tbody td {
+    padding: 5px 12px;
+    border-bottom: 1px solid #e9ecef;
+    vertical-align: middle;
+    background: #ffffff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* alternating rows */
+#gridGroupOverview tbody tr:nth-child(even) td {
+    background: #fbfdff;
+}
+
+/* row hover highlight */
+#gridGroupOverview tbody tr:hover td {
+    background: #fff3cd !important; /* subtle yellow highlight */
+}
+
+/* small/center/right helper classes */
+#gridGroupOverview td.text-center { text-align: center; }
+#gridGroupOverview td.text-right { text-align: right; }
+#gridGroupOverview td.no-wrap { white-space: nowrap; }
+#gridGroupOverview td.details-cell { white-space: normal; word-break: break-word; }
+
+/* compact mobile layout */
+@media (max-width: 768px) {
+    /* hide thead on small screens and present rows as blocks */
+    #gridGroupOverview thead { display: none; }
+    #gridGroupOverview tbody tr { display: block; margin-bottom: 8px; border: 1px solid #e9ecef; border-radius: 6px; overflow: hidden; }
+    #gridGroupOverview tbody td { display: flex; justify-content: space-between; padding: 8px 10px; }
+    #gridGroupOverview tbody td::before { content: attr(data-label); font-weight: 600; color: #495057; margin-right: 8px; }
+}
+
+/* caption if used */
+#gridGroupOverview caption {
+    caption-side: top;
+    text-align: left;
+    font-weight: 700;
+    padding: 8px 0;
+    color: #0b5ed7;
+}

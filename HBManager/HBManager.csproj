@@ -55,6 +55,8 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -118,30 +120,223 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Areas\GstBill\Controllers\ProductController.cs" />
+    <Compile Include="Areas\GstBill\GstBillAreaRegistration.cs" />
+    <Compile Include="Areas\GstBill\Models\BillSupport.cs" />
+    <Compile Include="Areas\GstBill\Models\CounterMaster.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\GstBill\Models\CustomerBillDTO.cs" />
+    <Compile Include="Areas\GstBill\Models\CustomerDTO.cs" />
+    <Compile Include="Areas\GstBill\Models\CustomerInformation.cs" />
+    <Compile Include="Areas\GstBill\Models\CustomerMaster.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\GstBill\Models\InvoiceDetail.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\GstBill\Models\InvoiceGstViewModel.cs" />
+    <Compile Include="Areas\GstBill\Models\ItemMaster.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\GstBill\Models\ItemTransaction.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\GstBill\Models\Model1.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Model1.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\GstBill\Models\Model1.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\GstBill\Models\Model1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Model1.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Controllers\DefaultController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\BarGraphData.cs" />
+    <Compile Include="Models\BirthdayModel.cs" />
+    <Compile Include="Models\Budget.cs" />
+    <Compile Include="Models\CalenderDataViewModel.cs" />
+    <Compile Include="Models\CalenderDateViewModel.cs" />
+    <Compile Include="Models\DashboardHeadingModel.cs" />
+    <Compile Include="Models\GetExpensiveViewModel.cs" />
+    <Compile Include="Models\Group3.cs" />
+    <Compile Include="Models\Group4Result.cs" />
+    <Compile Include="Models\GroupBudgetOverviewModel.cs" />
+    <Compile Include="Models\GroupMaster.cs" />
+    <Compile Include="Models\GstType.cs" />
+    <Compile Include="Models\SalaryMaster.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service\BirthdayService.cs" />
+    <Compile Include="Service\BudgetOverviewService.cs" />
+    <Compile Include="Service\BudgetService.cs" />
+    <Compile Include="Service\DashboardService.cs" />
+    <Compile Include="Service\GraphService.cs" />
+    <Compile Include="Service\GroupService.cs" />
+    <Compile Include="Service\LoginService.cs" />
+    <Compile Include="Service\NoteService.cs" />
+    <Compile Include="Service\SalaryService.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Areas\GstBill\Models\Model1.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>Model1.edmx</DependentUpon>
+      <LastGenOutput>Model1.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Areas\GstBill\Models\Model1.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>Model1.edmx</DependentUpon>
+      <LastGenOutput>Model1.cs</LastGenOutput>
+    </Content>
+    <Content Include="Content\application-css\common-date-format.css" />
+    <Content Include="Content\application-css\loader.css" />
+    <Content Include="Content\barchart.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\budget-grouping-index.css" />
+    <Content Include="Content\budget-index.css" />
+    <Content Include="Content\budget-overview.css" />
+    <Content Include="Content\calender-css.css" />
+    <Content Include="Content\common.css" />
+    <Content Include="Content\dashboard.css" />
+    <Content Include="Content\group.css" />
+    <Content Include="Content\img\bg1.jpg" />
+    <Content Include="Content\img\bg22.jpg" />
+    <Content Include="Content\img\delete.png" />
+    <Content Include="Content\img\financep1.png" />
+    <Content Include="Content\img\log-in.png" />
+    <Content Include="Content\img\stats.png" />
+    <Content Include="Content\login.css" />
+    <Content Include="Content\notes.css" />
+    <Content Include="Content\report-index.css" />
+    <Content Include="Content\salary.css" />
+    <Content Include="Content\spinner.css" />
+    <Content Include="Content\theme\assets\img\AdminLTEFullLogo.png" />
+    <Content Include="Content\theme\assets\img\AdminLTELogo.png" />
+    <Content Include="Content\theme\assets\img\avatar.png" />
+    <Content Include="Content\theme\assets\img\avatar2.png" />
+    <Content Include="Content\theme\assets\img\avatar3.png" />
+    <Content Include="Content\theme\assets\img\avatar4.png" />
+    <Content Include="Content\theme\assets\img\avatar5.png" />
+    <Content Include="Content\theme\assets\img\boxed-bg.jpg" />
+    <Content Include="Content\theme\assets\img\boxed-bg.png" />
+    <Content Include="Content\theme\assets\img\credit\american-express.png" />
+    <Content Include="Content\theme\assets\img\credit\cirrus.png" />
+    <Content Include="Content\theme\assets\img\credit\mastercard.png" />
+    <Content Include="Content\theme\assets\img\credit\paypal.png" />
+    <Content Include="Content\theme\assets\img\credit\paypal2.png" />
+    <Content Include="Content\theme\assets\img\credit\visa.png" />
+    <Content Include="Content\theme\assets\img\default-150x150.png" />
+    <Content Include="Content\theme\assets\img\icons.png" />
+    <Content Include="Content\theme\assets\img\photo1.png" />
+    <Content Include="Content\theme\assets\img\photo2.png" />
+    <Content Include="Content\theme\assets\img\photo3.jpg" />
+    <Content Include="Content\theme\assets\img\photo4.jpg" />
+    <Content Include="Content\theme\assets\img\prod-1.jpg" />
+    <Content Include="Content\theme\assets\img\prod-2.jpg" />
+    <Content Include="Content\theme\assets\img\prod-3.jpg" />
+    <Content Include="Content\theme\assets\img\prod-4.jpg" />
+    <Content Include="Content\theme\assets\img\prod-5.jpg" />
+    <Content Include="Content\theme\assets\img\user1-128x128.jpg" />
+    <Content Include="Content\theme\assets\img\user2-160x160.jpg" />
+    <Content Include="Content\theme\assets\img\user2-160x160.png" />
+    <Content Include="Content\theme\assets\img\user3-128x128.jpg" />
+    <Content Include="Content\theme\assets\img\user4-128x128.jpg" />
+    <Content Include="Content\theme\assets\img\user5-128x128.jpg" />
+    <Content Include="Content\theme\assets\img\user6-128x128.jpg" />
+    <Content Include="Content\theme\assets\img\user7-128x128.jpg" />
+    <Content Include="Content\theme\assets\img\user8-128x128.jpg" />
+    <Content Include="Content\theme\css\adminlte.css" />
+    <Content Include="Content\theme\css\adminlte.min.css" />
+    <Content Include="Content\theme\css\adminlte.rtl.css" />
+    <Content Include="Content\theme\css\adminlte.rtl.min.css" />
+    <Content Include="Content\theme\css\fontsource.css" />
+    <Content Include="Content\theme\css\overlayscrollbars.min.css" />
+    <Content Include="Content\theme\fontswesome\fontawesome.css" />
+    <Content Include="Content\theme\fontswesome\fontawesome.js" />
+    <Content Include="Content\theme\img\budget.png" />
+    <Content Include="Content\theme\img\round restaurent icon png.png" />
+    <Content Include="Content\theme\js\adminFormValidation.js" />
+    <Content Include="Content\theme\js\adminlte.js" />
+    <Content Include="Content\theme\js\adminlte.min.js" />
+    <Content Include="Content\theme\js\popper.min.js" />
+    <Content Include="Content\theme\js\SidebarWrapper.js" />
+    <Content Include="Content\upload.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Scripts\application-js\common.js" />
+    <Content Include="Scripts\application-js\gst-invoice-create.js" />
+    <Content Include="Scripts\barchart.js" />
+    <Content Include="Scripts\birthday.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Content\theme\css\adminlte.css.map" />
+    <Content Include="Content\theme\css\adminlte.min.css.map" />
+    <Content Include="Content\theme\css\adminlte.rtl.css.map" />
+    <Content Include="Content\theme\css\adminlte.rtl.min.css.map" />
+    <Content Include="Content\theme\js\adminlte.js.map" />
+    <Content Include="Content\theme\js\adminlte.min.js.map" />
+    <Content Include="Areas\GstBill\Views\web.config" />
+    <EntityDeploy Include="Areas\GstBill\Models\Model1.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>Model1.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Areas\GstBill\Models\Model1.edmx.diagram">
+      <DependentUpon>Model1.edmx</DependentUpon>
+    </Content>
+    <Content Include="Areas\GstBill\Views\Product\CustomerAdd.cshtml" />
+    <Content Include="Areas\GstBill\Views\Product\CustomerList.cshtml" />
+    <Content Include="Areas\GstBill\Views\Product\Index.cshtml" />
     <None Include="Properties\PublishProfiles\HBManager.pubxml" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\budget.js" />
+    <Content Include="Scripts\budgetGrouping.js" />
+    <Content Include="Scripts\budgetOverview.js" />
+    <Content Include="Scripts\calender.js" />
+    <Content Include="Scripts\dashboard.js" />
+    <Content Include="Scripts\group.js" />
+    <Content Include="Scripts\jquery-3.6.0.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\login.js" />
+    <Content Include="Scripts\note.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\salary.js" />
     <Content Include="Scripts\_references.js" />
+    <Content Include="theme\adminlte.css" />
+    <Content Include="theme\adminlte.min.css" />
+    <Content Include="theme\adminlte.min.js" />
+    <Content Include="theme\bootstrap.bundle.min.js" />
+    <Content Include="theme\bs-custom-file-input.min.js" />
+    <Content Include="theme\customeCss.css" />
+    <Content Include="theme\demo.js" />
+    <Content Include="theme\fontawesome.css" />
+    <Content Include="theme\fontawesome.js" />
+    <Content Include="theme\fontcss.css" />
+    <Content Include="theme\img\11zon_cropped.png" />
+    <Content Include="theme\img\AdminLTELogo.png" />
+    <Content Include="theme\img\favicon.ico" />
+    <Content Include="theme\img\WhatsApp Image 2022-09-21 at 4.57.32 PM.jpeg" />
+    <Content Include="theme\jquery.min.js" />
+    <Content Include="theme\printBillStyle.css" />
+    <Content Include="theme\sweetalert.min.js" />
+    <Content Include="Upload\_Finaance_16Jan.sql" />
+    <Content Include="Upload\_Finaance_8Jan.sql" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -156,10 +351,18 @@
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Shared\_LoginLayout.cshtml" />
+    <Content Include="Views\Login\LoginIndex.cshtml" />
+    <Content Include="Upload\Salary slip tracker.xlsx" />
+    <Content Include="Upload\similipala.xlsx" />
+    <Content Include="Upload\sonali preparation.xlsx" />
+    <Content Include="Views\Shared\_WebLayout.cshtml" />
+    <Content Include="Views\Default\Dashboard.cshtml" />
+    <Content Include="Views\Shared\_GstLayout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
+    <Folder Include="Areas\GstBill\Views\Shared\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -167,6 +370,9 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

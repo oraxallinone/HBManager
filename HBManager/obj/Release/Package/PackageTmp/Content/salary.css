@@ -1,0 +1,61 @@
+﻿/* optional: ensure cells maintain alignment with header during horizontal scroll */
+#gridTableSalary {
+    width: 100%;
+    table-layout: fixed; /* `fixed` helps align columns between header and body when tbody scrolls */
+}
+
+/* custome*/
+.wd-btn {
+    width: 75px;
+}
+
+.custom-tbl {
+    font-size: 13px;
+    font-family: 'Times New Roman';
+}
+/* custome*/
+
+/* ------------------ Fixed header (scrollable body) ------------------
+       - Keep the current <div class="table-responsive" style="height: ..."> wrapper.
+       - This CSS makes the wrapper scrollable and sticks the thead to top when you
+         scroll the tbody. Works well with Bootstrap and preserves column widths.
+       - Ensure this style block is included after Bootstrap CSS (it is, in the view).
+    --------------------------------------------------------------------- */
+
+/* make the responsive wrapper scrollable (use the same height you had) */
+.div-responsive {
+    overflow: auto;
+}
+
+    /* stick the header to top of the scrollable area */
+    .div-responsive #gridTableSalary thead th {
+        position: sticky;
+        top: 0;
+        z-index: 5;
+        background: #ffffff; /* set header background to override table rows */
+        box-shadow: 0 2px 3px rgba(0,0,0,.08);
+        color: white;
+        background-color: #175787cf;
+    }
+
+    /* optional: keep header text readable and prevent wrapping */
+    .div-responsive #gridTableSalary thead th {
+        white-space: nowrap;
+    }
+
+/* optional: ensure cells maintain alignment with header during horizontal scroll */
+#gridTableSalary {
+    width: 100%;
+    table-layout: auto; /* or `fixed` if you want fixed column widths */
+}
+
+.table-header-yellow {
+    background-color: yellow; /* Set header background to yellow */
+}
+
+
+/* Ensure thead uses th (not td) and apply header color + sticky */
+#gridTableSalary thead th {
+    background-color: red; /* your desired color */
+    color: white; /* optional (text color) */
+}

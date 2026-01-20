@@ -75,14 +75,16 @@
     function rebuildAccordion(notes) {
         var accordionHtml = '';
         $.each(notes, function (i, note) {
-            accordionHtml += '<div class="accordion-item" id="accordionItem-' + note.noteId + '">';
+            accordionHtml += '<div class="accordion-item note-main-bg" id="accordionItem-' + note.noteId + '">';
             accordionHtml += '  <div class="accordion-header" id="accordionHeader-' + note.noteId + '">';
             accordionHtml += '    <div class="accordion-header-content">';
-            accordionHtml += '      <h3>' + note.noteName + ' <span style="font-size: 0.8rem; color: #999;">(' + note.dateOfNote + ') - Priority: ' + note.notePriority + '</span></h3>';
-            accordionHtml += '      <div class="accordion-header-buttons">';
-            accordionHtml += '        <button class="btn btn-sm btn-edit-note" data-id="' + note.noteId + '" data-name="' + note.noteName + '" data-date="' + note.dateOfNote + '" data-priority="' + note.notePriority + '">Edit</button>';
-            accordionHtml += '        <button class="btn btn-sm btn-delete-note" data-id="' + note.noteId + '">Delete</button>';
+            // Edit/Delete icons at start
+            accordionHtml += '      <div class="accordion-header-buttons note-action-icons">';
+            accordionHtml += '        <button class="icon-btn btn-edit-note" title="Edit" data-id="' + note.noteId + '" data-name="' + note.noteName + '" data-date="' + note.dateOfNote + '" data-priority="' + note.notePriority + '"><i class="fa fa-pencil-alt"></i></button>';
+            accordionHtml += '        <button class="icon-btn btn-delete-note" title="Delete" data-id="' + note.noteId + '"><i class="fa fa-trash"></i></button>';
             accordionHtml += '      </div>';
+            // Note text and priority
+            accordionHtml += '      <h3 class="note-title">' + note.noteName + ' <span class="note-date">(' + note.dateOfNote + ')</span> <span class="note-priority">Priority: ' + note.notePriority + '</span></h3>';
             accordionHtml += '    </div>';
             accordionHtml += '    <span class="accordion-toggle">▼</span>';
             accordionHtml += '  </div>';
@@ -91,27 +93,18 @@
             accordionHtml += '      <div class="subnote-input-section">';
             accordionHtml += '        <div class="row g-3">';
             accordionHtml += '          <div class="col-md-5">';
-            accordionHtml += '            <input type="text" class="form-control form-control-sm txt-subnote-name" placeholder="enter sub note" />';
+            accordionHtml += '            <input type="text" class="form-control form-control-sm txt-subnote-name" placeholder="enter sub note" style="font-size:13px;" />';
             accordionHtml += '          </div>';
             accordionHtml += '          <div class="col-md-3">';
-            accordionHtml += '            <input type="date" class="form-control form-control-sm txt-subnote-date" />';
+            accordionHtml += '            <input type="date" class="form-control form-control-sm txt-subnote-date" style="font-size:13px;" />';
             accordionHtml += '          </div>';
             accordionHtml += '          <div class="col-md-2">';
-            accordionHtml += '            <button class="btn btn-add btn-sm btn-add-subnote w-100" data-note-id="' + note.noteId + '">Add SubNote</button>';
+            accordionHtml += '            <button class="btn btn-add btn-sm btn-add-subnote w-100 subnote-action-btn" data-note-id="' + note.noteId + '">Add SubNote</button>';
             accordionHtml += '          </div>';
             accordionHtml += '        </div>';
             accordionHtml += '      </div>';
             accordionHtml += '      <div class="subnote-grid-section">';
-            accordionHtml += '        <table class="subnote-table subnote-table-' + note.noteId + '">';
-            //accordionHtml += '          <thead>';
-            //accordionHtml += '            <tr>';
-            //accordionHtml += '              <th>SubNote</th>';
-            //accordionHtml += '              <th>Date</th>';
-            //accordionHtml += '              <th>Action</th>';
-            //accordionHtml += '            </tr>';
-            //accordionHtml += '          </thead>';
-            accordionHtml += '          <tbody class="subnote-tbody-' + note.noteId + '"></tbody>';
-            accordionHtml += '        </table>';
+            accordionHtml += '        <table class="subnote-table subnote-table-' + note.noteId + '"><tbody class="subnote-tbody-' + note.noteId + '"></tbody></table>';
             accordionHtml += '      </div>';
             accordionHtml += '    </div>';
             accordionHtml += '  </div>';
@@ -156,12 +149,12 @@
             if (res.success) {
                 var html = '';
                 $.each(res.data, function (i, subNote) {
-                    html += '<tr>';
+                    html += '<tr style="font-size:13px;background-color:#cddc39;">';
                     html += '<td>' + subNote.subNoteName + '</td>';
                     html += '<td>' + subNote.dateOfSubNote + '</td>';
                     html += '<td>';
-                    html += '<button class="btn btn-sm btn-edit-subnote" data-id="' + subNote.subNoteId + '" data-name="' + subNote.subNoteName + '" data-date="' + subNote.dateOfSubNote + '" data-note-id="' + noteId + '">Edit</button> ';
-                    html += '<button class="btn btn-sm btn-delete-subnote" data-id="' + subNote.subNoteId + '" data-note-id="' + noteId + '">Delete</button>';
+                    html += '<button class="icon-btn subnote-icon-btn btn-edit-subnote" title="Edit" data-id="' + subNote.subNoteId + '" data-name="' + subNote.subNoteName + '" data-date="' + subNote.dateOfSubNote + '" data-note-id="' + noteId + '"><i class="fa fa-pencil-alt"></i></button> ';
+                    html += '<button class="icon-btn subnote-icon-btn btn-delete-subnote" title="Delete" data-id="' + subNote.subNoteId + '" data-note-id="' + noteId + '"><i class="fa fa-trash"></i></button>';
                     html += '</td>';
                     html += '</tr>';
                 });

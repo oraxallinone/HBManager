@@ -72,19 +72,72 @@
     background-color: #c8c8c8;
 }
 
-/* Note Grid Section */
-.note-grid-section {
-    margin-bottom: 30px;
+/* Note Main Background (different from subnote) */
+.note-main-bg {
+    background-color: #f3f7ff !important;
+    border: 1.5px solid #b3d1ff;
 }
 
-.note-section {
-    background-color: #e8e8e8;
-    padding: 8px 15px;
-    font-size: 0.85rem;
+.note-title {
+    font-size: 13px !important;
     font-weight: 600;
-    color: #333;
-    margin-bottom: 10px;
-    border-radius: 2px;
+    color: #222;
+    margin: 0;
+}
+.note-date {
+    color: #888;
+    font-size: 12px;
+}
+.note-priority {
+    background: #ffe066;
+    color: #b36b00;
+    font-weight: bold;
+    border-radius: 4px;
+    padding: 2px 8px;
+    margin-left: 8px;
+    font-size: 13px;
+    box-shadow: 0 1px 2px #ffe06644;
+}
+/* Action icons for notes */
+.note-action-icons {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    margin-right: 10px;
+}
+.icon-btn {
+    background: none;
+    border: none;
+    color: #1976d2;
+    font-size: 15px;
+    padding: 2px 6px;
+    margin: 0 2px;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: background 0.2s;
+}
+.icon-btn:hover {
+    background: #e3f2fd;
+    color: #0d47a1;
+}
+/* Subnote icon buttons smaller */
+.subnote-icon-btn {
+    font-size: 12px !important;
+    padding: 1px 4px !important;
+    color: #666 !important;
+}
+.subnote-icon-btn:hover {
+    background: #f8e1e1 !important;
+    color: #c00 !important;
+}
+/* Subnote add button smaller */
+.subnote-action-btn {
+    font-size: 12px !important;
+    padding: 3px 10px !important;
+}
+/* Subnote font size */
+.subnote-table td, .subnote-table th {
+    font-size: 13px !important;
 }
 
 /* SubNote Accordion */
@@ -100,7 +153,7 @@
 }
 
 .accordion-header {
-    background-color: #f8f9fa;
+    background-color: #8cadc7;
     padding: 15px 20px;
     cursor: pointer;
     display: flex;
@@ -141,11 +194,11 @@
 }
 
 .accordion-header:hover {
-    background-color: #e9ecef;
+    background-color: #79c6be;
 }
 
 .accordion-header.active {
-    background-color: #e3f2fd;
+    background-color: #c79d77;
     border-bottom-color: #2196F3;
 }
 

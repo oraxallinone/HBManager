@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AdminTemp.Models
+namespace HBManager.Models
 {
     public class Group3
     {

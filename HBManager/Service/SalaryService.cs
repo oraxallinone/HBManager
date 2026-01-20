@@ -1,11 +1,11 @@
-﻿using AdminTemp.Models;
+﻿using HBManager.Models;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 
-namespace AdminTemp.Service
+namespace HBManager.Service
 {
     public class SalaryService
     {
@@ -112,9 +112,36 @@ namespace AdminTemp.Service
             }
         }
 
+        //private SalaryMaster Map(IDataRecord r)
+        //{
+        //    return new SalaryMaster
+        //    {
+        //        Id = Convert.ToInt32(r["Id"]),
+        //        MonthName = r["MonthName"] == DBNull.Value ? null : r["MonthName"].ToString(),
+        //        YearName = r["YearName"] == DBNull.Value ? null : r["YearName"].ToString(),
+        //        SalaryAmount = r["SalaryAmount"] == DBNull.Value ? (decimal?)null : Convert.ToDecimal(r["SalaryAmount"]),
+        //        Need50 = r["Need50"] == DBNull.Value ? (decimal?)null : Convert.ToDecimal(r["Need50"]),
+        //        Save20 = r["Save20"] == DBNull.Value ? (decimal?)null : Convert.ToDecimal(r["Save20"]),
+        //        Want30 = r["Want30"] == DBNull.Value ? (decimal?)null : Convert.ToDecimal(r["Want30"]),
+        //        FromData = r["FromData"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(r["FromData"]),
+        //        ToDate = r["ToDate"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(r["ToDate"]),
+        //        OrderRowAll = r["OrderRowAll"] == DBNull.Value ? (int?)null : Convert.ToInt32(r["OrderRowAll"]),
+        //        OrderRowYear = r["OrderRowYear"] == DBNull.Value ? (int?)null : Convert.ToInt32(r["OrderRowYear"]),
+        //        SalaryTillNow = r["SalaryTillNow"] == DBNull.Value ? (decimal?)null : Convert.ToDecimal(r["SalaryTillNow"]),
+        //    };
+        //}
+        private bool HasColumn(IDataRecord r, string columnName)
+        {
+            for (int i = 0; i < r.FieldCount; i++)
+            {
+                if (r.GetName(i).Equals(columnName, StringComparison.OrdinalIgnoreCase))
+                    return true;
+            }
+            return false;
+        }
         private SalaryMaster Map(IDataRecord r)
         {
-            return new SalaryMaster
+            var model = new SalaryMaster
             {
                 Id = Convert.ToInt32(r["Id"]),
                 MonthName = r["MonthName"] == DBNull.Value ? null : r["MonthName"].ToString(),
@@ -126,10 +153,17 @@ namespace AdminTemp.Service
                 FromData = r["FromData"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(r["FromData"]),
                 ToDate = r["ToDate"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(r["ToDate"]),
                 OrderRowAll = r["OrderRowAll"] == DBNull.Value ? (int?)null : Convert.ToInt32(r["OrderRowAll"]),
-                OrderRowYear = r["OrderRowYear"] == DBNull.Value ? (int?)null : Convert.ToInt32(r["OrderRowYear"]),
-                SalaryTillNow = r["SalaryTillNow"] == DBNull.Value ? (decimal?)null : Convert.ToDecimal(r["SalaryTillNow"]),
+                OrderRowYear = r["OrderRowYear"] == DBNull.Value ? (int?)null : Convert.ToInt32(r["OrderRowYear"])
             };
+
+            if (HasColumn(r, "SalaryTillNow") && r["SalaryTillNow"] != DBNull.Value)
+            {
+                model.SalaryTillNow = Convert.ToDecimal(r["SalaryTillNow"]);
+            }
+
+            return model;
         }
+
 
         public List<SalaryMaster> GetSalaryByMonthYearService(int monthName, int yearName)
         {

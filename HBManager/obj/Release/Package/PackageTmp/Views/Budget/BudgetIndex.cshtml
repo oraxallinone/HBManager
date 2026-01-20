@@ -1,0 +1,215 @@
+﻿@*|| budget-index.css || budget.js ||*@
+@{
+    ViewBag.Title = "BudgetIndex";
+    Layout = "~/Views/Shared/_WebLayout.cshtml";
+}
+
+<link href="~/Content/budget-index.css" rel="stylesheet" />
+<div class="app-content">
+    <div class="container-fluid">
+        <div class="row g-4">
+
+            <div class="col-md-12">
+                <div class="card card-primary card-outline mb-4">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-1">
+                                <div class="floating-label-group">
+                                    <select class="form-control form-control-sm" id="ddlYear">
+                                        <option value="0">--Year--</option>
+                                        <option value="2025">2025</option>
+                                        <option value="2026">2026</option>
+                                        <option value="2027">2027</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="floating-label-group">
+                                    <select class="form-control form-control-sm" id="ddlMonth">
+                                        <option value="0">--Month--</option>
+                                        <option value="1">January</option>
+                                        <option value="2">February</option>
+                                        <option value="3">March</option>
+                                        <option value="4">April</option>
+                                        <option value="5">May</option>
+                                        <option value="6">June</option>
+                                        <option value="7">July</option>
+                                        <option value="8">August</option>
+                                        <option value="9">September</option>
+                                        <option value="10">October</option>
+                                        <option value="11">November</option>
+                                        <option value="12">December</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-1">
+                                @*<div class="floating-label-group">
+                                        <select class="form-control form-control-sm" id="searchDDlG11">
+                                            <option value="0">-- G1 --</option>
+                                            <option>2025</option>
+                                            <option>2026</option>
+                                        </select>
+                                    </div>*@
+                            </div>
+
+                            <div class="col-md-2">
+                                @*<div class="floating-label-group">
+                                        <select id="searchDDlG21" class="form-control form-control-sm">
+                                            <option value="0">-- G2 --</option>
+                                            <option>2025</option>
+                                            <option>2026</option>
+                                        </select>
+                                    </div>*@
+                            </div>
+                            <div class="col-md-2">
+                                @*<div class="floating-label-group">
+                                        <select id="searchDDlG31" class="form-control form-control-sm">
+                                            <option value="0">-- G3 --</option>
+                                            <option>2025</option>
+                                            <option>2026</option>
+                                        </select>
+                                    </div>*@
+                            </div>
+                            <div class="col-md-2">
+                                @*<div class="floating-label-group">
+                                        <select id="searchDDlG41" class="form-control form-control-sm">
+                                            <option value="0">-- G4 --</option>
+                                            <option>2025</option>
+                                            <option>2026</option>
+                                        </select>
+                                    </div>*@
+                            </div>
+
+
+
+                            <div class="col-md-2">
+                                <div class="row g-1">
+                                    <!-- section salary -->
+                                    <div class="col-12">
+                                        <div class="p-0 border rounded section-salary-div">
+                                            <table style="width:100%" id="tblSalarySummary">
+                                                <tr>
+                                                    <td id="tdSalary">114576</td>
+                                                    <td> - </td>
+                                                    <td id="tdSpending"> 34300 </td>
+                                                    <td> = </td>
+                                                    <td id="tdRemain"> 76700 </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                        <div class="row">
+
+                        </div>
+
+                        <div class="div-responsive">
+                            <table id="gridTableBudget" class="custom-tbl-common">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>#</th>
+                                        <th>#</th>
+                                        <th>#</th>
+                                        <th>Amt</th>
+                                        <th>Details</th>
+                                        <th>G1</th>
+                                        <th>G2</th>
+                                        <th>G3</th>
+                                        <th>G4</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @*<tr> <td class="bg-main-day-sun">9 Nov (Sun)</td> <td><span>9801</span></td> <td><span>209</span></td> <td class="bg-sun-day"> <input id="eee" type="checkbox" /> </td> <td class="bg-sun-day">17450</td> <td class="bg-sun-day">&nbsp; House rent</td> <td class="bg-sun-day">H Rent</td> <td class="bg-sun-day"><div class="div-g2-c2">Essential Spend.</div></td> <td class="bg-sun-day">H Rent Blr</td> <td class="bg-sun-day"><div style="box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23); background: #fff; display: inline-block; position: relative; width: 100%; background-color: #9C27B0; color: white; border-radius: 21px 0px 21px 0px;">Repeat</div></td> </tr> <tr> <td class="bg-main-day-mon">10 Nov (Mon)</td> <td><span>9801</span></td> <td><span>209</span></td> <td class="bg-sun-day"> <input id="eee" type="checkbox" /> </td> <td class="bg-mon-day">130</td> <td class="bg-mon-day">&nbsp; Ice Cream</td> <td class="bg-mon-day">Food</td> <td class="bg-mon-day">Need</td> <td class="bg-mon-day">LIC</td> <td class="bg-mon-day">Repeat</td> </tr> <tr> <td class="bg-main-day-tue">11 Nov (Tue)</td> <td><span>9801</span></td> <td><span>209</span></td> <td class="bg-sun-day"> <input id="eee" type="checkbox" /> </td> <td class="bg-tue-day">130</td> <td class="bg-tue-day">&nbsp; Ice Cream</td> <td class="bg-tue-day">Food</td> <td class="bg-tue-day">Need</td> <td class="bg-tue-day">LIC</td> <td class="bg-tue-day">Repeat</td> </tr> <tr> <td class="bg-main-day-wed">12 Nov (Wed)</td> <td><span>9801</span></td> <td><span>209</span></td> <td class="bg-sun-day"> <input id="eee" type="checkbox" /> </td> <td class="bg-wed-day">17450</td> <td class="bg-wed-day">&nbsp; Ice Cream</td> <td class="bg-wed-day"> <div style="text-align: center; border-radius: 37px; background: #c0b120; box-shadow: 2px 2px 2px -1px red;">Food</div> </td> <td class="bg-wed-day"><div style="text-align: center; border-radius: 21px 0px 21px 0px; background: #c37706; box-shadow: 2px 2px 2px -1px #FF9800; color: white;">Essential Spend.</div></td> <td class="bg-wed-day">LIC</td> <td class="bg-wed-day">Repeat</td> </tr> <tr> <td class="bg-main-day-thu">13 Nov (Thu)</td> <td><span>9801</span></td> <td><span>209</span></td> <td class="bg-sun-day"> <input id="eee" type="checkbox" /> </td> <td class="bg-thu-day">30</td> <td class="bg-thu-day">&nbsp; Ice Cream</td> <td class="bg-thu-day">Food</td> <td class="bg-thu-day"><div style="text-align: center; border-radius: 21px 0px 21px 0px; background: #44880e; box-shadow: -2px -2px 0px 0px #4CAF50; color: #ffffff;">Savings / Invest.</div></td> <td class="bg-thu-day">LIC</td> <td class="bg-thu-day">Repeat</td> </tr> <tr> <td class="bg-main-day-fri">14 Nov (Fri)</td> <td><span>9801</span></td> <td><span>209</span></td> <td class="bg-sun-day"> <input id="eee" type="checkbox" /> </td> <td style="text-align:right;" class="bg-fri-day">560</td> <td class="bg-fri-day">&nbsp; Ice Cream</td> <td class="bg-fri-day">Food</td> <td class="bg-fri-day"><div style="text-align: center; border-radius: 21px 0px 21px 0px; background: #2196F3; box-shadow: -2px -2px 0px 0px #2196f34f; color: white; font-weight: 600;">Lifestyle / luxury</div></td> <td class="bg-fri-day">LIC</td> <td class="bg-fri-day">Repeat</td> </tr> <tr> <td class="bg-main-day-sat">15 Nov (Sat)</td> <td><span>9801</span></td> <td><span>209</span></td> <td class="bg-sun-day"> <input id="eee" type="checkbox" /> </td> <td class="bg-sat-day">130</td> <td class="bg-sat-day">&nbsp; Ice Cream</td> <td class="bg-sat-day">Food</td> <td class="bg-sat-day">Need</td> <td class="bg-sat-day">LIC</td> <td class="bg-sat-day">Repeat</td> </tr>*@
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card-footer" style="text-align:right">
+                        <div class="row">
+                            <!-- Section 1 fixed for all-->
+                            <div class="col-md-6">
+                                <div class="row g-1">
+
+                                    <div class="col-12">
+                                        <div class="p-0 border rounded " style="color: white; font-weight: 900;background-color:#0761a5c7 !important">
+                                            <table>
+                                                <tr>
+                                                    <td> &nbsp; &nbsp;</td>
+                                                    <td>Need :</td>
+                                                    <td id="tdNeedSalary">50,000</td>
+                                                    <td>-</td>
+                                                    <td id="tdNeedSpending">300</td>
+                                                    <td>=</td>
+                                                    <td id="tdNeedRemain">700</td>
+                                                    <td> &nbsp; &nbsp;|&nbsp; &nbsp; </td>
+
+                                                    <td>Save :</td>
+                                                    <td id="tdSaveSalary">20,000</td>
+                                                    <td>-</td>
+                                                    <td id="tdSaveSpending">300</td>
+                                                    <td>=</td>
+                                                    <td id="tdSaveRemain">700</td>
+                                                    <td> &nbsp; &nbsp;| &nbsp; &nbsp;</td>
+
+                                                    <td>Want :</td>
+                                                    <td id="tdWantSalary">30,000</td>
+                                                    <td>-</td>
+                                                    <td id="tdWantSpending">300</td>
+                                                    <td>=</td>
+                                                    <td id="tdWantRemain">700</td>
+                                                </tr>
+
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <!-- Section 2 for ddl chagne idividual-->
+                            <div class="col-md-6 ">
+                                <div class="row g-1">
+
+                                    <div class="col-12">
+                                        <div class="p-0 border rounded " style="color: white; font-weight: 900;background-color:#0761a5c7 !important">
+                                            <table>
+                                                <tr>
+                                                    <td> &nbsp; &nbsp;</td>
+                                                    <td>Group Name :</td>
+                                                    <td>1,000</td>
+                                                    <td>-</td>
+                                                    <td>300</td>
+                                                    <td>=</td>
+                                                    <td>700</td>
+
+                                                    <td> &nbsp; &nbsp;|&nbsp; &nbsp;</td>
+                                                    <td>Group Name :</td>
+                                                    <td>5,687</td>
+                                                </tr>
+
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+</div>
+
+<script src="~/Scripts/budget.js"></script>
+

@@ -1,0 +1,151 @@
+﻿@*|| budget-grouping-index.css || budgetGrouping.js ||*@
+@{
+    ViewBag.Title = "BudgetGroupingIndex";
+    Layout = "~/Views/Shared/_WebLayout.cshtml";
+}
+
+<link href="~/Content/budget-grouping-index.css" rel="stylesheet" />
+
+<div class="app-content">
+    <div class="container-fluid">
+        <div class="row g-4">
+
+            <div class="col-md-12">
+                <div class="card card-primary card-outline mb-4">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-1">
+                                <div class="floating-label-group">
+                                    <select class="form-control form-control-sm" id="ddlYear">
+                                        <option value="0">--Year--</option>
+                                        <option value="2024">2024</option>
+                                        <option value="2025">2025</option>
+                                        <option value="2026">2026</option>
+                                        <option value="2027">2027</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="floating-label-group">
+                                    <select class="form-control form-control-sm" id="ddlMonth">
+                                        <option value="0">--Month--</option>
+                                        <option value="1">January</option>
+                                        <option value="2">February</option>
+                                        <option value="3">March</option>
+                                        <option value="4">April</option>
+                                        <option value="5">May</option>
+                                        <option value="6">June</option>
+                                        <option value="7">July</option>
+                                        <option value="8">August</option>
+                                        <option value="9">September</option>
+                                        <option value="10">October</option>
+                                        <option value="11">November</option>
+                                        <option value="12">December</option>
+                                    </select>
+                                </div>
+                            </div>
+
+
+                            <div class="col-md-2">
+                                <div class="floating-label-group">
+                                    <input type="date" class="form-control form-control-sm" id="txtDate" placeholder="" />
+                                    <label for="txtDate">Date</label>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="floating-label-group">
+                                    <input type="text" class="form-control form-control-sm only-numeric" id="txtAmt" placeholder="" />
+                                    <label for="txtAmt">Amt</label>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="floating-label-group">
+                                    <input type="text" class="form-control form-control-sm" id="txtDetails" placeholder="" />
+                                    <label for="txtDetails">Details</label>
+                                </div>
+                            </div>
+                            <div class="col-md-2" style="text-align:right">
+                                <button id="btnSaveBudget" class="btn btn-sm btn-info wd-btn" style="width:100%" type="button">Save</button>
+                                <input id="hidenBudgetID" type="hidden" />
+                            </div>
+                            <div class="col-md-2">
+                            </div>
+
+                        </div>
+                        <div class="row" style="height: 27px;background-color:#97bad3">
+                            <div class="col-md-8">
+                                <div id="divDDLSingle">
+                                    <select class="ddl-group" id="ddlUpdateG1">
+                                        <option>--- G1 ---</option>
+                                    </select>
+                                    <select class="ddl-group" id="ddlUpdateG2">
+                                        <option>--- G2 ---</option>
+                                    </select>
+                                    <select class="ddl-group" id="ddlUpdateG3">
+                                        <option>--- G3 ---</option>
+                                    </select>
+                                    <select class="ddl-group" id="ddlUpdateG4">
+                                        <option>--- G4 ---</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <button id="btnUpdateBudgetGroupSingle" class="btn-update-single" type="button">Update Single</button>
+                                <span id="spanTotal">0</span> || <span id="spanTotalSave">0</span> || <span id="spanTotalSpend">0</span>
+                            </div>
+                        </div>
+
+                        <div class="div-responsive">
+                            <table id="gridTableBudget" class="custom-tbl-common" border="1">
+                                <thead>
+                                    <tr>
+                                        <th style="">Action</th>
+                                        <th style="">Date</th>
+                                        <th style="">Amt</th>
+                                        <th style=""></th>
+                                        <th style="">Details</th>
+                                        <th style="">G1</th>
+                                        <th style="">G2</th>
+                                        <th style="">G3</th>
+                                        <th style="">G4</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @*<tr> <td class="bg-sun-day"> <a href="#"> <i class="fa-solid fa-eye text-success"></i></a> <span class="bar-padding">|</span> <a href="#"> <i class="fa-regular fa-trash-can text-danger"></i></a> </td> <td class="bg-main-day-Sun">9 Nov (Sun)</td> <td class="bg-sun-day">17450</td> <td class="bg-sun-day"> <input id="eee" type="checkbox" />  </td> <td class="bg-sun-day"> House rent</td> <td class="bg-sun-day">H Rent</td> <td class="bg-sun-day"><div class="div-g2-c2">Essential Spend.</div></td> <td class="bg-sun-day">H Rent Blr</td> <td class="bg-sun-day"><div class="div-g4-c5">Repeat</div></td> </tr> <tr> <td class="bg-mon-day"> <a href="#"> <i class="fa-solid fa-eye text-success"></i></a> <span class="bar-padding">|</span> <a href="#"> <i class="fa-regular fa-trash-can text-danger"></i></a> </td> <td style="background:#c0c0c0;">10 Nov (Mon)</td> <td class="bg-mon-day">130</td> <td class="bg-mon-day"> <input id="eee" type="checkbox" />  </td> <td class="bg-mon-day"> Ice Cream</td> <td class="bg-mon-day">Food</td> <td class="bg-mon-day">Need</td> <td class="bg-mon-day">LIC</td> <td class="bg-mon-day">Repeat</td> </tr> <tr> <td class="bg-tue-day"> <a href="#"> <i class="fa-solid fa-eye text-success"></i></a> <span class="bar-padding">|</span> <a href="#"> <i class="fa-regular fa-trash-can text-danger"></i></a> </td> <td style="background:#ffc0cb;">11 Nov (Tue)</td> <td class="bg-tue-day">130</td> <td class="bg-tue-day"> <input id="eee" type="checkbox" />  </td> <td class="bg-tue-day"> Ice Cream</td> <td class="bg-tue-day">Food</td> <td class="bg-tue-day">Need</td> <td class="bg-tue-day">LIC</td> <td class="bg-tue-day">Repeat</td> </tr> <tr> <td class="bg-wed-day"> <a href="#"> <i class="fa-solid fa-eye text-success"></i></a> <span class="bar-padding">|</span> <a href="#"> <i class="fa-regular fa-trash-can text-danger"></i></a> </td> <td style="background:#008000;color:white;">12 Nov (Wed)</td> <td class="bg-wed-day">17450</td> <td class="bg-wed-day"> <input id="eee" type="checkbox" />  </td> <td class="bg-wed-day"> Ice Cream</td> <td class="bg-wed-day"> <div class="div-g1-c7">Food</div> </td> <td class="bg-wed-day"><div style="">Essential Spend.</div></td> <td class="bg-wed-day">LIC</td> <td class="bg-wed-day">Repeat</td> </tr> <tr> <td class="bg-thu-day"> <a href="#"> <i class="fa-solid fa-eye text-success"></i></a> <span class="bar-padding">|</span> <a href="#"> <i class="fa-regular fa-trash-can text-danger"></i></a> </td> <td style="background:#ffd700;">13 Nov (Thu)</td> <td class="bg-thu-day">30</td> <td class="bg-thu-day"> <input id="eee" type="checkbox" />  </td> <td class="bg-thu-day"> Ice Cream</td> <td class="bg-thu-day">Food</td> <td class="bg-thu-day"><div style="">Savings / Invest.</div></td> <td class="bg-thu-day">LIC</td> <td class="bg-thu-day">Repeat</td> </tr> <tr> <td class="bg-fri-day"> <a href="#"> <i class="fa-solid fa-eye text-success"></i></a> <span class="bar-padding">|</span> <a href="#"> <i class="fa-regular fa-trash-can text-danger"></i></a> </td> <td style="background:#add8e6;">14 Nov (Fri)</td> <td style="text-align:right;" class="bg-fri-day">560</td> <td class="bg-fri-day"> <input id="eee" type="checkbox" />  </td> <td class="bg-fri-day"> Ice Cream</td> <td class="bg-fri-day">Food</td> <td class="bg-fri-day"><div style="">Lifestyle / luxury</div></td> <td class="bg-fri-day">LIC</td> <td class="bg-fri-day">Repeat</td> </tr> <tr> <td class="bg-sat-day"> <a href="#"> <i class="fa-solid fa-eye text-success"></i></a> <span class="bar-padding">|</span> <a href="#"> <i class="fa-regular fa-trash-can text-danger"></i></a> </td> <td style="background:#000000;color:white;">15 Nov (Sat)</td> <td class="bg-sat-day">130</td> <td class="bg-sat-day"> <input id="eee" type="checkbox" /> </td> <td class="bg-sat-day"> Ice Cream</td> <td class="bg-sat-day">Food</td> <td class="bg-sat-day">Need</td> <td class="bg-sat-day">LIC</td> <td class="bg-sat-day">Repeat</td> </tr>*@
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card-footer" style="text-align:right;background-color: #1d68a075;">
+                        <div class="row" style="height: 27px;">
+                            <div class="col-md-6">
+                                <div id="divDDLMulti">
+                                    <select id="ddlUpdateG1Group" class="search-ddl-g-all">
+                                        <option value="0">-- G1 --</option>
+                                    </select>
+                                    <select id="ddlUpdateG2Group" class="search-ddl-g-all">
+                                        <option value="0">-- G2 --</option>
+                                    </select>
+                                    <select id="ddlUpdateG3Group" class="search-ddl-g-all">
+                                        <option value="0">-- G3 --</option>
+                                    </select>
+                                    <select id="ddlUpdateG4Group" class="search-ddl-g-all">
+                                        <option value="0">-- G4 --</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <button id="btnUpdateBudgetGroup" class="btn-update-group" type="button">Update Group</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+</div>
+<script src="~/Scripts/budgetGrouping.js"></script>
+

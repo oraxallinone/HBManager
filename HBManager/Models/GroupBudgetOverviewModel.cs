@@ -1,4 +1,4 @@
-﻿namespace AdminTemp.Models
+﻿namespace HBManager.Models
 {
     public class GroupBudgetOverviewModel
     {

@@ -1,0 +1,106 @@
+﻿@*|| group.css || group.js ||*@
+@{
+    ViewBag.Title = "GroupIndex";
+    Layout = "~/Views/Shared/_WebLayout.cshtml";
+}
+
+<link href="~/Content/group.css" rel="stylesheet" />
+
+
+<div class="app-content">
+    <div class="container-fluid">
+        <div class="row g-4">
+
+            <div class="col-md-12">
+                <div class="card card-primary card-outline mb-4">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-2">
+                                <div class="floating-label-group">
+                                    <input type="text" class="form-control form-control-sm" id="txtGroupName" placeholder="" />
+                                    <label for="txtGroupName">Group Name</label>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="floating-label-group">
+                                    <input type="text" class="form-control form-control-sm" id="txtGroupType" placeholder="" />
+                                    <label for="txtGroupType">Group Type</label>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="floating-label-group">
+                                    <input type="text" class="form-control form-control-sm" id="txtFixedAmt" placeholder="" />
+                                    <label for="txtFixedAmt">Fixed Amt</label>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="chkIsActive" />
+                                    <label class="form-check-label" for="chkIsActive"> Is Active </label>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="chkIsFixedAmt" />
+                                    <label class="form-check-label" for="chkIsFixedAmt"> Is FixedAmt </label>
+                                </div>
+                            </div>
+                            <div class="col-md-2" style="text-align:right">
+                                <button id="btnClearPage" class="btn btn-sm btn-outline-danger wd-btn" type="button">Clear</button>
+                                <button id="btnUpdateGroup" class="btn btn-sm btn-warning wd-btn" type="button">Update</button>
+                                <button id="btnSaveGroup" class="btn btn-sm btn-info wd-btn" type="button">Save</button>
+                                <input id="hidenGroupID" type="hidden" />
+                            </div>
+                        </div>
+
+
+                        <style>
+                            .table-responsive {
+                                max-height: 70vh;
+                                overflow: auto;
+                            }
+
+                                .table-responsive #gridTableGroup thead th {
+                                    position: sticky;
+                                    top: 0;
+                                    z-index: 5;
+                                    background: #ffffff;
+                                }
+
+                            /* ensure consistent column widths */
+                            #gridTableGroup {
+                                width: 100%;
+                                table-layout: fixed;
+                            }
+                        </style>
+
+                        <div class="table-responsive">
+                            <table id="gridTableGroup" class="table table-hover  custom-tbl">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 6%;">#</th>
+                                        <th>Group Name</th>
+                                        <th>Group Type</th>
+                                        <th>IsActive</th>
+                                        <th>IsFixed</th>
+                                        <th>Fixed Amt</th>
+                                        <th class="no-filter" style="width: 105px">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card-footer" style="text-align:right">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<script src="~/Scripts/group.js"></script>
+
+

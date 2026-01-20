@@ -157,9 +157,18 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Model1.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Controllers\BirthdayController.cs" />
+    <Compile Include="Controllers\BudgetController.cs" />
+    <Compile Include="Controllers\BudgetGroupingController.cs" />
+    <Compile Include="Controllers\BudgetOverviewController.cs" />
+    <Compile Include="Controllers\CalenderController.cs" />
     <Compile Include="Controllers\DefaultController.cs" />
+    <Compile Include="Controllers\GroupController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="Controllers\NotesController.cs" />
+    <Compile Include="Controllers\SalaryController.cs" />
+    <Compile Include="Controllers\UploadController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -359,6 +368,17 @@
     <Content Include="Views\Shared\_WebLayout.cshtml" />
     <Content Include="Views\Default\Dashboard.cshtml" />
     <Content Include="Views\Shared\_GstLayout.cshtml" />
+    <Content Include="Views\Default\BarChart.cshtml" />
+    <Content Include="Views\Birthday\BirthdayIndex.cshtml" />
+    <Content Include="Views\Birthday\ShowBirthday.cshtml" />
+    <Content Include="Views\Budget\BudgetIndex.cshtml" />
+    <Content Include="Views\BudgetGrouping\BudgetGroupingIndex.cshtml" />
+    <Content Include="Views\BudgetOverview\GroupBudgetOverview.cshtml" />
+    <Content Include="Views\Calender\CalenderIndex.cshtml" />
+    <Content Include="Views\Group\GroupIndex.cshtml" />
+    <Content Include="Views\Notes\NoteIndex.cshtml" />
+    <Content Include="Views\Salary\SalaryIndex.cshtml" />
+    <Content Include="Views\Upload\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

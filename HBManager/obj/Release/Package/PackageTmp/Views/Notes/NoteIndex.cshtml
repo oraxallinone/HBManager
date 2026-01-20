@@ -1,0 +1,44 @@
+﻿
+@{
+    ViewBag.Title = "NoteIndex";
+    Layout = "~/Views/Shared/_WebLayout.cshtml";
+}
+
+<link href="~/Content/notes.css" rel="stylesheet" />
+
+<div class="app-content">
+    <div class="container-fluid">
+        <div class="card card-primary card-outline mb-4">
+            <div class="card-body">
+                <!-- Main Note Input Section -->
+                <div class="note-input-section">
+                    <div class="row g-3">
+                        <div class="col-md-5">
+                            <input type="text" id="txtNoteName" class="form-control form-control-sm" placeholder="enter new note" />
+                        </div>
+                        <div class="col-md-3">
+                            <input type="date" id="txtNoteDate" class="form-control form-control-sm" />
+                        </div>
+                        <div class="col-md-1">
+                            <input type="text" id="txtNotePriority" class="form-control form-control-sm" placeholder="enter p" />
+                        </div>
+                        <div class="col-md-2">
+                            <button id="btnAddNote" class="btn btn-add btn-sm w-100 ">Add Note</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SubNote Accordion Panel -->
+                <div id="subNoteAccordion" class="subnote-accordion">
+                    <div id="accordionContainer"></div>
+                </div>
+
+                <!-- Hidden field for storing current note ID -->
+                <input type="hidden" id="hiddenNoteId" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/note.js"></script>
+

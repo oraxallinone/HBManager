@@ -6,7 +6,7 @@ using System.Configuration;
 using System.Linq;
 using System.Web;
 
-namespace AdminTemp.Service
+namespace HBManager.Service
 {
     public class NoteService
     {

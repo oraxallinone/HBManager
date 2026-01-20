@@ -1,0 +1,133 @@
+﻿@*|| salary.css || salary.js ||*@
+@{
+    ViewBag.Title = "SalaryIndex";
+    Layout = "~/Views/Shared/_WebLayout.cshtml";
+}
+
+<link href="~/Content/salary.css" rel="stylesheet" />
+
+<div class="app-content">
+    <div class="container-fluid">
+        <div class="row g-4">
+
+            <div class="col-md-12">
+                <div class="card card-primary card-outline mb-4">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12 col-sm-6 col-md-4 col-lg-2">
+                                <div class="floating-label-group">
+                                    <select class="form-control form-control-sm" id="txtMonthName">
+                                        <option value="0">--Month--</option>
+                                        <option value="1">January</option>
+                                        <option value="2">February</option>
+                                        <option value="3">March</option>
+                                        <option value="4">April</option>
+                                        <option value="5">May</option>
+                                        <option value="6">June</option>
+                                        <option value="7">July</option>
+                                        <option value="8">August</option>
+                                        <option value="9">September</option>
+                                        <option value="10">October</option>
+                                        <option value="11">November</option>
+                                        <option value="12">December</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6 col-md-4 col-lg-2">
+                                <div class="floating-label-group">
+                                    <input type="text" class="form-control form-control-sm" id="txtYearName" placeholder="" />
+                                    <label for="txtYearName">Year Name</label>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6 col-md-4 col-lg-2">
+                                <div class="floating-label-group">
+                                    <input type="text" class="form-control form-control-sm" id="txtSalaryAmount" placeholder="" />
+                                    <label for="txtSalaryAmount">Salary Amount</label>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6 col-md-4 col-lg-2">
+                                <div class="floating-label-group">
+                                    <input type="text" class="form-control form-control-sm" id="txtNeed50" placeholder="" />
+                                    <label for="txtNeed50">Need 50</label>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6 col-md-4 col-lg-2">
+                                <div class="floating-label-group">
+                                    <input type="text" class="form-control form-control-sm" id="txtSave20" placeholder="" />
+                                    <label for="txtSave20">Save 20</label>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6 col-md-4 col-lg-2">
+                                <div class="floating-label-group">
+                                    <input type="text" class="form-control form-control-sm" id="txtWant30" placeholder="" />
+                                    <label for="txtWant30">Want 30</label>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6 col-md-4 col-lg-2">
+                                <div class="floating-label-group">
+                                    <input type="date" class="form-control form-control-sm" id="txtFromData" placeholder="" />
+                                    <label for="txtFromData">From Data</label>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6 col-md-4 col-lg-2">
+                                <div class="floating-label-group">
+                                    <input type="date" class="form-control form-control-sm" id="txtToDate" placeholder="" />
+                                    <label for="txtToDate">To Date</label>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6 col-md-4 col-lg-2">
+                                <div class="floating-label-group">
+                                    <input type="text" class="form-control form-control-sm" id="txtOrderRowAll" placeholder="" />
+                                    <label for="txtOrderRowAll">Order Row All</label>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6 col-md-4 col-lg-2">
+                                <div class="floating-label-group">
+                                    <input type="text" class="form-control form-control-sm" id="txtOrderRowYear" placeholder="" />
+                                    <label for="txtOrderRowYear">Order Row Year</label>
+                                </div>
+                            </div>
+
+
+
+                            <div class="col-12 col-sm-6 col-md-4 col-lg-2" style="text-align:right">
+                                <button id="btnClearPage" class="btn btn-sm btn-outline-danger wd-btn" type="button">Clear</button>
+                                <button id="btnUpdateSalary" class="btn btn-sm btn-warning wd-btn" type="button">Update</button>
+                                <button id="btnSaveSalary" class="btn btn-sm btn-info wd-btn" type="button">Save</button>
+                                <input id="hidenSalaryID" type="hidden" />
+                            </div>
+                        </div>
+
+
+                        <div class="div-responsive">
+                            <table id="gridTableSalary" class="table table-hover  custom-tbl" style="text-align: right;">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 10px">#</th>
+                                        <th>Month Name</th>
+                                        <th>Year Name</th>
+                                        <th>Salary Amount</th>
+                                        <th>Need 50</th>
+                                        <th>Save 20</th>
+                                        <th>Want 30</th>
+                                        <th>From Data</th>
+                                        <th>To Date</th>
+                                        <th>Order Row All</th>
+                                        <th>+</th>
+                                        <th style="width: 105px">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card-footer" style="text-align:right">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/salary.js"></script>
+

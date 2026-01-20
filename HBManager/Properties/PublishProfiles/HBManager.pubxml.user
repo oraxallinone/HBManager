@@ -6,7 +6,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <TimeStampOfAssociatedLegacyPublishXmlFile />
-    <_PublishTargetUrl>D:\sync with git hub\After 2025 Oct 24\pb&amp;up&amp;dt__\combineMano_budget\publish\19jan2026_11</_PublishTargetUrl>
+    <_PublishTargetUrl>D:\sync with git hub\After 2025 Oct 24\pb&amp;up&amp;dt__\combineMano_budget\publish\19jan2026_12</_PublishTargetUrl>
   </PropertyGroup>
   <ItemGroup>
     <File Include="Areas/GstBill/Models/Model1.edmx.diagram">
@@ -34,7 +34,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>06/16/2024 20:47:02</publishTime>
     </File>
     <File Include="bin/HBManager.dll">
-      <publishTime>01/19/2026 21:24:02</publishTime>
+      <publishTime>01/19/2026 23:49:22</publishTime>
     </File>
     <File Include="bin/Microsoft.Web.Infrastructure.dll">
       <publishTime>04/23/2012 15:23:58</publishTime>
@@ -358,7 +358,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>01/19/2026 10:27:00</publishTime>
     </File>
     <File Include="Scripts/dashboard.js">
-      <publishTime>01/19/2026 14:58:00</publishTime>
+      <publishTime>01/19/2026 21:45:40</publishTime>
     </File>
     <File Include="Scripts/group.js">
       <publishTime>01/19/2026 14:57:59</publishTime>
@@ -462,8 +462,32 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     <File Include="Upload/_Finaance_8Jan.sql">
       <publishTime>01/19/2026 10:27:00</publishTime>
     </File>
+    <File Include="Views/Birthday/BirthdayIndex.cshtml">
+      <publishTime>01/19/2026 21:56:41</publishTime>
+    </File>
+    <File Include="Views/Birthday/ShowBirthday.cshtml">
+      <publishTime>01/19/2026 21:53:16</publishTime>
+    </File>
+    <File Include="Views/Budget/BudgetIndex.cshtml">
+      <publishTime>01/19/2026 22:03:58</publishTime>
+    </File>
+    <File Include="Views/BudgetGrouping/BudgetGroupingIndex.cshtml">
+      <publishTime>01/19/2026 22:16:13</publishTime>
+    </File>
+    <File Include="Views/BudgetOverview/GroupBudgetOverview.cshtml">
+      <publishTime>01/19/2026 22:50:05</publishTime>
+    </File>
+    <File Include="Views/Calender/CalenderIndex.cshtml">
+      <publishTime>01/19/2026 22:51:49</publishTime>
+    </File>
+    <File Include="Views/Default/BarChart.cshtml">
+      <publishTime>01/19/2026 21:39:08</publishTime>
+    </File>
     <File Include="Views/Default/Dashboard.cshtml">
-      <publishTime>01/19/2026 19:59:17</publishTime>
+      <publishTime>01/19/2026 21:40:58</publishTime>
+    </File>
+    <File Include="Views/Group/GroupIndex.cshtml">
+      <publishTime>01/19/2026 22:57:23</publishTime>
     </File>
     <File Include="Views/Home/About.cshtml">
       <publishTime>01/19/2026 18:46:45</publishTime>
@@ -476,6 +500,12 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     </File>
     <File Include="Views/Login/LoginIndex.cshtml">
       <publishTime>01/19/2026 19:36:18</publishTime>
+    </File>
+    <File Include="Views/Notes/NoteIndex.cshtml">
+      <publishTime>01/19/2026 23:00:55</publishTime>
+    </File>
+    <File Include="Views/Salary/SalaryIndex.cshtml">
+      <publishTime>01/19/2026 23:09:18</publishTime>
     </File>
     <File Include="Views/Shared/Error.cshtml">
       <publishTime>01/19/2026 18:46:45</publishTime>
@@ -490,7 +520,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>01/19/2026 19:34:28</publishTime>
     </File>
     <File Include="Views/Shared/_WebLayout.cshtml">
-      <publishTime>01/19/2026 20:04:50</publishTime>
+      <publishTime>01/19/2026 23:46:32</publishTime>
+    </File>
+    <File Include="Views/Upload/Index.cshtml">
+      <publishTime>01/19/2026 23:11:11</publishTime>
     </File>
     <File Include="Views/Web.config">
       <publishTime>01/19/2026 18:46:45</publishTime>

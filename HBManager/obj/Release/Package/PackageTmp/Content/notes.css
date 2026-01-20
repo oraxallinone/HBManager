@@ -85,7 +85,7 @@
     margin: 0;
 }
 .note-date {
-    color: #888;
+    color: #616162;
     font-size: 12px;
 }
 .note-priority {
@@ -316,130 +316,83 @@
 }
 
 /* Responsive Design */
-@media (max-width: 1200px) {
-    .note-input-section .row > div {
-        margin-bottom: 10px;
-    }
-    .note-title {
-        font-size: 12.5px !important;
-    }
-}
-
 @media (max-width: 1024px) {
-    .note-input-section .row > div {
-        margin-bottom: 10px;
-    }
-    .note-title {
-        font-size: 12px !important;
-    }
-    .accordion-header {
-        flex-direction: column;
-        align-items: flex-start;
-        padding: 10px 10px;
-    }
-    .accordion-header-content {
-        flex-direction: column;
-        gap: 8px;
-        width: 100%;
-    }
-    .note-action-icons {
-        margin-bottom: 4px;
-    }
-}
-
-@media (max-width: 900px) {
-    .note-input-section .row > div {
-        margin-bottom: 8px;
-    }
-    .note-title {
-        font-size: 11.5px !important;
-    }
-    .accordion-header {
-        padding: 8px 6px;
+    .subnote-slider {
+        width: 400px;
+        right: -400px;
     }
 }
 
 @media (max-width: 768px) {
-    .note-input-section .row > div {
-        margin-bottom: 8px;
-    }
-    .note-title {
-        font-size: 11px !important;
-    }
-    .accordion-header {
+    .input-row {
         flex-direction: column;
-        align-items: flex-start;
-        padding: 8px 4px;
+        gap: 10px;
     }
-    .accordion-header-content {
-        flex-direction: column;
-        gap: 6px;
+
+    .input-group {
+        min-width: 100%;
+    }
+
+    .btn-add {
         width: 100%;
     }
-    .note-action-icons {
-        margin-bottom: 4px;
-    }
-    .subnote-table td, .subnote-table th {
-        font-size: 11px !important;
-    }
-    .icon-btn, .subnote-icon-btn {
-        font-size: 11px !important;
-        padding: 2px 4px !important;
-    }
-    .subnote-action-btn {
-        font-size: 10px !important;
-        padding: 2px 6px !important;
-    }
-}
 
-@media (max-width: 600px) {
-    .note-input-section .row > div {
-        margin-bottom: 6px;
+    .subnote-slider {
+        width: 100%;
+        right: -100%;
     }
-    .note-title {
-        font-size: 10.5px !important;
+
+    .note-table,
+    .subnote-table {
+        font-size: 0.8rem;
     }
-    .accordion-header {
-        padding: 6px 2px;
+
+    .note-table thead th,
+    .note-table tbody td,
+    .subnote-table thead th,
+    .subnote-table tbody td {
+        padding: 8px 10px;
     }
-    .accordion-header-content {
-        gap: 4px;
-    }
-    .subnote-table td, .subnote-table th {
-        font-size: 10px !important;
-    }
-    .icon-btn, .subnote-icon-btn {
-        font-size: 10px !important;
-        padding: 1px 3px !important;
-    }
-    .subnote-action-btn {
-        font-size: 9px !important;
-        padding: 1px 4px !important;
+
+    .btn-expand,
+    .btn-edit-note,
+    .btn-delete-note,
+    .btn-edit-subnote,
+    .btn-delete-subnote {
+        padding: 3px 8px;
+        font-size: 0.7rem;
+        margin: 1px;
     }
 }
 
 @media (max-width: 480px) {
-    .note-input-section .row > div {
-        margin-bottom: 4px;
+    .input-group label {
+        font-size: 0.75rem;
     }
-    .note-title {
-        font-size: 10px !important;
+
+    .input-group .form-control {
+        font-size: 0.85rem;
+        padding: 6px 8px;
     }
-    .accordion-header {
-        padding: 4px 1px;
+
+    .note-table thead th,
+    .note-table tbody td {
+        padding: 6px 8px;
+        font-size: 0.75rem;
     }
-    .accordion-header-content {
-        gap: 2px;
+
+    .subnote-table thead th,
+    .subnote-table tbody td {
+        padding: 6px 8px;
+        font-size: 0.75rem;
     }
-    .subnote-table td, .subnote-table th {
-        font-size: 9px !important;
-    }
-    .icon-btn, .subnote-icon-btn {
-        font-size: 9px !important;
-        padding: 1px 2px !important;
-    }
-    .subnote-action-btn {
-        font-size: 8px !important;
-        padding: 1px 2px !important;
+
+    .btn-expand,
+    .btn-edit-note,
+    .btn-delete-note,
+    .btn-edit-subnote,
+    .btn-delete-subnote {
+        padding: 2px 6px;
+        font-size: 0.65rem;
     }
 }

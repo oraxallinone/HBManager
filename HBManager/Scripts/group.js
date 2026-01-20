@@ -7,6 +7,13 @@
     fnClearGroup();   // Reset form
     fnGetGroup();     // Load initial table
 
+    dmf();
+    function dmf() {
+        debugger
+        alert("Dimensions: " + $(window).width() + " × " + $(window).height());
+
+    }
+
 
     $("#btnSaveGroup").click(function () {
         if (!fnValidateGroup()) return;

@@ -1,8 +1,16 @@
-﻿$(function () {
+﻿$(document).ready(function () {
+    $('#searchDDlG1').hide();
+    $('#searchDDlG2').hide();
+    $('#searchDDlG3').hide();
+    $('#searchDDlG4').hide();
+
     var currentNoteId = 0;
     var currentNoteData = {};
     var editingNoteId = null;
     var editingSubNoteId = null;
+
+    $('#txtNoteDate').val(new Date().toISOString().split('T')[0]);
+    $('.txt-subnote-date').val(new Date().toISOString().split('T')[0]);
 
     // Load notes on page load
     loadNotes();
@@ -84,7 +92,7 @@
             accordionHtml += '        <button class="icon-btn btn-delete-note" title="Delete" data-id="' + note.noteId + '"><i class="fa fa-trash"></i></button>';
             accordionHtml += '      </div>';
             // Note text and priority
-            accordionHtml += '      <h3 class="note-title">' + note.noteName + ' <span class="note-date">(' + note.dateOfNote + ')</span> <span class="note-priority">Priority: ' + note.notePriority + '</span></h3>';
+            accordionHtml += '      <h3 class="note-title"> <span class="note-priority">Priority: ' + note.notePriority + '</span> <span class="note-date">(' + note.dateOfNote + ')</span>' + note.noteName + '</h3>';
             accordionHtml += '    </div>';
             accordionHtml += '    <span class="accordion-toggle">▼</span>';
             accordionHtml += '  </div>';
@@ -96,7 +104,7 @@
             accordionHtml += '            <input type="text" class="form-control form-control-sm txt-subnote-name" placeholder="enter sub note" style="font-size:13px;" />';
             accordionHtml += '          </div>';
             accordionHtml += '          <div class="col-md-3">';
-            accordionHtml += '            <input type="date" class="form-control form-control-sm txt-subnote-date" style="font-size:13px;" />';
+            accordionHtml += '            <input type="date" class="form-control form-control-sm txt-subnote-date" style="font-size:13px;" value="' + new Date().toISOString().split("T")[0] + '" />';
             accordionHtml += '          </div>';
             accordionHtml += '          <div class="col-md-2">';
             accordionHtml += '            <button class="btn btn-add btn-sm btn-add-subnote w-100 subnote-action-btn" data-note-id="' + note.noteId + '">Add SubNote</button>';

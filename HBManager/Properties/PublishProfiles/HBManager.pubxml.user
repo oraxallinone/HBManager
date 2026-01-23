@@ -6,20 +6,50 @@ by editing this MSBuild file. In order to learn more about this please visit htt
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <TimeStampOfAssociatedLegacyPublishXmlFile />
-    <_PublishTargetUrl>D:\sync with git hub\After 2025 Oct 24\pb&amp;up&amp;dt__\combineMano_budget\publish\ffff2</_PublishTargetUrl>
+    <_PublishTargetUrl>D:\sync with git hub\After 2025 Oct 24\pb&amp;up&amp;dt__\combineMano_budget\publish\24jan_1</_PublishTargetUrl>
   </PropertyGroup>
   <ItemGroup>
     <File Include="Areas/GstBill/Models/Model1.edmx.diagram">
       <publishTime>01/20/2026 23:46:57</publishTime>
     </File>
+    <File Include="Areas/GstBill/Views/Invoice/GstDraftList.cshtml">
+      <publishTime>01/23/2026 18:51:14</publishTime>
+    </File>
+    <File Include="Areas/GstBill/Views/Invoice/GstInvoiceCreate.cshtml">
+      <publishTime>01/23/2026 18:41:26</publishTime>
+    </File>
+    <File Include="Areas/GstBill/Views/Invoice/GstInvoiceList.cshtml">
+      <publishTime>01/23/2026 19:35:01</publishTime>
+    </File>
+    <File Include="Areas/GstBill/Views/Invoice/GstInvoicePrint.cshtml">
+      <publishTime>01/23/2026 22:06:52</publishTime>
+    </File>
     <File Include="Areas/GstBill/Views/Product/CustomerAdd.cshtml">
       <publishTime>01/20/2026 23:46:57</publishTime>
     </File>
+    <File Include="Areas/GstBill/Views/Product/CustomerEdit.cshtml">
+      <publishTime>01/23/2026 17:38:10</publishTime>
+    </File>
     <File Include="Areas/GstBill/Views/Product/CustomerList.cshtml">
-      <publishTime>01/20/2026 23:46:57</publishTime>
+      <publishTime>01/23/2026 17:51:02</publishTime>
+    </File>
+    <File Include="Areas/GstBill/Views/Product/CustomerView.cshtml">
+      <publishTime>01/23/2026 17:38:36</publishTime>
     </File>
     <File Include="Areas/GstBill/Views/Product/Index.cshtml">
       <publishTime>01/20/2026 23:46:57</publishTime>
+    </File>
+    <File Include="Areas/GstBill/Views/Product/ItemAdd.cshtml">
+      <publishTime>01/23/2026 17:51:49</publishTime>
+    </File>
+    <File Include="Areas/GstBill/Views/Product/ItemEdit.cshtml">
+      <publishTime>01/23/2026 17:53:29</publishTime>
+    </File>
+    <File Include="Areas/GstBill/Views/Product/ItemList.cshtml">
+      <publishTime>01/23/2026 17:51:49</publishTime>
+    </File>
+    <File Include="Areas/GstBill/Views/Product/ItemView.cshtml">
+      <publishTime>01/23/2026 17:51:49</publishTime>
     </File>
     <File Include="Areas/GstBill/Views/web.config">
       <publishTime>01/20/2026 23:46:57</publishTime>
@@ -34,10 +64,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>01/20/2026 23:46:58</publishTime>
     </File>
     <File Include="bin/HBManager.dll">
-      <publishTime>01/20/2026 23:48:41</publishTime>
+      <publishTime>01/24/2026 00:12:28</publishTime>
     </File>
     <File Include="bin/Microsoft.Web.Infrastructure.dll">
       <publishTime>01/20/2026 23:46:59</publishTime>
+    </File>
+    <File Include="bin/Newtonsoft.Json.dll">
+      <publishTime>03/18/2021 01:33:36</publishTime>
     </File>
     <File Include="bin/System.Web.Helpers.dll">
       <publishTime>01/20/2026 23:46:59</publishTime>
@@ -325,13 +358,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>01/20/2026 23:46:58</publishTime>
     </File>
     <File Include="packages.config">
-      <publishTime>01/20/2026 23:46:58</publishTime>
+      <publishTime>01/23/2026 17:47:10</publishTime>
     </File>
     <File Include="Scripts/application-js/common.js">
       <publishTime>01/20/2026 23:46:58</publishTime>
     </File>
     <File Include="Scripts/application-js/gst-invoice-create.js">
-      <publishTime>01/20/2026 23:46:58</publishTime>
+      <publishTime>01/23/2026 19:53:16</publishTime>
     </File>
     <File Include="Scripts/barchart.js">
       <publishTime>01/20/2026 23:46:58</publishTime>
@@ -412,7 +445,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>01/20/2026 23:46:58</publishTime>
     </File>
     <File Include="theme/customeCss.css">
-      <publishTime>01/20/2026 23:46:58</publishTime>
+      <publishTime>01/23/2026 20:04:06</publishTime>
     </File>
     <File Include="theme/demo.js">
       <publishTime>01/20/2026 23:46:58</publishTime>
@@ -442,7 +475,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>01/20/2026 23:46:58</publishTime>
     </File>
     <File Include="theme/printBillStyle.css">
-      <publishTime>01/20/2026 23:46:58</publishTime>
+      <publishTime>01/23/2026 20:05:04</publishTime>
     </File>
     <File Include="theme/sweetalert.min.js">
       <publishTime>01/20/2026 23:46:58</publishTime>
@@ -532,7 +565,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>01/20/2026 23:46:58</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>01/20/2026 23:48:41</publishTime>
+      <publishTime>01/23/2026 20:27:51</publishTime>
     </File>
   </ItemGroup>
 </Project>

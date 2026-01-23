@@ -195,6 +195,8 @@
         let ICustId = $('select#custId option:selected').val(); if (ICustId == "") { swal("", "Please choose customer first", "error"); return false; }//custId
         let drafteNo = $('#IDraftNo').val();
         let invoiceNo = $('#INo').val();
+        let iNotes = $('#INotes').val();//new
+        let iDONumber = $('#IDONumber').val();//new
         let invoiceDate = $('#IDate').val();
         let invoiceGrand_Value = $('.gItmValue').text();
         if ($('#tblInvoice tbody > tr').length < 1) { swal("", "Please add atlist one item to create invoice", "error"); return false; }
@@ -229,6 +231,8 @@
 
         let InvoiceGstViewModel = {
             INo: invoiceNo,
+            INotes:iNotes,//new
+            IDONumber:iDONumber,//new
             IinvoiceStatus: invoiceStatus,
             IDraftNo: drafteNo,
             IDate: invoiceDate,
@@ -236,7 +240,7 @@
             TotalValue: invoiceGrand_Value,
             ItemTransList: addedItemList
         }
-
+        debugger
         $.ajax({
             url: '/GstBill/Invoice/GstInvoiceCreate',
             type: "POST",

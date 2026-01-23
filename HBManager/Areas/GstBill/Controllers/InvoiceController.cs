@@ -22,9 +22,11 @@ namespace HBManager.Areas.GstBill.Controllers
                     var draftData = db.InvoiceDetails.Where(x => x.IDraftNo == draftNo && x.IinvoiceStatus == "draft" && x.IsActive == true).FirstOrDefault();
                     if (draftData.IsActive)
                     {
+                        obj.IDONumber = draftData.IDONumber;
+                        obj.INotes = draftData.INotes;
                         obj.IsDraft = true;
                         obj.IDraftNo = draftNo;
-                        obj.INo = getNewInvoiceNo();
+                        obj.INo = draftData.INo;//getNewInvoiceNo();
                         obj.IDate = Convert.ToDateTime(draftData.IDate);
                     }
                     else
@@ -61,6 +63,8 @@ namespace HBManager.Areas.GstBill.Controllers
                                 INo = a.INo,
                                 IDate = a.IDate,
                                 IDraftNo = a.IDraftNo,
+                                IDONumber=a.IDONumber,
+                                INotes=a.INotes,
                                 TotalValue = a.TotalValue,
                                 TotalTotal = a.TotalTotal,
                                 GrandTotal = a.GrandTotal,
@@ -90,6 +94,8 @@ namespace HBManager.Areas.GstBill.Controllers
                                 INo = a.INo,
                                 IDraftNo = a.IDraftNo,
                                 IDate = a.IDate,
+                                INotes = a.INotes,
+                                IDONumber = a.IDONumber,
                                 TotalValue = a.TotalValue,
                                 TotalTotal = a.TotalTotal,
                                 GrandTotal = a.GrandTotal,
@@ -118,6 +124,8 @@ namespace HBManager.Areas.GstBill.Controllers
                               {
                                   INo = s.INo,
                                   custName = c.custName,
+                                  INotes = s.INotes,
+                                  IDONumber = s.IDONumber,
                                   cusstAdd1 = c.addr1,
                                   custAdd2 = c.addr2,
                                   custAdd3 = c.addr3,
@@ -216,6 +224,8 @@ namespace HBManager.Areas.GstBill.Controllers
 
                 inv.IDraftNo = model.IDraftNo;
                 inv.IinvoiceStatus = model.IinvoiceStatus;
+                inv.INotes = model.INotes;
+                inv.IDONumber = model.IDONumber;
                 inv.IDate = model.IDate;
                 inv.ICustId = model.ICustId;
                 inv.TotalValue = model.TotalValue;
@@ -316,6 +326,8 @@ namespace HBManager.Areas.GstBill.Controllers
             data.CreatedDate = invoiceData.CreatedDate;
             data.UpdatedDate = invoiceData.UpdatedDate;
             data.IsActive = invoiceData.IsActive;
+            data.INotes = invoiceData.INotes;
+            data.IDONumber = invoiceData.IDONumber;
 
             data.ItemTransactions = (from d in db.ItemTransactions
                                      where d.DraftNoT == draftNo && d.IsActive == true
@@ -364,7 +376,7 @@ namespace HBManager.Areas.GstBill.Controllers
         public ActionResult CancelInvoice(string dNo)
         {
             InvoiceDetail invoice = db.InvoiceDetails.Where(x => x.IDraftNo == dNo && x.IsActive == true).FirstOrDefault();
-            invoice.INo = null;
+            //invoice.INo = null;
             invoice.IinvoiceStatus = "draft";
             invoice.UpdatedDate = DateTime.Now;
             //db.SaveChanges();

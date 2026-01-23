@@ -11,6 +11,8 @@ namespace HBManager.Areas.GstBill.Models
         public decimal TotalTotal { get; set; }
         public decimal GrandTotal { get; set; }
         public bool IsActive { get; set; }
+        public string INotes { get; set; }
+        public string IDONumber { get; set; }
 
         public string custName { get; set; }
         public string addr1 { get; set; }

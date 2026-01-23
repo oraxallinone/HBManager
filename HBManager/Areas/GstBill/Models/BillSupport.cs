@@ -9,23 +9,23 @@ namespace HBManager.Areas.GstBill.Models
             int newDbCounter = dbCounter +1;
             if (newDbCounter > 0 && newDbCounter < 10)
             {
-                InvoiceNo = "INV00000" + newDbCounter.ToString();
+                InvoiceNo = "TI00000" + newDbCounter.ToString();
             }
             if (newDbCounter > 9 && newDbCounter < 100)
             {
-                InvoiceNo = "INV0000" + newDbCounter.ToString();
+                InvoiceNo = "TI0000" + newDbCounter.ToString();
             }
             if (newDbCounter > 99 && newDbCounter < 1000)
             {
-                InvoiceNo = "INV000" + newDbCounter.ToString();
+                InvoiceNo = "TI000" + newDbCounter.ToString();
             }
             if (newDbCounter > 999 && newDbCounter < 10000)
             {
-                InvoiceNo = "INV00" + newDbCounter.ToString();
+                InvoiceNo = "TI00" + newDbCounter.ToString();
             }
             if (newDbCounter > 9999 && newDbCounter < 100000)
             {
-                InvoiceNo = "INV0" + newDbCounter.ToString();
+                InvoiceNo = "TI0" + newDbCounter.ToString();
             }
             return InvoiceNo;
 

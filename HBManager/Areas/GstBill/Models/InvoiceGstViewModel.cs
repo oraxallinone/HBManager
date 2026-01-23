@@ -13,6 +13,8 @@ namespace HBManager.Areas.GstBill.Models
         public string custAdd3 { get; set; }
         public string custGstin { get; set; }
         public string INo { get; set; }
+        public string INotes { get; set; }
+        public string IDONumber { get; set; }
         public int ICustId { get; set; }
         public int? IGstType { get; set; }
         public Nullable<System.DateTime> IDate { get; set; }
@@ -56,6 +58,8 @@ namespace HBManager.Areas.GstBill.Models
         public string IDraftNo { get; set; }
         public string IDate { get; set; }
         public string ICustId { get; set; }
+        public string INotes { get; set; }
+        public string IDONumber { get; set; }
         public string IinvoiceStatus { get; set; }
         public decimal TotalValue { get; set; }
         public decimal TotalGST { get; set; }

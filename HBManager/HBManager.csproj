@@ -52,6 +52,10 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -120,6 +124,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Areas\GstBill\Controllers\InvoiceController.cs" />
     <Compile Include="Areas\GstBill\Controllers\ProductController.cs" />
     <Compile Include="Areas\GstBill\GstBillAreaRegistration.cs" />
     <Compile Include="Areas\GstBill\Models\BillSupport.cs" />
@@ -308,6 +313,16 @@
     <Content Include="Areas\GstBill\Views\Product\CustomerAdd.cshtml" />
     <Content Include="Areas\GstBill\Views\Product\CustomerList.cshtml" />
     <Content Include="Areas\GstBill\Views\Product\Index.cshtml" />
+    <Content Include="Areas\GstBill\Views\Product\CustomerView.cshtml" />
+    <Content Include="Areas\GstBill\Views\Product\CustomerEdit.cshtml" />
+    <Content Include="Areas\GstBill\Views\Product\ItemAdd.cshtml" />
+    <Content Include="Areas\GstBill\Views\Product\ItemList.cshtml" />
+    <Content Include="Areas\GstBill\Views\Product\ItemView.cshtml" />
+    <Content Include="Areas\GstBill\Views\Product\ItemEdit.cshtml" />
+    <Content Include="Areas\GstBill\Views\Invoice\GstInvoiceCreate.cshtml" />
+    <Content Include="Areas\GstBill\Views\Invoice\GstDraftList.cshtml" />
+    <Content Include="Areas\GstBill\Views\Invoice\GstInvoiceList.cshtml" />
+    <Content Include="Areas\GstBill\Views\Invoice\GstInvoicePrint.cshtml" />
     <None Include="Properties\PublishProfiles\HBManager.pubxml" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\budget.js" />

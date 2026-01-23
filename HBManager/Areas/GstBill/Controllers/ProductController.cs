@@ -1,5 +1,4 @@
-﻿using AdminTemp.Areas.GstBill.Models;
-using HBManager.Areas.GstBill.Models;
+﻿using HBManager.Areas.GstBill.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -108,6 +107,106 @@ namespace HBManager.Areas.GstBill.Controllers
                                 gstIn = ss.gstIn
                             }).ToList();
             return Json(custList);
+        }
+        #endregion-------------------------------------------------------
+
+        #region------------------------Item------------------------------
+        public ActionResult ItemAdd()
+        {
+            ItemMaster obj = new ItemMaster();
+            obj.ItemCode = getNewItemNo();
+            return View(obj);
+        }
+
+        public string getNewItemNo()
+        {
+            int dbCount = db.CounterMasters.Where(x => x.counterName == "item").FirstOrDefault().counterValue;
+            string newNo = BillSupport.increamentItem(dbCount);
+            return newNo;
+        }
+
+        [HttpPost]
+        public ActionResult ItemAdd(ItemMaster itm)
+        {
+            try
+            {
+                var checkDuplicate = duplicateCheck(itm.ItemDetails);
+                if (!checkDuplicate)
+                {
+                    ItemMaster itm2 = new ItemMaster();
+                    itm2.ItemCode = itm.ItemCode;
+                    itm2.ItemDetails = itm.ItemDetails;
+                    itm2.HSN = itm.HSN;
+                    itm2.Rate = itm.Rate;
+                    itm2.Gst = itm.Gst;
+                    itm2.IsActive = true;
+                    itm2.CreatedDate = DateTime.Now;
+                    db.ItemMasters.Add(itm2);
+                    db.SaveChanges();
+
+                    int newDbCounter = Convert.ToInt32(itm.ItemCode.Remove(0, 3));
+                    CounterMaster cnt = db.CounterMasters.Where(x => x.counterName == "item").FirstOrDefault();
+                    cnt.counterValue = newDbCounter;
+                    db.SaveChanges();
+
+                    return RedirectToAction("ItemList");
+                }
+                ViewBag.isPresent = "Item Name exist please chanege the item details";
+                return View();
+            }
+            catch (Exception) { return View(); }
+        }
+
+        public ActionResult ItemList()
+        {
+            var itemList = db.ItemMasters.OrderByDescending(x => x.ItemId).ToList();
+            return View(itemList);
+        }
+
+        public ActionResult ItemEdit(int? id)
+        {
+            if (id != 0 || id != null)
+            {
+                var item = db.ItemMasters.Where(x => x.ItemId == id).FirstOrDefault();
+                return View(item);
+            }
+            ViewBag.type = "notfound";
+            return View();
+        }
+
+        private bool duplicateCheck(string itemName)
+        {
+            var isThere = db.ItemMasters.Any(x => x.ItemDetails == itemName);
+            return isThere;
+        }
+
+        [HttpPost]
+        public ActionResult ItemEdit(ItemMaster itm)
+        {
+            try
+            {
+                ItemMaster itm2 = db.ItemMasters.Where(x => x.ItemId == itm.ItemId).FirstOrDefault();
+                itm2.ItemDetails = itm.ItemDetails;
+                itm2.HSN = itm.HSN;
+                itm2.Rate = itm.Rate;
+                itm2.Gst = itm.Gst;
+                itm2.IsActive = itm.IsActive;
+                itm2.UpdatedDate = DateTime.Now;
+                db.SaveChanges();
+                return RedirectToAction("ItemList");
+            }
+            catch (Exception) { return View(); }
+        }
+
+        public ActionResult ItemView(int? id)
+        {
+            if (id != 0 || id != null)
+            {
+                var item = db.ItemMasters.Where(x => x.ItemId == id).FirstOrDefault();
+                return View(item);
+            }
+            ViewBag.type = "notfound";
+            return View();
         }
         #endregion-------------------------------------------------------
     }

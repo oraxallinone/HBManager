@@ -1,5 +1,5 @@
 ﻿using System;
-namespace AdminTemp.Areas.GstBill.Models
+namespace HBManager.Areas.GstBill.Models
 {
     public class CustomerBillDTO
     {

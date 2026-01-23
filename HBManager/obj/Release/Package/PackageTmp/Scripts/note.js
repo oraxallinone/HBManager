@@ -1,4 +1,9 @@
-﻿$(function () {
+﻿$(document).ready(function () {
+    $('#searchDDlG1').hide();
+    $('#searchDDlG2').hide();
+    $('#searchDDlG3').hide();
+    $('#searchDDlG4').hide();
+
     var currentNoteId = 0;
     var currentNoteData = {};
     var editingNoteId = null;

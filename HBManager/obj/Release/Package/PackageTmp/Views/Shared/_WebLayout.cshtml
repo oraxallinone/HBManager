@@ -232,7 +232,7 @@
                         role="menu"
                         data-accordion="false">
                         <li class="nav-item @(curController == "Default" || curController == "BudgetGrouping" || curController == "Budget" ? dashOpen : "")">
-                            <a href="#" class="nav-link @(curController == "Default" || curController == "BudgetGrouping" || curController == "Budget" ? dashActive : "")"> <i class="nav-icon bi bi-speedometer"></i> <p> Dashboard <i class="nav-arrow bi bi-chevron-right"></i> </p> </a>
+                            <a href="#" class="nav-link @(curController == "Default" || curController == "BudgetGrouping" || curController == "Budget" ? dashActive : "")"> <i class="nav-icon bi bi-speedometer"></i> <p style="color:red;"> Dashboard <i class="nav-arrow bi bi-chevron-right"></i> </p> </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item"> <a href="@Url.Action("Dashboard", "Default")" class="nav-link @dashDashboardActive"> <i class="nav-icon bi bi-house-door"></i> <p>Dashboard</p> </a> </li>
                                 <li class="nav-item"> <a href="@Url.Action("BudgetGroupingIndex", "BudgetGrouping")" class="nav-link @dashBudgetGroupingActive"> <i class="nav-icon bi bi-diagram-3"></i> <p>Grouping</p> </a> </li>
@@ -240,7 +240,7 @@
                             </ul>
                         </li>
                         <li class="nav-item @(curController == "BarChart" || curController == "Calender" || curController == "BudgetOverview" || curController == "Upload" || curController == "Birthday" || curController == "Notes" ? "menu-open" : "")">
-                            <a href="#" class="nav-link @(curController == "BarChart" || curController == "Calender" || curController == "BudgetOverview" || curController == "Upload" || curController == "Birthday" || curController == "Notes" ? "active" : "")"> <i class="nav-icon bi bi-stars"></i> <p> Feature <i class="nav-arrow bi bi-chevron-right"></i> </p> </a>
+                            <a href="#" class="nav-link @(curController == "BarChart" || curController == "Calender" || curController == "BudgetOverview" || curController == "Upload" || curController == "Birthday" || curController == "Notes" ? "active" : "")"> <i class="nav-icon bi bi-stars"></i> <p style="color:red;"> Feature <i class="nav-arrow bi bi-chevron-right"></i> </p> </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item"> <a href="@Url.Action("BarChart", "Default")" class="nav-link @dashBarChartActive"> <i class="nav-icon bi bi-bar-chart-line"></i> <p>Bar Graph</p> </a> </li>
                                 <li class="nav-item"> <a href="@Url.Action("CalenderIndex", "Calender")" class="nav-link @dashCalenderActive"> <i class="nav-icon bi bi-calendar3"></i> <p>Calender</p> </a> </li>
@@ -252,7 +252,7 @@
                             </ul>
                         </li>
                         <li class="nav-item @masterOpen">
-                            <a href="#" class="nav-link @masterActive"> <i class="nav-icon bi bi-box-seam-fill"></i> <p> Master <i class="nav-arrow bi bi-chevron-right"></i> </p> </a>
+                            <a href="#" class="nav-link @masterActive"> <i class="nav-icon bi bi-box-seam-fill"></i> <p style="color:red;"> Master <i class="nav-arrow bi bi-chevron-right"></i> </p> </a>
 
                             <ul class="nav nav-treeview">
                                 <li class="nav-item"> <a href="@Url.Action("SalaryIndex", "Salary")" class="nav-link @masterSalaryActive"> <i class="nav-icon bi bi-currency-dollar"></i> <p>Salary</p> </a> </li>

@@ -26,3 +26,5 @@ D:\sync with git hub\After 2025 Oct 24\HBManager\HBManager\HBManager\bin\EntityF
 D:\sync with git hub\After 2025 Oct 24\HBManager\HBManager\HBManager\bin\EntityFramework.SqlServer.dll
 D:\sync with git hub\After 2025 Oct 24\HBManager\HBManager\HBManager\bin\EntityFramework.xml
 D:\sync with git hub\After 2025 Oct 24\HBManager\HBManager\HBManager\bin\EntityFramework.SqlServer.xml
+D:\sync with git hub\After 2025 Oct 24\HBManager\HBManager\HBManager\bin\Newtonsoft.Json.dll
+D:\sync with git hub\After 2025 Oct 24\HBManager\HBManager\HBManager\bin\Newtonsoft.Json.xml

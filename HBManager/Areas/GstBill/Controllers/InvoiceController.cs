@@ -26,7 +26,8 @@ namespace HBManager.Areas.GstBill.Controllers
                         obj.INotes = draftData.INotes;
                         obj.IsDraft = true;
                         obj.IDraftNo = draftNo;
-                        obj.INo = draftData.INo;//getNewInvoiceNo();
+                        if (draftData.INo == null) { obj.INo = getNewInvoiceNo(); }
+                        else { obj.INo = draftData.INo; }
                         obj.IDate = Convert.ToDateTime(draftData.IDate);
                     }
                     else
@@ -63,8 +64,8 @@ namespace HBManager.Areas.GstBill.Controllers
                                 INo = a.INo,
                                 IDate = a.IDate,
                                 IDraftNo = a.IDraftNo,
-                                IDONumber=a.IDONumber,
-                                INotes=a.INotes,
+                                IDONumber = a.IDONumber,
+                                INotes = a.INotes,
                                 TotalValue = a.TotalValue,
                                 TotalTotal = a.TotalTotal,
                                 GrandTotal = a.GrandTotal,
@@ -119,7 +120,7 @@ namespace HBManager.Areas.GstBill.Controllers
             var inviceById = (from s in db.InvoiceDetails
                               join c in db.CustomerMasters
                               on s.ICustId equals c.custId
-                              where s.INo == INo
+                              where s.INo == INo && s.IsActive == true
                               select new InvoiceGstViewModel
                               {
                                   INo = s.INo,
@@ -136,7 +137,7 @@ namespace HBManager.Areas.GstBill.Controllers
                               }).FirstOrDefault();
 
             var itemTransaction = (from ss in db.ItemTransactions
-                                   where ss.InvoiceNoT == inviceById.INo
+                                   where ss.InvoiceNoT == inviceById.INo && ss.IsActive == true
                                    select new InvoiceGstItemTransactionViewModel
                                    {
                                        itm_InvoiceNoT = ss.InvoiceNoT,
@@ -215,11 +216,17 @@ namespace HBManager.Areas.GstBill.Controllers
         {
             try
             {
-                DeactiveOldDraft(model.IDraftNo);
+                bool hasOldDraft;
+                string oldInvoiceNo;
+                DeactiveOldDraft(model.IDraftNo, out hasOldDraft, out oldInvoiceNo);
                 InvoiceDetail inv = new InvoiceDetail();
                 if (model.IinvoiceStatus == "invoice")
                 {
                     inv.INo = model.INo;
+                }
+                if(hasOldDraft == true && model.IinvoiceStatus== "draft" && oldInvoiceNo != null)
+                {
+                    inv.INo = oldInvoiceNo;   //get the prev inv value as assing to it.
                 }
 
                 inv.IDraftNo = model.IDraftNo;
@@ -232,7 +239,6 @@ namespace HBManager.Areas.GstBill.Controllers
                 inv.CreatedDate = DateTime.Now;
                 inv.IsActive = true;
                 db.InvoiceDetails.Add(inv);
-                db.SaveChanges();
 
                 foreach (var itm in model.ItemTransList)
                 {
@@ -253,18 +259,21 @@ namespace HBManager.Areas.GstBill.Controllers
                     itr.CreatedDate = DateTime.Now;
                     itr.IsActive = true;
                     db.ItemTransactions.Add(itr);
+                }
+                db.SaveChanges();//finally all save
+
+                if (hasOldDraft == false)
+                {
+                    int newDbDraftCounter = Convert.ToInt32(model.IDraftNo.Remove(0, 1));
+                    CounterMaster cntDraft = db.CounterMasters.Where(x => x.counterName == "invoiceDraft").FirstOrDefault();
+                    cntDraft.counterValue = newDbDraftCounter;
                     db.SaveChanges();
                 }
 
-                int newDbDraftCounter = Convert.ToInt32(model.IDraftNo.Remove(0, 1));
-                CounterMaster cntDraft = db.CounterMasters.Where(x => x.counterName == "invoiceDraft").FirstOrDefault();
-                cntDraft.counterValue = newDbDraftCounter;
-                db.SaveChanges();
 
-
-                if (model.IinvoiceStatus == "invoice")
+                if (model.IinvoiceStatus == "invoice" && hasOldDraft == false)
                 {
-                    int newDbCounter = Convert.ToInt32(model.INo.Remove(0, 3));
+                    int newDbCounter = Convert.ToInt32(model.INo.Remove(0, 2));
                     CounterMaster cnt = db.CounterMasters.Where(x => x.counterName == "invoiceGst").FirstOrDefault();
                     cnt.counterValue = newDbCounter;
                     db.SaveChanges();
@@ -307,7 +316,7 @@ namespace HBManager.Areas.GstBill.Controllers
             return Json(rupees, JsonRequestBehavior.AllowGet);
         }
 
-        
+
 
         public JsonResult GetDraftData(string draftNo)
         {
@@ -353,14 +362,19 @@ namespace HBManager.Areas.GstBill.Controllers
             return Json(data, JsonRequestBehavior.AllowGet);
         }
 
-        private void DeactiveOldDraft(string draftNo)
+        private void DeactiveOldDraft(string draftNo, out bool hasOldDraft, out string oldInvoiceNo)
         {
+            hasOldDraft = false;
+            oldInvoiceNo = null;
+
             InvoiceDetail invDetails = db.InvoiceDetails.Where(x => x.IDraftNo == draftNo && x.IsActive == true).FirstOrDefault();
             if (invDetails != null)
             {
+                oldInvoiceNo = invDetails.INo;//get prev invoice no if any
                 invDetails.IsActive = false;
                 invDetails.UpdatedDate = DateTime.Now;
                 db.SaveChanges();
+                hasOldDraft = true;
             }
 
             List<ItemTransaction> items = db.ItemTransactions.Where(x => x.DraftNoT == draftNo && x.IsActive == true).ToList();
@@ -383,7 +397,7 @@ namespace HBManager.Areas.GstBill.Controllers
             List<ItemTransaction> items = db.ItemTransactions.Where(x => x.DraftNoT == dNo && x.IsActive == true).ToList();
             foreach (var item in items)
             {
-                item.InvoiceNoT = null;
+                //item.InvoiceNoT = null;
                 item.UpdatedDate = DateTime.Now;
             }
             db.SaveChanges();

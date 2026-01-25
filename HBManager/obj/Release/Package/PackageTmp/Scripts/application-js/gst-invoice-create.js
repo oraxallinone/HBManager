@@ -167,6 +167,8 @@
 
     function resetPageAfterSave() {
         $("#tblInvoice tbody").empty();
+        $("#INotes").val('');
+        $("#IDONumber").val('');
         calulateValue();
     }
 

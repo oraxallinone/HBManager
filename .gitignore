@@ -1,0 +1,32 @@
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+DocumentLayout.json
+DocumentLayout.backup.json
+
+# Build output
+bin/
+obj/
+out/
+
+# .NET binaries
+*.dll
+*.exe
+*.pdb
+*.cache
+
+# Editors
+.idea/
+.vscode/
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Copilot / IntelliCode
+CopilotIndices/
+FileContentIndex/
+DesignTimeBuild/

@@ -180,6 +180,7 @@
     <Compile Include="Models\BarGraphData.cs" />
     <Compile Include="Models\BirthdayModel.cs" />
     <Compile Include="Models\Budget.cs" />
+    <Compile Include="Models\BudgetVerificationModels.cs" />
     <Compile Include="Models\CalenderDataViewModel.cs" />
     <Compile Include="Models\CalenderDateViewModel.cs" />
     <Compile Include="Models\DashboardHeadingModel.cs" />

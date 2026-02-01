@@ -1,4 +1,5 @@
-﻿using HBManager.Models;
+﻿
+using HBManager.Models;
 using HBManager.Service;
 using System;
 using System.Collections.Generic;
@@ -27,6 +28,14 @@ namespace HBManager.Controllers
         {
             return View();
         }
+
+        [HttpGet]
+        public JsonResult GetBudgetVerificationData(int year, int month)
+        {
+            var data = _svc.GetBudgetVerificationData(year, month);
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
 
         [HttpGet]
         public JsonResult GetAllBudgetFromTo(int year, int month)

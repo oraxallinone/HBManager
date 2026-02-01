@@ -115,6 +115,15 @@
             return;
         }
 
+        // Allow decimal point (.)
+        if ((e.keyCode === 190 || e.keyCode === 110)) {
+            // Prevent more than one dot
+            if ($(this).val().indexOf('.') !== -1) {
+                e.preventDefault();
+            }
+            return;
+        }
+
         // Block anything that is not a number (0–9)
         if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) &&
             (e.keyCode < 96 || e.keyCode > 105)) {

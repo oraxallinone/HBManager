@@ -1,3 +1,22 @@
 ﻿    .wd-80 {
         width: 80px;
     }
+
+.summary-card {
+    padding: 20px;
+    border-radius: 8px;
+    color: #fff;
+    margin-bottom: 10px;
+    text-align: center;
+}
+.summary-title {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+.summary-value {
+    font-size: 2em;
+    margin-top: 10px;
+}
+.bg-success { background-color: #28a745 !important; }
+.bg-warning { background-color: #ffc107 !important; color: #333 !important; }
+.bg-info { background-color: #17a2b8 !important; }

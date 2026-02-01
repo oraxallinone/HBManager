@@ -1,9 +1,11 @@
-﻿using HBManager.Models;
+﻿
+using HBManager.Models;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
 
 namespace HBManager.Service
 {
@@ -14,6 +16,90 @@ namespace HBManager.Service
         public BudgetService()
         {
             _connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+        }
+
+        // Budget Verification Data
+        public BudgetVerificationSummaryModel GetBudgetVerificationData(int year, int month)
+        {
+            var result = new BudgetVerificationSummaryModel();
+            var inList = new List<BudgetVerificationInModel>();
+            var outList = new List<BudgetVerificationOutModel>();
+            var nowList = new List<BudgetVerificationNowModel>();
+
+            using (var conn = new SqlConnection(_connString))
+            {
+                conn.Open();
+                // M IN
+                using (var cmd = new SqlCommand("sp_GetMonthInData", conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@Year", year);
+                    cmd.Parameters.AddWithValue("@Month", month);
+                    using (var rdr = cmd.ExecuteReader())
+                    {
+                        while (rdr.Read())
+                        {
+                            inList.Add(new BudgetVerificationInModel
+                            {
+                                IdIn = rdr["IdIn"] != DBNull.Value ? Convert.ToInt32(rdr["IdIn"]) : 0,
+                                AmountIn = rdr["AmountIn"] != DBNull.Value ? Convert.ToDecimal(rdr["AmountIn"]) : 0,
+                                DetailsIn = rdr["DetailsIn"] != DBNull.Value ? rdr["DetailsIn"].ToString() : string.Empty,
+                                YearIn = rdr["YearIn"] != DBNull.Value ? Convert.ToInt32(rdr["YearIn"]) : 0,
+                                MonthIn = rdr["MonthIn"] != DBNull.Value ? Convert.ToInt32(rdr["MonthIn"]) : 0
+                            });
+                        }
+                    }
+                }
+
+                // M Out
+                using (var cmd = new SqlCommand("sp_budget_verification_MOut", conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@Year", year);
+                    cmd.Parameters.AddWithValue("@Month", month);
+                    using (var rdr = cmd.ExecuteReader())
+                    {
+                        while (rdr.Read())
+                        {
+                            outList.Add(new BudgetVerificationOutModel
+                            {
+                                AmountOut = rdr["AmountOut"] != DBNull.Value ? Convert.ToDecimal(rdr["AmountOut"]) : 0
+                            });
+                        }
+                    }
+                }
+
+                // M Now
+                using (var cmd = new SqlCommand("sp_GetMonthNowData", conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@Year", year);
+                    cmd.Parameters.AddWithValue("@Month", month);
+                    using (var rdr = cmd.ExecuteReader())
+                    {
+                        while (rdr.Read())
+                        {
+                            nowList.Add(new BudgetVerificationNowModel
+                            {
+                                IdNow = rdr["IdNow"] != DBNull.Value ? Convert.ToInt32(rdr["IdNow"]) : 0,
+                                AmountNow = rdr["AmountNow"] != DBNull.Value ? Convert.ToDecimal(rdr["AmountNow"]) : 0,
+                                DetailsNow = rdr["DetailsNow"] != DBNull.Value ? rdr["DetailsNow"].ToString() : string.Empty,
+                                DateNow = rdr["DateNow"] != DBNull.Value ? Convert.ToDateTime(rdr["DateNow"]) : DateTime.MinValue,
+                                YearNow = rdr["YearNow"] != DBNull.Value ? Convert.ToInt32(rdr["YearNow"]) : 0,
+                                MonthNow = rdr["MonthNow"] != DBNull.Value ? Convert.ToInt32(rdr["MonthNow"]) : 0
+                            });
+                        }
+                    }
+                }
+            }
+
+            result.InList = inList;
+            result.OutList = outList;
+            result.NowList = nowList;
+            result.TotalIn = inList.Sum(x => x.AmountIn);
+            result.TotalOut = outList.Sum(x => x.AmountOut);
+            result.TotalNow = nowList.Sum(x => x.AmountNow);
+            return result;
         }
 
         public int InsertBudget(Budget model)

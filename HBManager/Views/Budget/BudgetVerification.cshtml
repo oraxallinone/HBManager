@@ -5,7 +5,7 @@
 }
 
 <link href="~/Content/budget-verification.css" rel="stylesheet" />
- 
+
 <div class="app-content">
     <div class="container-fluid">
         <div class="row">
@@ -45,7 +45,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
 
 
                     </div>
@@ -53,49 +53,31 @@
             </div>
 
 
-            <div class="col-12 col-sm-6 col-md-3">
-                <div class="info-box bg-success text-white">
-                    <span class="info-box-icon text-bg-primary shadow-sm">
-                        <i class="bi bi-people-fill"></i>
-                    </span>
-                    <div class="info-box-content">
-                        <span class="info-box-text">2,14,686.74</span>
-                        <span class="info-box-number">Pass</span>
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="summary-card bg-success">
+                        <div class="summary-title">M Compare</div>
+                        <div class="summary-title" style="color:orange" id="totalCompareIn"></div>
+                        <div class="summary-title" style="color:yellow" id="totalCompare"></div>
                     </div>
                 </div>
-            </div>
-            <div class="col-12 col-sm-6 col-md-3">
-                <div class="info-box">
-                    <span class="info-box-icon text-bg-warning shadow-sm">
-                        <i class="bi bi-gear-fill"></i>
-                    </span>
-                    <div class="info-box-content">
-                        <span class="info-box-text">M IN</span>
-                        <span class="info-box-number">
-                            2,14,686.74
-                        </span>
+
+                <div class="col-md-3">
+                    <div class="summary-card bg-body-secondary">
+                        <div class="summary-title">M IN</div>
+                        <div class="summary-value" id="totalIn"></div>
                     </div>
                 </div>
-            </div>
-            <div class="col-12 col-sm-6 col-md-3">
-                <div class="info-box">
-                    <span class="info-box-icon text-bg-info shadow-sm">
-                        <i class="bi bi-hand-thumbs-up-fill"></i>
-                    </span>
-                    <div class="info-box-content">
-                        <span class="info-box-text">M Out</span>
-                        <span class="info-box-number">17,384.24</span>
+                <div class="col-md-3">
+                    <div class="summary-card bg-warning">
+                        <div class="summary-title">M Out</div>
+                        <div class="summary-value" id="totalOut"></div>
                     </div>
                 </div>
-            </div>
-            <div class="col-12 col-sm-6 col-md-3">
-                <div class="info-box">
-                    <span class="info-box-icon text-bg-dark shadow-sm">
-                        <i class="bi bi-cart-fill"></i>
-                    </span>
-                    <div class="info-box-content">
-                        <span class="info-box-text">Now</span>
-                        <span class="info-box-number">1,97,302.5</span>
+                <div class="col-md-3">
+                    <div class="summary-card bg-info">
+                        <div class="summary-title">Now</div>
+                        <div class="summary-value" id="totalNow"></div>
                     </div>
                 </div>
             </div>
@@ -109,31 +91,14 @@
                     </div>
                     <div class="card-body p-0">
                         <div class="table-responsive">
-                            <table class="table m-0">
+                            <table class="table m-0" id="tblMin">
                                 <thead>
                                     <tr>
                                         <th>Amt</th>
                                         <th>Details</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Call of Duty IV</td>
-                                        <td>123</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Call of Duty IV</td>
-                                        <td>123</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Call of Duty IV</td>
-                                        <td>123</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Call of Duty IV</td>
-                                        <td>123</td>
-                                    </tr>
-                                </tbody>
+                                <tbody></tbody>
                             </table>
                         </div>
                     </div>
@@ -142,7 +107,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="col-md-4">
                 <div class="card">
                     <div class="card-header">
@@ -150,31 +114,14 @@
                     </div>
                     <div class="card-body p-0">
                         <div class="table-responsive">
-                            <table class="table m-0">
+                            <table class="table m-0" id="tblMout">
                                 <thead>
                                     <tr>
                                         <th>Amt</th>
                                         <th>Details</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Call of Duty IV</td>
-                                        <td>123</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Call of Duty IV</td>
-                                        <td>123</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Call of Duty IV</td>
-                                        <td>123</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Call of Duty IV</td>
-                                        <td>123</td>
-                                    </tr>
-                                </tbody>
+                                <tbody></tbody>
                             </table>
                         </div>
                     </div>
@@ -183,7 +130,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="col-md-4">
                 <div class="card">
                     <div class="card-header">
@@ -191,31 +137,14 @@
                     </div>
                     <div class="card-body p-0">
                         <div class="table-responsive">
-                            <table class="table m-0">
+                            <table class="table m-0" id="tblMnow">
                                 <thead>
                                     <tr>
                                         <th>Amt</th>
                                         <th>Details</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Call of Duty IV</td>
-                                        <td>123</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Call of Duty IV</td>
-                                        <td>123</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Call of Duty IV</td>
-                                        <td>123</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Call of Duty IV</td>
-                                        <td>123</td>
-                                    </tr>
-                                </tbody>
+                                <tbody></tbody>
                             </table>
                         </div>
                     </div>

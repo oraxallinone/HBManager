@@ -12,7 +12,18 @@ namespace HBManager.Controllers
     {
         private readonly BudgetService _svc = new BudgetService();
 
+        // Mobile-friendly budget index view
+        public ActionResult BudgeMobileIndex()
+        {
+            return View();
+        }
+
         public ActionResult BudgetIndex()
+        {
+            return View();
+        }
+
+        public ActionResult BudgetVerification()
         {
             return View();
         }

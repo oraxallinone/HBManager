@@ -220,6 +220,7 @@
     <Content Include="Content\budget-grouping-index.css" />
     <Content Include="Content\budget-index.css" />
     <Content Include="Content\budget-overview.css" />
+    <Content Include="Content\budget-verification.css" />
     <Content Include="Content\calender-css.css" />
     <Content Include="Content\common.css" />
     <Content Include="Content\dashboard.css" />
@@ -303,6 +304,10 @@
     <Content Include="Content\theme\js\adminlte.js.map" />
     <Content Include="Content\theme\js\adminlte.min.js.map" />
     <Content Include="Areas\GstBill\Views\web.config" />
+    <Content Include="Scripts\budget-verification.js" />
+    <Content Include="Views\Budget\BudgeMobileIndex.cshtml" />
+    <Content Include="Content\budget-mobile-index.css" />
+    <Content Include="Scripts\budget-mobile.js" />
     <EntityDeploy Include="Areas\GstBill\Models\Model1.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>Model1.Designer.cs</LastGenOutput>
@@ -394,6 +399,7 @@
     <Content Include="Views\Notes\NoteIndex.cshtml" />
     <Content Include="Views\Salary\SalaryIndex.cshtml" />
     <Content Include="Views\Upload\Index.cshtml" />
+    <Content Include="Views\Budget\BudgetVerification.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

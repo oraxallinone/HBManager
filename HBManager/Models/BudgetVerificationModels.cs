@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace HBManager.Models
@@ -5,6 +6,7 @@ namespace HBManager.Models
     public class BudgetVerificationInModel
     {
         public int IdIn { get; set; }
+        public DateTime? DateIn { get; set; }
         public decimal AmountIn { get; set; }
         public string DetailsIn { get; set; }
         public int YearIn { get; set; }
@@ -21,7 +23,7 @@ namespace HBManager.Models
         public int IdNow { get; set; }
         public decimal AmountNow { get; set; }
         public string DetailsNow { get; set; }
-        public System.DateTime DateNow { get; set; }
+        public DateTime? DateNow { get; set; }
         public int YearNow { get; set; }
         public int MonthNow { get; set; }
     }

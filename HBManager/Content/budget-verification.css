@@ -2,21 +2,202 @@
         width: 80px;
     }
 
-.summary-card {
+/*.summary-card {
     padding: 20px;
     border-radius: 8px;
     color: #fff;
     margin-bottom: 10px;
     text-align: center;
-}
-.summary-title {
+}*/
+/*.summary-title {
     font-size: 1.2em;
     font-weight: bold;
-}
-.summary-value {
+}*/
+/*.summary-value {
     font-size: 1.1em;
     margin-top: 10px;
-}
+}*/
 .bg-success { background-color: #28a745 !important; }
 .bg-warning { background-color: #ffc107 !important; color: #333 !important; }
 .bg-info { background-color: #17a2b8 !important; }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.summary-card {
+    padding: 18px;
+    border-radius: 14px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+    color: #ffffff;
+}
+
+.summary-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.summary-title {
+    font-size: 14px;
+    letter-spacing: 1px;
+    opacity: 0.9;
+}
+
+.summary-icon {
+    font-size: 20px;
+    opacity: 0.9;
+}
+
+.summary-value {
+    margin-top: 12px;
+    font-size: 28px;
+    font-weight: 700;
+}
+
+/* Color Themes */
+.summary-in {
+    background: linear-gradient(135deg, #11998e, #38ef7d);
+}
+
+.summary-out {
+    background: linear-gradient(135deg, #cb2d3e, #ef473a);
+}
+
+.summary-now {
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Compare Card */
+.summary-compare {
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    color: #ffffff;
+}
+
+.compare-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 18px;
+    font-weight: 600;
+    margin-top: 8px;
+}
+
+.compare-row i {
+    font-size: 16px;
+}
+
+/* Status colors */
+.compare-row.positive {
+    color: #38ef7d;
+}
+
+.compare-row.neutral {
+    color: #f9d423;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.card-header-in {
+    background: linear-gradient(135deg, #11998e, #38ef7d);
+    color: #ffffff;
+}
+
+.card-header-in .card-title {
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.card-header-now {
+background: linear-gradient(135deg, #2c3e50, #4b6cb7);
+    color: #ffffff;
+}
+
+.card-header-now .card-title {
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 1px;
+}

@@ -5,6 +5,7 @@
 }
 
 <link href="~/Content/budget-verification.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <div class="app-content">
     <div class="container-fluid">
@@ -46,12 +47,73 @@
             <div class="row mb-1">
                 <div class="col-md-3">
                     <div class="summary-card bg-success">
-                        <div class="summary-title" style="color:orange" id="totalCompareIn"></div>
-                        <div class="summary-title" style="color:yellow" id="totalCompare"></div>
+                        <div class="summary-header">
+                            <span class="summary-title">COMPARE</span>
+                            @*<i class="fa-solid fa-scale-balanced summary-icon"></i>*@
+                            <i class="fa-solid fa-scale-unbalanced summary-icon"></i>
+                        </div>
+                        <div class="summary-title" style="color:orange;font-size: 18px;" id="totalCompareIn"></div>
+                        <div class="summary-title" style="color:yellow;font-size: 18px;" id="totalCompare"></div>
+                    </div>
+                </div>
+
+                @*<div class="col-md-3">
+                    <div class="summary-card summary-compare">
+                        <div class="summary-header">
+                            <span class="summary-title">COMPARE</span>
+                            <i class="fa-solid fa-chart-line summary-icon"></i>
+                        </div>
+                        <div class="compare-row positive">
+                            <i class="fa-solid fa-arrow-trend-up"></i>
+                            <span id="totalCompareIn"></span>
+                        </div>
+                        <div class="compare-row neutral">
+                            <i class="fa-solid fa-scale-balanced"></i>
+                            <span id="totalCompare"></span>
+                        </div>
+                    </div>
+                </div>*@
+
+
+                <div class="col-md-3">
+                    <div class="summary-card summary-in">
+                        <div class="summary-header">
+                            <span class="summary-title">M IN</span>
+                            <i class="fa-solid fa-plus summary-icon"></i>
+                        </div>
+                        <div class="summary-value">
+                            <i class="fa-solid fa-indian-rupee-sign"></i>
+                            <span id="totalIn"></span>
+                        </div>
                     </div>
                 </div>
 
                 <div class="col-md-3">
+                    <div class="summary-card summary-out">
+                        <div class="summary-header">
+                            <span class="summary-title">M OUT</span>
+                            <i class="fa-solid fa-minus summary-icon"></i>
+                        </div>
+                        <div class="summary-value">
+                            <i class="fa-solid fa-indian-rupee-sign"></i>
+                            <span id="totalOut"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="summary-card summary-now">
+                        <div class="summary-header">
+                            <span class="summary-title">NOW</span>
+                            <i class="fa-solid fa-clock summary-icon"></i>
+                        </div>
+                        <div class="summary-value">
+                            <i class="fa-solid fa-indian-rupee-sign"></i>
+                            <span id="totalNow"></span>
+                        </div>
+                    </div>
+                </div>
+                @*<div class="col-md-3">
                     <div class="summary-card bg-body-secondary">
                         <div class="summary-title">M IN</div>
                         <div class="summary-value" id="totalIn"></div>
@@ -68,15 +130,15 @@
                         <div class="summary-title">Now</div>
                         <div class="summary-value" id="totalNow"></div>
                     </div>
-                </div>
+                </div>*@
             </div>
         </div>
 
         <div class="row">
             <div class="col-md-6">
                 <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">M IN</h3>
+                    <div class="card-header card-header-in">
+                        <h3 class="card-title mb-0">M IN</h3>
                     </div>
                     <div class="card-body p-0">
                         <div class="table-responsive">
@@ -101,16 +163,13 @@
                             </table>
                         </div>
                     </div>
-                    <div class="card-footer clearfix">
-                        <span class="btn btn-sm btn-secondary float-end" id="footerMIN"> total MIN </span>
-                    </div>
                 </div>
             </div>
 
             <div class="col-md-6">
                 <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">M Now</h3>
+                    <div class="card-header card-header-now">
+                        <h3 class="card-title mb-0">M Now</h3>
                     </div>
                     <div class="card-body p-0">
                         <div class="table-responsive">
@@ -134,9 +193,6 @@
                                 </tfoot>
                             </table>
                         </div>
-                    </div>
-                    <div class="card-footer clearfix">
-                        <span class="btn btn-sm btn-secondary float-end" id="footerNow"> Total MNow </span>
                     </div>
                 </div>
             </div>

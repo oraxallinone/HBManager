@@ -1,4 +1,5 @@
 ﻿
+
 using HBManager.Models;
 using System;
 using System.Collections.Generic;
@@ -42,6 +43,7 @@ namespace HBManager.Service
                             inList.Add(new BudgetVerificationInModel
                             {
                                 IdIn = rdr["IdIn"] != DBNull.Value ? Convert.ToInt32(rdr["IdIn"]) : 0,
+                                DateIn = rdr["DateIn"] != DBNull.Value ? Convert.ToDateTime(rdr["DateIn"]) : (DateTime?)null,
                                 AmountIn = rdr["AmountIn"] != DBNull.Value ? Convert.ToDecimal(rdr["AmountIn"]) : 0,
                                 DetailsIn = rdr["DetailsIn"] != DBNull.Value ? rdr["DetailsIn"].ToString() : string.Empty,
                                 YearIn = rdr["YearIn"] != DBNull.Value ? Convert.ToInt32(rdr["YearIn"]) : 0,
@@ -364,5 +366,105 @@ namespace HBManager.Service
             }
             return list;
         }
+
+        // Budget verification - insert / update for M IN and M Now
+        public int InsertBudgetVerificationIn(BudgetVerificationInModel model)
+        {
+            using (var conn = new SqlConnection(_connString))
+            using (var cmd = new SqlCommand("sp_InsertBudgetVerificationIn", conn))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@Year", model.YearIn);
+                cmd.Parameters.AddWithValue("@Month", model.MonthIn);
+                cmd.Parameters.AddWithValue("@DateIn", (object)model.DateIn ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@AmountIn", model.AmountIn);
+                cmd.Parameters.AddWithValue("@DetailsIn", (object)model.DetailsIn ?? DBNull.Value);
+
+                conn.Open();
+                var obj = cmd.ExecuteScalar();
+                return obj != null ? Convert.ToInt32(obj) : 0;
+            }
+        }
+
+        public int UpdateBudgetVerificationIn(BudgetVerificationInModel model)
+        {
+            using (var conn = new SqlConnection(_connString))
+            using (var cmd = new SqlCommand("sp_UpdateBudgetVerificationIn", conn))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@IdIn", model.IdIn);
+                cmd.Parameters.AddWithValue("@Year", model.YearIn);
+                cmd.Parameters.AddWithValue("@Month", model.MonthIn);
+                cmd.Parameters.AddWithValue("@DateIn", (object)model.DateIn ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@AmountIn", model.AmountIn);
+                cmd.Parameters.AddWithValue("@DetailsIn", (object)model.DetailsIn ?? DBNull.Value);
+
+                conn.Open();
+                var obj = cmd.ExecuteScalar();
+                return obj != null ? Convert.ToInt32(obj) : 0;
+            }
+        }
+
+        public int InsertBudgetVerificationNow(BudgetVerificationNowModel model)
+        {
+            using (var conn = new SqlConnection(_connString))
+            using (var cmd = new SqlCommand("sp_InsertBudgetVerificationNow", conn))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@Year", model.YearNow);
+                cmd.Parameters.AddWithValue("@Month", model.MonthNow);
+                cmd.Parameters.AddWithValue("@DateNow", (object)model.DateNow ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@AmountNow", model.AmountNow);
+                cmd.Parameters.AddWithValue("@DetailsNow", (object)model.DetailsNow ?? DBNull.Value);
+
+                conn.Open();
+                var obj = cmd.ExecuteScalar();
+                return obj != null ? Convert.ToInt32(obj) : 0;
+            }
+        }
+
+        public int UpdateBudgetVerificationNow(BudgetVerificationNowModel model)
+        {
+            using (var conn = new SqlConnection(_connString))
+            using (var cmd = new SqlCommand("sp_UpdateBudgetVerificationNow", conn))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@IdNow", model.IdNow);
+                cmd.Parameters.AddWithValue("@Year", model.YearNow);
+                cmd.Parameters.AddWithValue("@Month", model.MonthNow);
+                cmd.Parameters.AddWithValue("@DateNow", (object)model.DateNow ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@AmountNow", model.AmountNow);
+                cmd.Parameters.AddWithValue("@DetailsNow", (object)model.DetailsNow ?? DBNull.Value);
+
+                conn.Open();
+                var obj = cmd.ExecuteScalar();
+                return obj != null ? Convert.ToInt32(obj) : 0;
+            }
+        }
+
+        public int DeleteBudgetVerificationIn(int idIn)
+        {
+            using (var conn = new SqlConnection(_connString))
+            using (var cmd = new SqlCommand("sp_DeleteTblMonthInById", conn))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@IdIn", idIn);
+                conn.Open();
+                return cmd.ExecuteNonQuery();
+            }
+        }
+
+        public int DeleteBudgetVerificationNow(int idNow)
+        {
+            using (var conn = new SqlConnection(_connString))
+            using (var cmd = new SqlCommand("sp_DeleteMonthNowById", conn))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@IdNow", idNow);
+                conn.Open();
+                return cmd.ExecuteNonQuery();
+            }
+        }
+
     }
 }

@@ -1,4 +1,5 @@
 ﻿
+
 using HBManager.Models;
 using HBManager.Service;
 using System;
@@ -104,6 +105,48 @@ namespace HBManager.Controllers
         {
             var list = _svc.GetGroupMasterUncutService();
             return Json(list, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult InsertBudgetVerificationIn(BudgetVerificationInModel model)
+        {
+            var id = _svc.InsertBudgetVerificationIn(model);
+            return Json(new { Id = id });
+        }
+
+        [HttpPost]
+        public JsonResult UpdateBudgetVerificationIn(BudgetVerificationInModel model)
+        {
+            var rows = _svc.UpdateBudgetVerificationIn(model);
+            return Json(new { Rows = rows });
+        }
+
+        [HttpPost]
+        public JsonResult InsertBudgetVerificationNow(BudgetVerificationNowModel model)
+        {
+            var id = _svc.InsertBudgetVerificationNow(model);
+            return Json(new { Id = id });
+        }
+
+        [HttpPost]
+        public JsonResult UpdateBudgetVerificationNow(BudgetVerificationNowModel model)
+        {
+            var rows = _svc.UpdateBudgetVerificationNow(model);
+            return Json(new { Rows = rows });
+        }
+
+        [HttpPost]
+        public JsonResult DeleteBudgetVerificationIn(int idIn)
+        {
+            var rows = _svc.DeleteBudgetVerificationIn(idIn);
+            return Json(new { Rows = rows });
+        }
+
+        [HttpPost]
+        public JsonResult DeleteBudgetVerificationNow(int idNow)
+        {
+            var rows = _svc.DeleteBudgetVerificationNow(idNow);
+            return Json(new { Rows = rows });
         }
     }
 }

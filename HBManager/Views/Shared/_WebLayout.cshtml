@@ -138,6 +138,8 @@
         var dashGroupBudgetActive = (curController == "BudgetOverview" && curAction == "GroupBudgetOverview") ? "active" : "";
         var dashBudgetGroupingActive = (curController == "BudgetGrouping" && curAction == "BudgetGroupingIndex") ? "active" : "";
         var dashBudgetIndexActive = (curController == "Budget" && curAction == "BudgetIndex") ? "active" : "";
+        var dashBudgetVerificationActive = (curController == "Budget" && curAction == "BudgetVerification") ? "active" : "";
+        var dashBudgetMobileActive = (curController == "Budget" && curAction == "BudgeMobileIndex") ? "active" : "";
 
         // Master group
         var masterIs = (curController == "Salary" || curController == "Group");
@@ -234,6 +236,8 @@
                         <li class="nav-item @(curController == "Default" || curController == "BudgetGrouping" || curController == "Budget" ? dashOpen : "")">
                             <a href="#" class="nav-link @(curController == "Default" || curController == "BudgetGrouping" || curController == "Budget" ? dashActive : "")"> <i class="nav-icon bi bi-speedometer"></i> <p style="color:red;"> Dashboard <i class="nav-arrow bi bi-chevron-right"></i> </p> </a>
                             <ul class="nav nav-treeview">
+                                <li class="nav-item"> <a href="@Url.Action("BudgetVerification", "Budget")" class="nav-link @dashBudgetVerificationActive"> <i class="nav-icon bi bi-shield-check"></i> <p>Budget Verification</p> </a> </li>
+                                <li class="nav-item"> <a href="@Url.Action("BudgeMobileIndex", "Budget")" class="nav-link @dashBudgetMobileActive"> <i class="nav-icon bi bi-phone"></i> <p>Budget Mobile</p> </a> </li>
                                 <li class="nav-item"> <a href="@Url.Action("Dashboard", "Default")" class="nav-link @dashDashboardActive"> <i class="nav-icon bi bi-house-door"></i> <p>Dashboard</p> </a> </li>
                                 <li class="nav-item"> <a href="@Url.Action("BudgetGroupingIndex", "BudgetGrouping")" class="nav-link @dashBudgetGroupingActive"> <i class="nav-icon bi bi-diagram-3"></i> <p>Grouping</p> </a> </li>
                                 <li class="nav-item"> <a href="@Url.Action("BudgetIndex", "Budget")" class="nav-link @dashBudgetIndexActive"> <i class="nav-icon bi bi-cash-coin"></i> <p>Final</p> </a> </li>

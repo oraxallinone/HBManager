@@ -65,6 +65,11 @@
             let out_Now = parseFloat(data.TotalOut) + parseFloat(data.TotalNow);
             $('#totalCompare').text(out_Now.toLocaleString());
 
+            //difference between #totalCompareIn - #totalCompare= ?
+            let difference = parseFloat(data.TotalIn) - parseFloat(out_Now);
+            $('#IdDifference').text(difference.toLocaleString());
+
+
             // Compare and set card color
             var compareIn = parseFloat(data.TotalIn).toFixed(2);
             var compare = out_Now.toFixed(2);
@@ -72,11 +77,58 @@
             if ($summaryCard.length == 0) {
                 $summaryCard = $('.summary-card.bg-danger');
             }
+
+
+            //var $icon = $('.fa-solid.summary-icon');
+            //if (compareIn === compare) {
+            //    $summaryCard.removeClass('bg-danger').addClass('bg-success');
+            //    //nikili balanced
+            //    //nikiti
+            //    if ($icon.hasClass('fa-scale-unbalanced')) {
+            //        $icon.removeClass('fa-scale-unbalanced').addClass('fa-scale-balanced');
+            //    } else {
+            //        $icon.addClass('fa-scale-balanced');
+            //    }
+            //} else {
+            //    $summaryCard.removeClass('bg-success').addClass('bg-danger');
+            //    //nikiti
+            //    if ($icon.hasClass('fa-scale-balanced')) {
+            //        $icon.removeClass('fa-scale-balanced').addClass('fa-scale-unbalanced');
+            //    } else {
+            //        $icon.addClass('fa-scale-unbalanced');
+            //    }
+            //}
+
+            debugger
+            var $icon = $('#idNikiti');
+
             if (compareIn === compare) {
                 $summaryCard.removeClass('bg-danger').addClass('bg-success');
+
+                // balanced
+                if ($icon.hasClass('fa-scale-unbalanced')) {
+                    $icon.removeClass('fa-scale-unbalanced')
+                         .addClass('fa-scale-balanced');
+                } else {
+                    $icon.addClass('fa-scale-balanced');
+                }
+
             } else {
                 $summaryCard.removeClass('bg-success').addClass('bg-danger');
+
+                // unbalanced
+                if ($icon.hasClass('fa-scale-balanced')) {
+                    $icon.removeClass('fa-scale-balanced')
+                         .addClass('fa-scale-unbalanced');
+                } else {
+                    $icon.addClass('fa-scale-unbalanced');
+                }
             }
+
+
+
+
+
 
             // M IN
             var inRows = '';
@@ -90,31 +142,31 @@
             $.each(data.NowList, function (i, item) {
                 nowRows += `<tr data-id="${item.IdNow}"><td>${item.DateNow ? formatDateForDisplay(item.DateNow) : ''}</td><td>${item.AmountNow.toLocaleString()}</td><td>${item.DetailsNow || ''}</td><td><button class="btn btn-primary btn-xs edit-now" style="padding:2px 8px;font-size:11px;">Edit</button> <button class="btn btn-danger btn-xs delete-now" style="padding:2px 8px;font-size:11px;">Delete</button></td></tr>`;
             });
-    // Delete for M IN
-    $('#tblMin').on('click', '.delete-in', function () {
-        var $tr = $(this).closest('tr');
-        var id = $tr.data('id');
-        if (confirm('Are you sure you want to delete this M IN entry?')) {
-            $.post('/Budget/DeleteBudgetVerificationIn', { idIn: id }, function (resp) {
-                loadData();
+            // Delete for M IN
+            $('#tblMin').on('click', '.delete-in', function () {
+                var $tr = $(this).closest('tr');
+                var id = $tr.data('id');
+                if (confirm('Are you sure you want to delete this M IN entry?')) {
+                    $.post('/Budget/DeleteBudgetVerificationIn', { idIn: id }, function (resp) {
+                        loadData();
+                    });
+                }
             });
-        }
-    });
 
-    // Delete for M Now
-    $('#tblMnow').on('click', '.delete-now', function () {
-        var $tr = $(this).closest('tr');
-        var id = $tr.data('id');
-        if (confirm('Are you sure you want to delete this M Now entry?')) {
-            $.post('/Budget/DeleteBudgetVerificationNow', { idNow: id }, function (resp) {
+            // Delete for M Now
+            $('#tblMnow').on('click', '.delete-now', function () {
+                var $tr = $(this).closest('tr');
+                var id = $tr.data('id');
+                if (confirm('Are you sure you want to delete this M Now entry?')) {
+                    $.post('/Budget/DeleteBudgetVerificationNow', { idNow: id }, function (resp) {
+                        loadData();
+                    });
+                }
+            });
+            // Cancel for M Now (delegated, like M IN)
+            $('#tblMnow').on('click', '.cancel-edit', function () {
                 loadData();
             });
-        }
-    });
-                // Cancel for M Now (delegated, like M IN)
-                $('#tblMnow').on('click', '.cancel-edit', function () {
-                    loadData();
-                });
             $('#tblMnow tbody').html(nowRows);
         });
     }
@@ -168,7 +220,7 @@
         $tr.find('td').eq(0).html(`<input type="date" class="form-control form-control-sm edit-date" value="${formatDateForInput(date)}" />`);
         $tr.find('td').eq(1).html(`<input type="number" step="0.01" class="form-control form-control-sm edit-amount" value="${amount}" />`);
         $tr.find('td').eq(2).html(`<input type="text" class="form-control form-control-sm edit-details" value="${details}" />`);
-        $btn.removeClass('edit-in btn-primary').addClass('save-in btn-success btn-xs').text('Save').css({'padding':'2px 8px','font-size':'11px'});
+        $btn.removeClass('edit-in btn-primary').addClass('save-in btn-success btn-xs').text('Save').css({ 'padding': '2px 8px', 'font-size': '11px' });
         $btn.after(`<button class="btn btn-secondary btn-xs cancel-edit" style="margin-left:5px;padding:2px 8px;font-size:11px;">Cancel</button>`);
     });
 
@@ -204,7 +256,7 @@
         $tr.find('td').eq(0).html(`<input type="date" class="form-control form-control-sm edit-date" value="${formatDateForInput(date)}" />`);
         $tr.find('td').eq(1).html(`<input type="number" step="0.01" class="form-control form-control-sm edit-amount" value="${amount}" />`);
         $tr.find('td').eq(2).html(`<input type="text" class="form-control form-control-sm edit-details" value="${details}" />`);
-        $btn.removeClass('edit-now btn-primary').addClass('save-now btn-success btn-xs').text('Save').css({'padding':'2px 8px','font-size':'11px'});
+        $btn.removeClass('edit-now btn-primary').addClass('save-now btn-success btn-xs').text('Save').css({ 'padding': '2px 8px', 'font-size': '11px' });
         $btn.after(`<button class="btn btn-secondary btn-xs cancel-edit" style="margin-left:5px;padding:2px 8px;font-size:11px;">Cancel</button>`);
     });
 
@@ -225,5 +277,5 @@
         });
     });
 
-   
+
 });

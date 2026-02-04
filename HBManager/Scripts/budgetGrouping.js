@@ -107,16 +107,26 @@
     $(document).on("keydown", ".only-numeric", function (e) {
 
         // Allow: backspace, delete, tab, escape, enter
-        if ($.inArray(e.keyCode, [8, 9, 13, 27, 46]) !== -1 ||
+        if (
+            $.inArray(e.keyCode, [8, 9, 13, 27, 46]) !== -1 ||
             // Allow: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
             (e.ctrlKey === true && $.inArray(e.keyCode, [65, 67, 86, 88]) !== -1) ||
             // Allow: home, end, left, right
-            (e.keyCode >= 35 && e.keyCode <= 39)) {
+            (e.keyCode >= 35 && e.keyCode <= 39)
+        ) {
+            return;
+        }
+
+        // Allow minus (-) only at the beginning
+        if (e.keyCode === 189 || e.keyCode === 109) { // - key
+            if ($(this).val().length !== 0) {
+                e.preventDefault();
+            }
             return;
         }
 
         // Allow decimal point (.)
-        if ((e.keyCode === 190 || e.keyCode === 110)) {
+        if (e.keyCode === 190 || e.keyCode === 110) {
             // Prevent more than one dot
             if ($(this).val().indexOf('.') !== -1) {
                 e.preventDefault();
@@ -125,8 +135,10 @@
         }
 
         // Block anything that is not a number (0–9)
-        if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) &&
-            (e.keyCode < 96 || e.keyCode > 105)) {
+        if (
+            (e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) &&
+            (e.keyCode < 96 || e.keyCode > 105)
+        ) {
             e.preventDefault();
         }
     });
@@ -165,7 +177,7 @@
             return false;
         }
 
-        if (amount.trim() === "" || isNaN(amount) || parseFloat(amount) < 0) {
+        if (amount.trim() === "" || isNaN(amount) ) {
             alert("Please enter a valid Amount");
             $("#txtAmt").focus();
             return false;

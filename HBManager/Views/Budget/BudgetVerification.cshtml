@@ -7,200 +7,219 @@
 <link href="~/Content/budget-verification.css" rel="stylesheet" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
+
+
+
 <div class="app-content">
     <div class="container-fluid">
         <div class="row">
-            <div class="row">
-                <div class="col-md-1">
-                    <div class="floating-label-group">
-                        <select class="form-control form-control-sm" id="ddlYear">
-                            <option value="0">--Year--</option>
-                            <option value="2024">2024</option>
-                            <option value="2025">2025</option>
-                            <option value="2026">2026</option>
-                            <option value="2027">2027</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <div class="floating-label-group">
-                        <select class="form-control form-control-sm" id="ddlMonth">
-                            <option value="0">--Month--</option>
-                            <option value="1">January</option>
-                            <option value="2">February</option>
-                            <option value="3">March</option>
-                            <option value="4">April</option>
-                            <option value="5">May</option>
-                            <option value="6">June</option>
-                            <option value="7">July</option>
-                            <option value="8">August</option>
-                            <option value="9">September</option>
-                            <option value="10">October</option>
-                            <option value="11">November</option>
-                            <option value="12">December</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
+            <!-- cards -->
+            <div class="col-md-12">
+                <div class="card card-primary  mb-1">
+                    <div class="card-body" style="padding: 5px 5px 5px 5px;">
+                        <div class="row">
 
+                            <div class="col-md-3">
+                                <div class="summary-card" style="background-image: linear-gradient(to right top, #097c72, #009786, #00b298, #00cea9, #12ebb9);">
+                                    <div class="row g-1">
+                                        <div class="col-md-6">
+                                            <div class="floating-label-group">
+                                                <select class="form-control form-control-sm" id="ddlYear">
+                                                    <option value="0">--Year--</option>
+                                                    <option value="2024">2024</option>
+                                                    <option value="2025">2025</option>
+                                                    <option value="2026">2026</option>
+                                                    <option value="2027">2027</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="floating-label-group">
+                                                <select class="form-control form-control-sm" id="ddlMonth">
+                                                    <option value="0">--Month--</option>
+                                                    <option value="1">January</option>
+                                                    <option value="2">February</option>
+                                                    <option value="3">March</option>
+                                                    <option value="4">April</option>
+                                                    <option value="5">May</option>
+                                                    <option value="6">June</option>
+                                                    <option value="7">July</option>
+                                                    <option value="8">August</option>
+                                                    <option value="9">September</option>
+                                                    <option value="10">October</option>
+                                                    <option value="11">November</option>
+                                                    <option value="12">December</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
 
-            <div class="row mb-1">
-                <div class="col-md-3">
-                    <div class="summary-card bg-success">
-                        <div class="summary-header">
-                            <span class="summary-title">COMPARE</span><span id="IdDifference"></span>
-                            <i class="fa-solid summary-icon" id="idNikiti"></i>
+                                </div>
+                            </div>
 
-                            @*<i class="fa-solid summary-icon fa-scale-balanced "></i>*@
-                            @*<i class="fa-solid summary-icon fa-scale-unbalanced"></i>*@
-                        </div>
-                        <div class="summary-title" style="color:darkgreen;font-size: 18px;" id="totalCompareIn"></div>
-                        <div class="summary-title" style="color:darkred;font-size: 18px;" id="totalCompare"></div>
-                        
-                    </div>
-                </div>
+                            <div class="col-md-3">
+                                <div class="summary-card bg-success-cstm" style="height:12vh">
+                                    <div class="summary-header">
+                                        <span class="summary-title">COMPARE</span><span id="IdDifference"></span>
+                                        <i class="fa-solid summary-icon" id="idNikiti"></i>
+                                    </div>
+                                    <div class="summary-title" style="color:#FFD700;font-size: 16px;" id="totalCompareIn"></div>
+                                    <div class="summary-title" style="color:#E6FF00;font-size: 16px;" id="totalCompare"></div>
 
-                @*<div class="col-md-3">
-                    <div class="summary-card summary-compare">
-                        <div class="summary-header">
-                            <span class="summary-title">COMPARE</span>
-                            <i class="fa-solid fa-chart-line summary-icon"></i>
-                        </div>
-                        <div class="compare-row positive">
-                            <i class="fa-solid fa-arrow-trend-up"></i>
-                            <span id="totalCompareIn"></span>
-                        </div>
-                        <div class="compare-row neutral">
-                            <i class="fa-solid fa-scale-balanced"></i>
-                            <span id="totalCompare"></span>
-                        </div>
-                    </div>
-                </div>*@
+                                </div>
+                            </div>
 
+                            <div class="col-md-3">
+                                <div class="summary-card" style="height:12vh;background-image: linear-gradient(to right top, #6c7c09, #85970c, #9eb20e, #b9ce10, #d5eb12);">
+                                    <div class="summary-header">
+                                        <span class="summary-title">Rem </span> <span id="cardRem_salary">00.00</span>-<span id="cardRem_speand">00.00</span>
+                                        <i class="fa-solid fa-clock summary-icon"></i>
+                                    </div>
+                                    <div class="summary-value">
+                                        <i class="fa-solid fa-indian-rupee-sign"></i>
+                                        <span id="cardRem_remain">00.00</span>
+                                    </div>
+                                </div>
+                            </div>
 
-                <div class="col-md-3">
-                    <div class="summary-card summary-in">
-                        <div class="summary-header">
-                            <span class="summary-title">M IN</span>
-                            <i class="fa-solid fa-plus summary-icon"></i>
-                        </div>
-                        <div class="summary-value">
-                            <i class="fa-solid fa-indian-rupee-sign"></i>
-                            <span id="totalIn"></span>
-                        </div>
-                    </div>
-                </div>
+                            <div class="col-md-3">
+                                <div class="summary-card summary-in" style="background-image: linear-gradient(to right top, #051937, #004d7a, #008793, #00bf72, #a8eb12);">
+                                    <div class="summary-header">
+                                        <span class="summary-title">M IN</span>
+                                        <i class="fa-solid fa-plus summary-icon"></i>
+                                    </div>
+                                    <div class="summary-value">
+                                        <i class="fa-solid fa-indian-rupee-sign"></i>
+                                        <span id="totalIn"></span>
+                                    </div>
+                                </div>
+                            </div>
 
-                <div class="col-md-3">
-                    <div class="summary-card summary-out">
-                        <div class="summary-header">
-                            <span class="summary-title">M OUT</span>
-                            <i class="fa-solid fa-minus summary-icon"></i>
-                        </div>
-                        <div class="summary-value">
-                            <i class="fa-solid fa-indian-rupee-sign"></i>
-                            <span id="totalOut"></span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-3">
-                    <div class="summary-card summary-now">
-                        <div class="summary-header">
-                            <span class="summary-title">NOW</span>
-                            <i class="fa-solid fa-clock summary-icon"></i>
-                        </div>
-                        <div class="summary-value">
-                            <i class="fa-solid fa-indian-rupee-sign"></i>
-                            <span id="totalNow"></span>
-                        </div>
-                    </div>
-                </div>
-                @*<div class="col-md-3">
-                    <div class="summary-card bg-body-secondary">
-                        <div class="summary-title">M IN</div>
-                        <div class="summary-value" id="totalIn"></div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="summary-card bg-body-secondary">
-                        <div class="summary-title">M Out</div>
-                        <div class="summary-value" id="totalOut"></div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="summary-card bg-body-secondary">
-                        <div class="summary-title">Now</div>
-                        <div class="summary-value" id="totalNow"></div>
-                    </div>
-                </div>*@
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header card-header-in">
-                        <h3 class="card-title mb-0">M IN</h3>
-                    </div>
-                    <div class="card-body p-0">
-                        <div class="table-responsive">
-                            <table class="table m-0" id="tblMin">
-                                <thead>
-                                    <tr>
-                                        <th style="width: 25%;">Date</th>
-                                        <th style="width: 19%;">Amt</th>
-                                        <th>Details</th>
-                                        <th style="width: 32%;">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody></tbody>
-                                <tfoot>
-                                    <tr>
-                                        <td><input type="date" id="inDateAdd" class="form-control form-control-sm" /></td>
-                                        <td><input type="number" step="0.01" id="inAmountAdd" class="form-control form-control-sm" /></td>
-                                        <td><input type="text" id="inDetailsAdd" class="form-control form-control-sm" /></td>
-                                        <td><button id="addInBtn" class="btn btn-sm btn-success">Add</button></td>
-                                    </tr>
-                                </tfoot>
-                            </table>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header card-header-now">
-                        <h3 class="card-title mb-0">M Now</h3>
-                    </div>
-                    <div class="card-body p-0">
-                        <div class="table-responsive">
-                            <table class="table m-0" id="tblMnow">
-                                <thead>
-                                    <tr>
-                                        <th>Date</th>
-                                        <th>Amt</th>
-                                        <th>Details</th>
-                                        <th style="width: 32%;">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody></tbody>
-                                <tfoot>
-                                    <tr>
-                                        <td><input type="date" id="nowDateAdd" class="form-control form-control-sm" /></td>
-                                        <td><input type="number" step="0.01" id="nowAmountAdd" class="form-control form-control-sm" /></td>
-                                        <td><input type="text" id="nowDetailsAdd" class="form-control form-control-sm" /></td>
-                                        <td><button id="addNowBtn" class="btn btn-sm btn-success">Add</button></td>
-                                    </tr>
-                                </tfoot>
-                            </table>
+            <!-- cards2 -->
+            <div class="col-md-12">
+                <div class="card card-primary  mb-1">
+                    <div class="card-body"  style="padding: 5px 5px 5px 5px;">
+                        <div class="row">
+
+                            <div class="col-md-3">
+                                <div class="summary-card summary-out"  style="height:12vh;background-image: linear-gradient(to right top, #7c0948, #960c57, #b20e65, #ce1074, #eb1282);">
+                                    <div class="summary-header">
+                                        <span class="summary-title">M OUT</span>
+                                        <i class="fa-solid fa-minus summary-icon"></i>
+                                    </div>
+                                    <div class="summary-value">
+                                        <i class="fa-solid fa-indian-rupee-sign"></i>
+                                        <span id="totalOut"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="summary-card summary-now"  style="height:12vh;background-image: linear-gradient(to right top, #54097c, #690c97, #7f0fb2, #9611ce, #ae12eb);">
+                                    <div class="summary-header">
+                                        <span class="summary-title">NOW</span>
+                                        <i class="fa-solid fa-clock summary-icon"></i>
+                                    </div>
+                                    <div class="summary-value">
+                                        <i class="fa-solid fa-indian-rupee-sign"></i>
+                                        <span id="totalNow"></span>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
             </div>
+
+
+            <!-- Details Table Row -->
+            <div class="col-md-12">
+                <div class="card card-success ">
+                    <div class="div-responsive-dash"  style="padding: 5px 5px 5px 5px;padding: 5px 5px 5px 5px; overflow-y: scroll; height: 54vh; overflow-x: hidden;">
+
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header card-header-in" style="background-image: linear-gradient(to right top, #10097c, #004fb7, #0085d5, #00b9de, #12ebdf);">
+                                        <h3 class="card-title mb-1">M IN</h3>
+                                    </div>
+                                    <div class="card-body p-0">
+                                        <div class="table-responsive">
+                                            <table class="table m-1" id="tblMin">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="width: 25%;">Date</th>
+                                                        <th style="width: 19%;">Amt</th>
+                                                        <th>Details</th>
+                                                        <th style="width: 32%;">Actions</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody></tbody>
+                                                <tfoot>
+                                                    <tr>
+                                                        <td><input type="date" id="inDateAdd" class="form-control form-control-sm" /></td>
+                                                        <td><input type="number" step="0.01" id="inAmountAdd" class="form-control form-control-sm" /></td>
+                                                        <td><input type="text" id="inDetailsAdd" class="form-control form-control-sm" /></td>
+                                                        <td><button id="addInBtn" class="btn btn-sm btn-success">Add</button></td>
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header card-header-now" style="background-image: linear-gradient(to right top, #10097c, #004fb7, #0085d5, #00b9de, #12ebdf);">
+                                        <h3 class="card-title mb-0">M Now</h3>
+                                    </div>
+                                    <div class="card-body p-0">
+                                        <div class="table-responsive">
+                                            <table class="table m-0" id="tblMnow">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Date</th>
+                                                        <th>Amt</th>
+                                                        <th>Details</th>
+                                                        <th style="width: 32%;">Actions</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody></tbody>
+                                                <tfoot>
+                                                    <tr>
+                                                        <td><input type="date" id="nowDateAdd" class="form-control form-control-sm" /></td>
+                                                        <td><input type="number" step="0.01" id="nowAmountAdd" class="form-control form-control-sm" /></td>
+                                                        <td><input type="text" id="nowDetailsAdd" class="form-control form-control-sm" /></td>
+                                                        <td><button id="addNowBtn" class="btn btn-sm btn-success">Add</button></td>
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+
         </div>
     </div>
 </div>
+
+
+
+
 
 <script src="~/Scripts/budget-verification.js"></script>

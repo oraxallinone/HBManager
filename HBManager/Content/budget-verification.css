@@ -21,7 +21,9 @@
 .bg-warning { background-color: #ffc107 !important; color: #333 !important; }
 .bg-info { background-color: #17a2b8 !important; }
 
-
+/*.min-high{
+    min-height:4vh;
+}*/
 
 
 
@@ -42,10 +44,11 @@
 
 
 .summary-card {
-    padding: 18px;
+    padding: 16px;
     border-radius: 14px;
     box-shadow: 0 6px 18px rgba(0,0,0,0.12);
     color: #ffffff;
+    min-height:15vh;
 }
 
 .summary-header {
@@ -91,8 +94,7 @@
 
 
 
-
-
+ 
 
 
 
@@ -154,7 +156,12 @@
 
 
 
-
+.bg-success-cstm{
+    background-image: linear-gradient(to right top, #147c09, #19970b, #1db20e, #22ce10, #27eb12);
+}
+.bg-danger-cstm{
+    background-image: linear-gradient(to right top, #7c4809, #944700, #af4200, #cc3500, #eb1212);
+}
 
 
 

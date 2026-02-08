@@ -56,26 +56,37 @@
         var month = $('#ddlMonth').val();
         $.getJSON('/Budget/GetBudgetVerificationData', { year: year, month: month }, function (data) {
             // Totals
+        
 
             $('#totalIn').text(data.TotalIn.toLocaleString());
-            $('#totalCompareIn').text(data.TotalIn.toLocaleString());
+            $('#totalCompareIn').text(data.TotalIn.toLocaleString() + '  _ Init');
             $('#totalOut').text(data.TotalOut.toLocaleString());
             $('#totalNow').text(data.TotalNow.toLocaleString());
 
+            //card:rem salary
+            $('#cardRem_salary').text(data.InList.find(item => item.DetailsIn === "Salary Amount").AmountIn.toLocaleString());
+
+            //card:rem assign out
+            $('#cardRem_speand').text(data.TotalOut.toLocaleString());
+            //calc of remain
+            let calcRemain = parseFloat(data.InList.find(item => item.DetailsIn === "Salary Amount").AmountIn) - parseFloat(data.TotalOut);
+            $('#cardRem_remain').text(calcRemain.toLocaleString());
+
+
             let out_Now = parseFloat(data.TotalOut) + parseFloat(data.TotalNow);
-            $('#totalCompare').text(out_Now.toLocaleString());
+            $('#totalCompare').text(out_Now.toLocaleString() + ' _  O + Now');
 
             //difference between #totalCompareIn - #totalCompare= ?
             let difference = parseFloat(data.TotalIn) - parseFloat(out_Now);
             $('#IdDifference').text(difference.toLocaleString());
 
-
+            debugger
             // Compare and set card color
             var compareIn = parseFloat(data.TotalIn).toFixed(2);
             var compare = out_Now.toFixed(2);
-            var $summaryCard = $('.summary-card.bg-success');
+            var $summaryCard = $('.summary-card.bg-success-cstm');
             if ($summaryCard.length == 0) {
-                $summaryCard = $('.summary-card.bg-danger');
+                $summaryCard = $('.summary-card.bg-danger-cstm');
             }
 
 
@@ -99,11 +110,10 @@
             //    }
             //}
 
-            debugger
             var $icon = $('#idNikiti');
 
             if (compareIn === compare) {
-                $summaryCard.removeClass('bg-danger').addClass('bg-success');
+                $summaryCard.removeClass('bg-danger-cstm').addClass('bg-success-cstm');
 
                 // balanced
                 if ($icon.hasClass('fa-scale-unbalanced')) {
@@ -114,7 +124,7 @@
                 }
 
             } else {
-                $summaryCard.removeClass('bg-success').addClass('bg-danger');
+                $summaryCard.removeClass('bg-success-cstm').addClass('bg-danger-cstm');
 
                 // unbalanced
                 if ($icon.hasClass('fa-scale-balanced')) {

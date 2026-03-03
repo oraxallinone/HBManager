@@ -22,6 +22,18 @@
         line-height: 0.7;
         vertical-align: middle;
     }
+
+    .card-footer {
+        display: flex;
+    }
+
+   
+
+    #txtInternalNote {
+        height: 28px;
+        padding: 2px 6px;
+        font-size: 13px;
+    }
 </style>
 
 <div class="content-wrapper">
@@ -62,8 +74,8 @@
                                     @Html.TextBoxFor(m => m.INotes, new { placeholder = "Invoice Note", @class = "form-control form-control-sm", Styles = "color:#e9ecef" })
                                 </div>
                                 <div class="form-group col-md-1">
-                                    <label for="IDONumber" style="font-size:14px">OD Number</label>
-                                    @Html.TextBoxFor(m => m.IDONumber, new { placeholder = "OD Number", @class = "form-control form-control-sm", Styles = "color:#e9ecef" })
+                                    <label for="IDONumber" style="font-size:14px">DO Number</label>
+                                    @Html.TextBoxFor(m => m.IDONumber, new { placeholder = "DO Number", @class = "form-control form-control-sm", Styles = "color:#e9ecef" })
                                 </div>
 
                             </div>
@@ -121,10 +133,16 @@
                             </div>
                         </div>
                         <div class="card-footer">
+
                             <button type="button" class="btn  btn-sm btn-info w104" id="invoiceSubmit">Submit & new</button>
-                            <button type="button" class="btn  btn-sm btn-info w104" id="invoicePrint">Submit & Print</button>
-                            <button type="button" class="btn  btn-sm btn-info w104" id="invoiceDraft">Draft</button>
-                            <button type="button" id="reset" class="btn btn-sm btn-outline-danger w104">Reset</button>
+                            <button type="button" class="btn  btn-sm btn-info w104" id="invoicePrint" style="margin-left: 1%;">Submit & Print</button>
+                            <button type="button" class="btn  btn-sm btn-info w104" id="invoiceDraft"  style="margin-left: 1%;">Draft</button>
+                            <button type="button" id="reset" class="btn btn-sm btn-outline-danger w104"  style="margin-left: 1%;">Reset</button>
+
+                            <div class="inertnal-note" style="margin-left: 30%;">
+                                Internal Note: <input type="text" id="txtInternalNote" style="width:300px" />
+
+                            </div>
                         </div>
                     </div>
                 </div>

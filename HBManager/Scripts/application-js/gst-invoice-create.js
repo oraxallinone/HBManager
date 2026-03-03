@@ -13,6 +13,12 @@
         $("#IDate").val(formatDate());
     }
 
+    $(document).on("keydown", function (e) {
+        if (e.which === 13 && !e.shiftKey && !e.ctrlKey && !e.altKey) {
+            $("#btnAddItm").trigger("click");
+        }
+    });
+
     hidelFooterGstGroup();
 
     loadCustomers();
@@ -28,7 +34,7 @@
         if (!itmName || itmName === 'Search item...') { swal("", "Please select an item", "error"); return false; }
         let value = $("#itm_Quantity").val();
         if (value == "") { $("#itm_Quantity").val(1); }
-        if (value != "") { $("#itm_Quantity").val(parseInt(value) + 1); }
+        if (value != "") { $("#itm_Quantity").val(parseFloat(value) + 1); }
         taxCalculation();
     });
 
@@ -36,8 +42,8 @@
         let itmName = $('select#ItemCode option:selected').text();
         if (itmName == "-- Select One --") { swal("", "Please select an item", "error"); return false; }
         let value = $("#itm_Quantity").val();
-        if (value == "" || parseInt(value) == 0) { swal("", "Please add a quantity", "info"); return false; }
-        if (value != "" || parseInt(value) > 0) { $("#itm_Quantity").val(parseInt(value) - 1); }
+        if (value == "" || parseFloat(value) == 0) { swal("", "Please add a quantity", "info"); return false; }
+        if (value != "" || parseFloat(value) > 0) { $("#itm_Quantity").val(parseFloat(value) - 1); }
         taxCalculation();
     });
 
@@ -58,7 +64,7 @@
         if (itmName == "-- Select One --") { swal("", "Please select an item", "error"); return false; }
         if (itmHsn == "") { swal("", "HSN should not be empty", "error"); return false; }
         if (itmQty == "") { swal("", "Qantity should not be empty", "error"); return false; }
-        if (parseInt(itmQty) < 1) { swal("", "Please add a quantity", "error"); return false; }
+        if (parseFloat(itmQty) < 1) { swal("", "Please add a quantity", "error"); return false; }
         if (itmRate == "") { alert("Rate should not be empty"); return false; }
         if (itmValue == "" || itmValue == 0) { alert("Value should not be empty"); return false; }
 
@@ -94,13 +100,12 @@
     $('#custId').change(function () {
         let gstType = ($(this).val()).split('-')[1];
         //cgst
-        if (gstType == "1")
-        {
+        if (gstType == "1") {
             $(".section-group").show();
             $(".section-sgst").show();
             $(".section-igst").hide();
         }
-        //igst
+            //igst
         else if (gstType == "2") {
             $(".section-group").show();
             $(".section-sgst").hide();
@@ -233,8 +238,8 @@
 
         let InvoiceGstViewModel = {
             INo: invoiceNo,
-            INotes:iNotes,//new
-            IDONumber:iDONumber,//new
+            INotes: iNotes,//new
+            IDONumber: iDONumber,//new
             IinvoiceStatus: invoiceStatus,
             IDraftNo: drafteNo,
             IDate: invoiceDate,
@@ -242,7 +247,7 @@
             TotalValue: invoiceGrand_Value,
             ItemTransList: addedItemList
         }
-        debugger
+        
         $.ajax({
             url: '/GstBill/Invoice/GstInvoiceCreate',
             type: "POST",
@@ -290,7 +295,7 @@
     }
 
     function taxCalculation() {
-        let qty = parseInt($("#itm_Quantity").val());
+        let qty = parseFloat($("#itm_Quantity").val());
         let rate = parseFloat($("#itm_Rate").val());
         let value = qty * rate;
         $("#itm_Value").val(value.toFixed(2));
@@ -386,6 +391,14 @@
         });
     }
 
+    $("#itm_Quantity").on("keydown", function (e) {
+        if (e.shiftKey && e.keyCode === 13) { // Shift + Enter
+            e.preventDefault(); // stop default behavior
+            $(this).val(""); // clear value
+            $(this).focus(); // optional: keep focus
+        }
+    });
+
     $('#itemSearch').on('select2:select', function (e) {
         var itemname = e.params.data.text;
         $.ajax({
@@ -402,6 +415,10 @@
                 $('#itemSearch').attr('alt', data.ItemCode);
                 $("#itm_Quantity").val(1);
                 taxCalculation();
+                //$("#itm_Quantity").focus();
+                setTimeout(function () {
+                    $("#itm_Quantity").focus();
+                }, 100);
             }
         });
     });

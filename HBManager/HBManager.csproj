@@ -306,6 +306,8 @@
     <Content Include="Content\theme\js\adminlte.min.js.map" />
     <Content Include="Areas\GstBill\Views\web.config" />
     <Content Include="Scripts\budget-verification.js" />
+    <Content Include="Upload\schemaHBManagerupto3march.sql" />
+    <Content Include="Upload\sp_budget_verification.sql" />
     <Content Include="Views\Budget\BudgeMobileIndex.cshtml" />
     <Content Include="Content\budget-mobile-index.css" />
     <Content Include="Scripts\budget-mobile.js" />

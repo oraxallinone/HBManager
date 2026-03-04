@@ -74,13 +74,12 @@
 
 
             let out_Now = parseFloat(data.TotalOut) + parseFloat(data.TotalNow);
-            $('#totalCompare').text(out_Now.toLocaleString() + ' _  O + Now');
+            $('#totalCompare').text(out_Now.toLocaleString() + ' _  ONow');
 
             //difference between #totalCompareIn - #totalCompare= ?
             let difference = parseFloat(data.TotalIn) - parseFloat(out_Now);
             $('#IdDifference').text(difference.toLocaleString());
 
-            debugger
             // Compare and set card color
             var compareIn = parseFloat(data.TotalIn).toFixed(2);
             var compare = out_Now.toFixed(2);
@@ -143,14 +142,14 @@
             // M IN
             var inRows = '';
             $.each(data.InList, function (i, item) {
-                inRows += `<tr data-id="${item.IdIn}"><td>${item.DateIn ? formatDateForDisplay(item.DateIn) : ''}</td><td>${item.AmountIn.toLocaleString()}</td><td>${item.DetailsIn || ''}</td><td><button class="btn btn-primary btn-xs edit-in" style="padding:2px 8px;font-size:11px;">Edit</button> <button class="btn btn-danger btn-xs delete-in" style="padding:2px 8px;font-size:11px;">Delete</button></td></tr>`;
+                inRows += `<tr data-id="${item.IdIn}"><td>${item.DateIn ? formatDateForDisplay(item.DateIn) : ''}</td><td>${item.AmountIn.toLocaleString()}</td><td>${item.DetailsIn || ''}</td><td><button class="btn btn-primary btn-xs edit-in" style="padding:2px 8px;font-size:11px;" title="Edit"><i class="fa fa-pencil"></i></button> <button class="btn btn-danger btn-xs delete-in" style="padding:2px 8px;font-size:11px;" title="Delete"><i class="fa fa-trash"></i></button></td></tr>`;
             });
             $('#tblMin tbody').html(inRows);
 
             // M Now
             var nowRows = '';
             $.each(data.NowList, function (i, item) {
-                nowRows += `<tr data-id="${item.IdNow}"><td>${item.DateNow ? formatDateForDisplay(item.DateNow) : ''}</td><td>${item.AmountNow.toLocaleString()}</td><td>${item.DetailsNow || ''}</td><td><button class="btn btn-primary btn-xs edit-now" style="padding:2px 8px;font-size:11px;">Edit</button> <button class="btn btn-danger btn-xs delete-now" style="padding:2px 8px;font-size:11px;">Delete</button></td></tr>`;
+                nowRows += `<tr data-id="${item.IdNow}"><td>${item.DateNow ? formatDateForDisplay(item.DateNow) : ''}</td><td>${item.AmountNow.toLocaleString()}</td><td>${item.DetailsNow || ''}</td><td><button class="btn btn-primary btn-xs edit-now" style="padding:2px 8px;font-size:11px;" title="Edit"><i class="fa fa-pencil"></i></button> <button class="btn btn-danger btn-xs delete-now" style="padding:2px 8px;font-size:11px;" title="Delete"><i class="fa fa-trash"></i></button></td></tr>`;
             });
             // Delete for M IN
             $('#tblMin').on('click', '.delete-in', function () {
@@ -230,8 +229,8 @@
         $tr.find('td').eq(0).html(`<input type="date" class="form-control form-control-sm edit-date" value="${formatDateForInput(date)}" />`);
         $tr.find('td').eq(1).html(`<input type="number" step="0.01" class="form-control form-control-sm edit-amount" value="${amount}" />`);
         $tr.find('td').eq(2).html(`<input type="text" class="form-control form-control-sm edit-details" value="${details}" />`);
-        $btn.removeClass('edit-in btn-primary').addClass('save-in btn-success btn-xs').text('Save').css({ 'padding': '2px 8px', 'font-size': '11px' });
-        $btn.after(`<button class="btn btn-secondary btn-xs cancel-edit" style="margin-left:5px;padding:2px 8px;font-size:11px;">Cancel</button>`);
+        $btn.removeClass('edit-in btn-primary').addClass('save-in btn-success btn-xs').html('<i class="fa fa-floppy-disk"></i>').attr('title', 'Save').css({ 'padding': '2px 8px', 'font-size': '11px' });
+        $btn.after(`<button class="btn btn-secondary btn-xs cancel-edit" style="margin-left:5px;padding:2px 8px;font-size:11px;" title="Cancel"><i class="fa fa-xmark"></i></button>`);
     });
 
     $('#tblMin').on('click', '.cancel-edit', function () {
@@ -266,8 +265,8 @@
         $tr.find('td').eq(0).html(`<input type="date" class="form-control form-control-sm edit-date" value="${formatDateForInput(date)}" />`);
         $tr.find('td').eq(1).html(`<input type="number" step="0.01" class="form-control form-control-sm edit-amount" value="${amount}" />`);
         $tr.find('td').eq(2).html(`<input type="text" class="form-control form-control-sm edit-details" value="${details}" />`);
-        $btn.removeClass('edit-now btn-primary').addClass('save-now btn-success btn-xs').text('Save').css({ 'padding': '2px 8px', 'font-size': '11px' });
-        $btn.after(`<button class="btn btn-secondary btn-xs cancel-edit" style="margin-left:5px;padding:2px 8px;font-size:11px;">Cancel</button>`);
+        $btn.removeClass('edit-now btn-primary').addClass('save-now btn-success btn-xs').html('<i class="fa fa-floppy-disk"></i>').attr('title', 'Save').css({ 'padding': '2px 8px', 'font-size': '11px' });
+        $btn.after(`<button class="btn btn-secondary btn-xs cancel-edit" style="margin-left:5px;padding:2px 8px;font-size:11px;" title="Cancel"><i class="fa fa-xmark"></i></button>`);
     });
 
     $('#tblMnow').on('click', '.save-now', function () {

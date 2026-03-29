@@ -18,5 +18,6 @@ namespace HBManager.Models
         public int? G3 { get; set; }
         public int? G4 { get; set; }
         public DateTime CreatedTime { get; set; }
+        public bool? IsVerified { get; set; }
     }
 }

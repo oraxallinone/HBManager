@@ -46,9 +46,9 @@ namespace HBManager.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetAllBudgetFromToWithGroup(int year, int month, int g1, int g2, int g3, int g4)
+        public JsonResult GetAllBudgetFromToWithGroup(int year, int month, int g1, int g2, int g3, int g4, bool isAll)
         {
-            var list = _svc.GetBudgetByFromToDateWithGroup(year, month, g1, g2, g3, g4);
+            var list = _svc.GetBudgetByFromToDateWithGroup(year, month, g1, g2, g3, g4, isAll);
             return Json(list, JsonRequestBehavior.AllowGet);
         }
 
@@ -147,6 +147,19 @@ namespace HBManager.Controllers
         {
             var rows = _svc.DeleteBudgetVerificationNow(idNow);
             return Json(new { Rows = rows });
+        }
+        [HttpPost]
+        public JsonResult UpdateText(int id, string details)
+        {
+            var ok = _svc.UpdateText(id, details);
+            return Json(new { Success = ok });
+        }
+
+        [HttpPost]
+        public JsonResult UpdateBudgetVerificationById(Budget model)
+        {
+            var rowIffected = _svc.UpdateBudgetVerificationById(model);
+            return Json(rowIffected);
         }
     }
 }

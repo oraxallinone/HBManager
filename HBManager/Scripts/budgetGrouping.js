@@ -1,14 +1,14 @@
 ﻿$(document).ready(function () {
     var screenWidth = window.screen.width;
     console.log(screenWidth);
-    $(".div-responsive").css("height", "63vh", "important");
+    $(".div-responsive").css("height", "69vh", "important");
 
     $("#lnkMaximize").click(function () {
-        $(".div-responsive").css("height", "69vh", "important");
+        $(".div-responsive").css("height", "74vh", "important");
     });
 
     $("#lnkMinimize").click(function () {
-        $(".div-responsive").css("height", "63vh", "important");
+        $(".div-responsive").css("height", "69vh", "important");
     });
 
     var selectedBudgetIds = [];  // Global array to store selected IDs
@@ -19,25 +19,53 @@
     //var screenWidth = window.screen.width; console.log(screenWidth);
 
     $("#ddlYear").change(function () {
-        GetAllBudgetFromToWithGroup();
+        if (!$('#checkForAll').is(':checked')) {
+            GetAllBudgetFromToWithGroup();
+        }
     });
 
     $("#ddlMonth").change(function () {
-        GetAllBudgetFromToWithGroup();
+        if (!$('#checkForAll').is(':checked')) {
+            GetAllBudgetFromToWithGroup();
+        }
     });
 
+    function getAllBudgetForGroupOnly() {
+        var year = $("#ddlYear").val();
+        var month = $("#ddlMonth").val();
+        var isAll = $('#checkForAll').prop('checked');
+        // Get group dropdown values
+        var g1 = parseInt($("#searchDDlG1").val(), 10) || 0;
+        var g2 = parseInt($("#searchDDlG2").val(), 10) || 0;
+        var g3 = parseInt($("#searchDDlG3").val(), 10) || 0;
+        var g4 = parseInt($("#searchDDlG4").val(), 10) || 0;
+        // Call API with year=0, month=0 to get all data for group
+        $.ajax({
+            url: "/Budget/GetAllBudgetFromToWithGroup",
+            type: "GET",
+            data: { year: 0, month: 0, g1: g1, g2: g2, g3: g3, g4: g4,isAll:isAll },
+            dataType: "json",
+            success: function (res) {
+                if (res && res.length > 0) {
+                    $("#gridTableBudget tbody").empty();
+                    bindBudgetTable(res);//bind rows
+                } else {
+                    $("#gridTableBudget tbody").html("<tr><td colspan='9' style='text-align:center;'>No records found</td></tr>");
+                }
+            },
+            error: function (xhr, status, error) {
+                alert("Error occurred while loading data: " + error);
+                console.log(xhr.responseText);
+            }
+        });
+    }
 
-    $("#searchDDlG1").change(function () {
-        GetAllBudgetFromToWithGroup();
-    });
-    $("#searchDDlG2").change(function () {
-        GetAllBudgetFromToWithGroup();
-    });
-    $("#searchDDlG3").change(function () {
-        GetAllBudgetFromToWithGroup();
-    });
-    $("#searchDDlG4").change(function () {
-        GetAllBudgetFromToWithGroup();
+    $("#searchDDlG1, #searchDDlG2, #searchDDlG3, #searchDDlG4").change(function () {
+        if ($('#checkForAll').is(':checked')) {
+            getAllBudgetForGroupOnly();
+        } else {
+            GetAllBudgetFromToWithGroup();
+        }
     });
 
 
@@ -51,7 +79,7 @@
 
     Get4Group();
 
-   
+
 
     $("#btnSaveBudget").click(function () {
         if (validateBudget()) {
@@ -94,14 +122,103 @@
 
         // Show/hide update button based on selection
         if (selectedBudgetIds.length > 0) {
+            $("#btnsingleSearch").hide();
+            $("#btnUpdateBudgetGroupSingle").hide();
             $("#btnUpdateBudgetGroup").show();
-            $('#divDDLMulti').show()
-        } else {
-            $("#btnUpdateBudgetGroup").hide();
-            $('#divDDLMulti').hide()
-        }
 
+            $("#divdllOnRender").hide();
+            $("#divDDLSingle").hide();
+            $("#divDDLMulti").show();
+        }
+        else {
+            $('#btnsingleSearch').show();
+            $('#btnUpdateBudgetGroupSingle').hide();
+            $('#btnUpdateBudgetGroup').hide();
+            $('#divdllOnRender').show();
+            $('#divDDLSingle').hide();
+            $('#divDDLMulti').hide();
+        }
         console.log("Selected Budget IDs:", selectedBudgetIds);
+    });
+
+    // Modal HTML injection (only once)
+    if ($('#customEditModal').length === 0) {
+        var modalHtml = `
+        <div id="customEditModal" style="display:none; position:fixed; z-index:99999; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.3);">
+            <div style="background:#fff; margin:10% auto; padding:20px; border-radius:8px; width:320px; position:relative; box-shadow:0 0 10px #333;">
+                <input type="hidden" id="modalHiddenId" />
+                <label for="modalEditInput">Edit Details:</label>
+                <input type="text" id="modalEditInput" class="form-control" style="margin-bottom:10px;" />
+                <button id="modalUpdateBtn" class="btn btn-primary" style="margin-right:10px;">Update</button>
+                <button id="modalCloseBtn" class="btn btn-secondary">Close</button>
+            </div>
+        </div>`;
+        $('body').append(modalHtml);
+    }
+
+    //with double click open popup
+    // Inline edit for Details cell
+    $(document).on('dblclick', '.doubleClick', function () {
+        var $td = $(this);
+        // Prevent multiple editors
+        if ($td.find('.inline-edit-details').length > 0) return;
+        var titleValue = $td.attr('title');   // get title value (ID)
+        var valueOfTd = $td.text();
+        // Save original for cancel
+        $td.data('original-content', valueOfTd);
+        // Build inline editor
+        var editorHtml = `
+                <input type="text" class="inline-edit-details form-control" value="${valueOfTd.replace(/"/g, '&quot;')}" style="width:195px; height:24px; font-size:12px; padding:2px 4px; display:inline-block; vertical-align:middle;" />
+                <button class="btn btn-success inline-update-details" data-id="${titleValue}" style="margin-left:4px; padding:2px 8px; font-size:12px; height:26px; line-height:1;">U</button>
+                <button class="btn btn-secondary inline-cancel-details" style="margin-left:2px; padding:2px 8px; font-size:12px; height:26px; line-height:1;">x</button>
+            `;
+        $td.html(editorHtml);
+        $td.find('input').focus();
+    });
+
+    // Close modal
+
+    // Cancel inline edit
+    $(document).on('click', '.inline-cancel-details', function (e) {
+        var $td = $(this).closest('td');
+        var original = $td.data('original-content');
+        $td.html(original);
+    });
+
+    // Update inline edit: call backend to update
+    $(document).on('click', '.inline-update-details', function (e) {
+        var $td = $(this).closest('td');
+        var id = $(this).data('id');
+        var newVal = $td.find('input').val();
+        // AJAX call to update details
+        $.ajax({
+            url: '/Budget/UpdateText',
+            type: 'POST',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify({ id: id, details: newVal }),
+            dataType: 'json',
+            success: function (res) {
+                if (res && res.Success) {
+                    $td.html(newVal);
+                    showMessage('Updated');
+                } else {
+                    showMessageError();
+                    $td.html($td.data('original-content'));
+                }
+            },
+            error: function () {
+                showMessageError();
+                $td.html($td.data('original-content'));
+            }
+        });
+    });
+
+    // Update button click
+    $(document).on('click', '#modalUpdateBtn', function () {
+        var id = $('#modalHiddenId').val();
+        // You can add your update logic here, for now just alert
+        alert('Selected Row ID: ' + id);
+        $('#customEditModal').fadeOut(100);
     });
 
     $(document).on("keydown", ".only-numeric", function (e) {
@@ -177,7 +294,7 @@
             return false;
         }
 
-        if (amount.trim() === "" || isNaN(amount) ) {
+        if (amount.trim() === "" || isNaN(amount)) {
             alert("Please enter a valid Amount");
             $("#txtAmt").focus();
             return false;
@@ -314,8 +431,15 @@
             success: function (res) {
                 if (res) {
                     bindBudgetDetails(res); // Bind the result to the fields
-                    $("#btnSaveBudget").hide();
-                    $('#divDDLSingle').show();
+
+                    //div
+                    $("#btnsingleSearch").hide();
+                    $("#btnUpdateBudgetGroupSingle").show();
+                    $("#btnUpdateBudgetGroup").hide();
+                    //btns
+                    $("#divdllOnRender").hide();
+                    $("#divDDLSingle").show();
+                    $("#divDDLMulti").hide();
                 } else {
                     alert("Budget not found.");
                 }
@@ -424,6 +548,57 @@
         }
 
         UpdateBudgetGroups();
+    });
+
+
+
+    // Double-click to toggle IsVerified
+    $(document).on('dblclick', '.validated-row', function () {
+        var $tr = $(this).closest('tr');
+        var id = $tr.attr('id');
+        if (!id) return;
+        $.ajax({
+            url: '/Budget/UpdateBudgetVerificationById',
+            type: 'POST',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify({ Id: parseInt(id), IsVerified: false }),
+            dataType: 'json',
+            success: function (res) {
+                if (res > 0) {
+                    showMessage('Marked as not validated');
+                    GetAllBudgetFromToWithGroup();
+                } else {
+                    showMessageError();
+                }
+            },
+            error: function () {
+                showMessageError();
+            }
+        });
+    });
+
+    $(document).on('dblclick', '.not-validated-row', function () {
+        var $tr = $(this).closest('tr');
+        var id = $tr.attr('id');
+        if (!id) return;
+        $.ajax({
+            url: '/Budget/UpdateBudgetVerificationById',
+            type: 'POST',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify({ Id: parseInt(id), IsVerified: true }),
+            dataType: 'json',
+            success: function (res) {
+                if (res > 0) {
+                    showMessage('Marked as validated');
+                    GetAllBudgetFromToWithGroup();
+                } else {
+                    showMessageError();
+                }
+            },
+            error: function () {
+                showMessageError();
+            }
+        });
     });
 
     // ... rest of existing functions ...
@@ -565,9 +740,11 @@
         });
     }
 
+    //execute on page load
     function GetAllBudgetFromToWithGroup() {
         var year = $("#ddlYear").val();
         var month = $("#ddlMonth").val();
+        var isAll = $('#checkForAll').prop('checked');
 
         var g1 = parseInt($("#searchDDlG1").val(), 10) || 0;
         var g2 = parseInt($("#searchDDlG2").val(), 10) || 0;
@@ -582,7 +759,7 @@
         $.ajax({
             url: "/Budget/GetAllBudgetFromToWithGroup",
             type: "GET",
-            data: { year: year, month: month, g1: g1, g2: g2, g3: g3, g4: g4 },
+            data: { year: year, month: month, g1: g1, g2: g2, g3: g3, g4: g4, isAll: isAll },
             dataType: "json",
             success: function (res) {
                 if (res && res.length > 0) {
@@ -610,7 +787,6 @@
     function bindBudgetTable(data) {
         var html = "";
         var i = 1;
-
         $.each(data, function (idx, item) {
             //var sssss = extractNameById(item.G1); //GetGroupMasterNameById(item.G1);
 
@@ -619,12 +795,15 @@
             var dayClassMain = ToDayExtraction(spendDate);
             var dayClass = getDayClass(dayClassMain);
             var g2save = (item.G2 == '3') ? "amt-save" : "";
-
+            var IsSafeDiv = item.IsVerified ?
+            "<i class='fa-solid fa-lock validated-row'></i>"
+            : "<i class='fa-solid fa-xmark not-validated-row'></i>";
 
             html += "<tr class='no-css id-" + item.Id + "' id='" + item.Id + "'>";
 
             // --- ICON COLUMN ---
             html += "<td class='" + dayClass + "'>";
+            //html += IsSafeDiv;
             html += "<a href='#' class='text-success class-btnViewBudget' data-id='" + item.Id + "'>";
             html += "<i class='fa-solid fa-eye'></i></a>";
             html += "<span class='bar-padding'>|</span>";
@@ -641,10 +820,10 @@
             // --- CHECKBOX COLUMN ---
             html += "<td class='" + dayClass + "'>";
             html += "<input type='checkbox' class='budget-checkbox' data-id='" + item.Id + "' />";
-            html += "</td>";
+            html += "" + IsSafeDiv + " </td>";
 
             // --- DETAILS COLUMN ---
-            html += "<td class='" + dayClass + "'>" + (item.Details || "") + "</td>";
+            html += "<td class='" + dayClass + " doubleClick' title=" + item.Id + " >"+ (item.Details || "") + "</td>";
 
             // --- G1 COLUMN ---
             html += "<td class='" + dayClass + "'> <div class='div-g1-c" + item.G1 + "'>" + (extractNameById(item.G1) || "") + "</div> </td>";
@@ -704,7 +883,7 @@
 
         // Short month names
         var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
-                      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
         // Day names (3 letters)
         var days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];

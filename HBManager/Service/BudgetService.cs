@@ -1,5 +1,6 @@
 ﻿
 
+
 using HBManager.Models;
 using System;
 using System.Collections.Generic;
@@ -143,6 +144,7 @@ namespace HBManager.Service
                 cmd.Parameters.AddWithValue("@G3", (object)model.G3 ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@G4", (object)model.G4 ?? DBNull.Value);
 
+
                 conn.Open();
                 var obj = cmd.ExecuteScalar();
                 return obj != null ? Convert.ToInt32(obj) : 0;
@@ -171,7 +173,7 @@ namespace HBManager.Service
             return list;
         }
 
-        public List<Budget> GetBudgetByFromToDateWithGroup(int year, int month, int g1, int g2, int g3, int g4)
+        public List<Budget> GetBudgetByFromToDateWithGroup(int year, int month, int g1, int g2, int g3, int g4, bool isAll)
         {
             var list = new List<Budget>();
             using (var conn = new SqlConnection(_connString))
@@ -184,6 +186,8 @@ namespace HBManager.Service
                 cmd.Parameters.AddWithValue("@g2", g2);
                 cmd.Parameters.AddWithValue("@g3", g3);
                 cmd.Parameters.AddWithValue("@g4", g4);
+                cmd.Parameters.AddWithValue("@isAll", isAll);
+
 
                 conn.Open();
                 using (var rdr = cmd.ExecuteReader())
@@ -245,8 +249,10 @@ namespace HBManager.Service
                 G2 = r["G2"] == DBNull.Value ? (int?)null : Convert.ToInt32(r["G2"]),
                 G3 = r["G3"] == DBNull.Value ? (int?)null : Convert.ToInt32(r["G3"]),
                 G4 = r["G4"] == DBNull.Value ? (int?)null : Convert.ToInt32(r["G4"]),
-                CreatedTime = Convert.ToDateTime(r["CreatedTime"])
-            };
+                CreatedTime = Convert.ToDateTime(r["CreatedTime"]),
+                //IsVerified = r["IsVerified"] == DBNull.Value ? (bool?)null : Convert.ToBoolean(r["IsVerified"])
+                IsVerified = r["IsVerified"] == DBNull.Value ? null : (bool?)r["IsVerified"]
+        };
         }
 
         public Group4Result GetAll4Group()
@@ -466,5 +472,39 @@ namespace HBManager.Service
             }
         }
 
+        public bool UpdateText(int id, string details)
+        {
+            using (var conn = new SqlConnection(_connString))
+            using (var cmd = new SqlCommand("usp_updateText", conn))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@Id", id);
+                cmd.Parameters.AddWithValue("@Details", details ?? "");
+                conn.Open();
+                using (var rdr = cmd.ExecuteReader())
+                {
+                    if (rdr.Read() && rdr["Success"] != DBNull.Value)
+                    {
+                        return Convert.ToInt32(rdr["Success"]) == 1;
+                    }
+                }
+            }
+            return false;
+        }
+
+        public int UpdateBudgetVerificationById(Budget model)
+        {
+            using (var conn = new SqlConnection(_connString))
+            using (var cmd = new SqlCommand("sp_UpdateBudgetVerificationById", conn))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@Id", model.Id);
+                cmd.Parameters.AddWithValue("@IsVerified", (object)model.IsVerified ?? DBNull.Value);
+
+                conn.Open();
+                var obj = cmd.ExecuteScalar();
+                return obj != null ? Convert.ToInt32(obj) : 0;
+            }
+        }
     }
 }

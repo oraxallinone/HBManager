@@ -90,7 +90,7 @@
    --------------------------------------------------------------------- */
 .search-ddl-g-all {
     border: none;
-    border-left: 4px solid #007bff;
+    border-left: 4px solid #ffc107;
     background: #f1f1f1;
     border-radius: 4px;
     appearance: none;
@@ -218,6 +218,7 @@
 }
 /* 4rd column Details*/
 #gridTableBudget td:nth-child(4) {
+    width: 3%;
 }
 /* 5rd column ----*/
 #gridTableBudget td:nth-child(5) {
@@ -260,10 +261,16 @@
 
 /*12	Saving*/
 .div-g1-c12 {
-    box-shadow: rgb(50 50 93 / 26%) 0px 2px 5px -1px, rgb(0 0 0 / 57%) 0px 1px 3px -1px;
+    background-image: linear-gradient(to right, #4fdf50b8 0%, #a1c8af9e 100%);
+    box-shadow: #43fc00 0px 2px 5px -1px, #00000091 0px 1px 3px -1px;
     margin-right: 7px;
-    transform: skew(166deg);
-    background-color: #6b8e2369;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 27px;
+    border-radius: 5px;
+    color: green;
 }
 
 /*8	HouseRent*/ /*14	Essential5k*/ /*11	Oil*/ /*13	Extra10k*/ /*9	Borrowed From Me_*/
@@ -376,7 +383,7 @@
    --------------------------------------------------------------------- */
 /* Style 11 */
 .ddl-group {
-    border-top: 3px solid #4a90e2;
+    border-top: 3px solid #ff0000;
     border-left: none;
     border-right: none;
     border-bottom: none;
@@ -385,9 +392,6 @@
 }
 
 
-/* ------------------ topic ------------------
-       - 
-   --------------------------------------------------------------------- */
 
 
 /* ------------------ topic ------------------
@@ -493,5 +497,40 @@
        - 
    --------------------------------------------------------------------- */
 .dynamic-bg-tr {
-    background-color: #17ff00de;
+    color: white;
+    background-color: #03a9f4;
+}
+
+
+
+.validated-row {
+    color: #9C27B0;
+    font-size: 15px;
+    cursor: pointer;
+    margin-right: 3%;
+    margin-left: 15%;
+}
+
+.not-validated-row {
+    color: #9c27b0;
+    font-size: 15px;
+    cursor: pointer;
+    margin-right: 3%;
+    margin-left: 15%;
+}
+
+
+/* ------------------ topic ------------------
+       - btn search all 
+   --------------------------------------------------------------------- */
+.btn-sm-search {
+    height: 27px;
+    color: white;
+    border-color: white;
+    font-size: 13px;
+}
+
+.card.card-outline {
+    border-top: 3px solid #175787b3;
+    border-bottom: 3px solid #175787b3;
 }

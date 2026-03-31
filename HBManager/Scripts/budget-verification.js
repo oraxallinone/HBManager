@@ -79,6 +79,16 @@
             //difference between #totalCompareIn - #totalCompare= ?
             let difference = parseFloat(data.TotalIn) - parseFloat(out_Now);
             $('#IdDifference').text(difference.toLocaleString());
+            if (difference > 0) {
+                $('#idSpanPVE').text(difference.toLocaleString());
+            }
+            else if (difference < 0) {
+                $('#idSpanNVE').text(difference.toLocaleString());
+            }
+            else {
+                $('#idSpanPVE').text('0');
+                $('#idSpanNVE').text('0');
+            }
 
             // Compare and set card color
             var compareIn = parseFloat(data.TotalIn).toFixed(2);

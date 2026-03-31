@@ -84,7 +84,7 @@
                     html += '<td>' + (item.Want30 != null ? item.Want30 : '') + '</td>';
                     html += '<td>' + fromDate + '</td>';
                     html += '<td>' + toDate + '</td>';
-                    html += '<td>' + (item.OrderRowAll != null ? item.OrderRowAll : '') + ' row count || ' + numberOfDays + ' days</td>';
+                    html += '<td>' + (item.OrderRowAll != null ? item.OrderRowAll : '') + ' order row all || ' + numberOfDays + ' days</td>';
 
                     html += '<td class="total-salary">' + (item.SalaryTillNow != null ? item.SalaryTillNow : '').toLocaleString('en-IN') + '</td>';
 

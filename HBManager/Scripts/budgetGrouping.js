@@ -43,7 +43,7 @@
         $.ajax({
             url: "/Budget/GetAllBudgetFromToWithGroup",
             type: "GET",
-            data: { year: 0, month: 0, g1: g1, g2: g2, g3: g3, g4: g4,isAll:isAll },
+            data: { year: 0, month: 0, g1: g1, g2: g2, g3: g3, g4: g4, isAll: isAll },
             dataType: "json",
             success: function (res) {
                 if (res && res.length > 0) {
@@ -88,16 +88,27 @@
     });
 
     $(document).on("keypress", function (e) {
-        if (e.which === 13) { // 13 = Enter key
-            let hidId = $('#hidenBudgetID').val();
-            if (hidId == 0) {
-                InsertBudget();
-                $('#txtAmt').focus();
+        if (e.which === 13) {
+            var $focused = $(e.target);
+            if ($focused.hasClass("inline-edit-details")) {
+                e.preventDefault();
+                var $updateBtn = $focused.closest('td').find(".inline-update-details");
+                if ($updateBtn.length > 0) {
+                    $updateBtn.click();
+                } else {
+                    console.error("Could not find the '.inline-update-details' button inside this cell.");
+                }
             }
             else {
-                UpdateBudgetGroupSingle();
+                let hidId = $('#hidenBudgetID').val();
+                if (hidId == 0) {
+                    InsertBudget();
+                    $('#txtAmt').focus();
+                }
+                else {
+                    UpdateBudgetGroupSingle();
+                }
             }
-
         }
     });
 
@@ -823,7 +834,7 @@
             html += "" + IsSafeDiv + " </td>";
 
             // --- DETAILS COLUMN ---
-            html += "<td class='" + dayClass + " doubleClick' title=" + item.Id + " >"+ (item.Details || "") + "</td>";
+            html += "<td class='" + dayClass + " doubleClick' title=" + item.Id + " >" + (item.Details || "") + "</td>";
 
             // --- G1 COLUMN ---
             html += "<td class='" + dayClass + "'> <div class='div-g1-c" + item.G1 + "'>" + (extractNameById(item.G1) || "") + "</div> </td>";

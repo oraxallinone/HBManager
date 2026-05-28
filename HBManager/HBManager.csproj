@@ -172,6 +172,7 @@
     <Compile Include="Controllers\DefaultController.cs" />
     <Compile Include="Controllers\GroupController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ImportController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\NotesController.cs" />
     <Compile Include="Controllers\SalaryController.cs" />
@@ -192,6 +193,7 @@
     <Compile Include="Models\GroupBudgetOverviewModel.cs" />
     <Compile Include="Models\GroupMaster.cs" />
     <Compile Include="Models\GstType.cs" />
+    <Compile Include="Models\QueryViewModel.cs" />
     <Compile Include="Models\SalaryMaster.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\BirthdayService.cs" />
@@ -415,6 +417,7 @@
     <Content Include="Views\Salary\SalaryIndex.cshtml" />
     <Content Include="Views\Upload\Index.cshtml" />
     <Content Include="Views\Budget\BudgetVerification.cshtml" />
+    <Content Include="Views\Import\ExecuteQuery.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

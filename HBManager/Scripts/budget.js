@@ -8,8 +8,10 @@
     console.log(screenWidth);
     $(".div-responsive").css("height", "67vh");
 
-    bindGet4Group();
-    GetGroupMasterUncut(); // call on page load
+     // call on page load
+    bindGet4Group();//1
+    GetGroupMasterUncut();//2
+    setThisYearMonth()//3 set month n year
 
     $("#lnkMaximize").click(function () {
         $(".div-responsive").css("height", "72vh");
@@ -39,7 +41,6 @@
         GetSalaryByMonthYear();
     });
 
-    setThisYearMonth()//set month n year
 
     function validateBudget() {
         var year = $("#ddlYear").val();
@@ -102,29 +103,10 @@
             success: function (rowIffected) {
                 if (rowIffected > 0) {
                     showMessage(rowiffected);
-                    //alert("Budget record inserted successfully! ID: " + res.Id);
                     fnClearAmtDetails();
-                    //GetAllBudgetFromTo();
                 } else {
                     alert("Error: Failed to insert budget record");
                 }
-
-
-
-                //if (res) {
-                //    if (res.message == 'success') {
-                //        showMessage(msg)
-                //        alert("Budget record inserted successfully! ID: " + res.Id);
-                //        fnClearAmtDetails();
-                //        //GetAllBudgetFromTo();
-                //    } else {
-                //        alert("Error: Failed to insert budget record");
-                //    }
-                //}
-                //else {
-
-                //}
-
             },
             error: function (xhr, status, error) {
                 alert("Error occurred: " + error);
@@ -134,22 +116,12 @@
     }
 
     function fnClearAmtDetails() {
-        //$("#ddlYear").val("0");
-        //$("#ddlMonth").val("0");
-        //$("#txtDate").val("");
         $("#txtAmt").val("");
         $("#txtDetails").val("");
-        //$("#searchDDlG1").val("-- G1 --");
-        //$("#searchDDlG2").val("-- G2 --");
-        //$("#searchDDlG3").val("-- G3 --");
-        //$("#searchDDlG4").val("-- G4 --");
-        //$("#hidenBudgetID").val("");
     }
 
     function showMessage(msg) {
-        // Create message box
         var msg = $('<div id="tempMessage">complete ' + msg + '</div>');
-
         // Style it like an alert popup
         msg.css({
             position: 'fixed',
@@ -220,7 +192,6 @@
     }
 
     function bindData() {
-
         var year = parseInt($("#ddlYear").val(), 10) || 0;
         var month = parseInt($("#ddlMonth").val(), 10) || 0;
 
@@ -228,17 +199,17 @@
         var g2 = parseInt($("#searchDDlG2").val(), 10) || 0;
         var g3 = parseInt($("#searchDDlG3").val(), 10) || 0;
         var g4 = parseInt($("#searchDDlG4").val(), 10) || 0;
+        var isAll = false;
 
 
         if (year === 0 || month === 0) {
             alert("Please select Year and Month");
             return;
         }
-
         $.ajax({
             url: '/Budget/GetAllBudgetFromToWithGroup',//GetAllBudgetFromToWithGroup||GetAllBudgetFromTo
             type: 'GET',
-            data: { year: year, month: month, g1: g1, g2: g2, g3: g3, g4: g4 },
+            data: { year: year, month: month, g1: g1, g2: g2, g3: g3, g4: g4, isAll: isAll },
             dataType: 'json',
             success: function (res) {
                 $("#gridTableBudget tbody").empty();
@@ -372,7 +343,7 @@
                 bindData();
             },
             error: function (xhr, status, err) {
-
+                console.error('GetSalaryByMonthYear:', err);
             }
         });
     }

@@ -1,0 +1,254 @@
+﻿@model HBManager.Models.BudgetImportViewModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HBManager - Budget Bulk Import</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <style>
+        body {
+            padding-top: 20px;
+            background-color: #fafafa;
+        }
+
+        .main-card {
+            background: #fff;
+            padding: 25px;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .textarea-sql {
+            font-family: Consolas, Monaco, monospace;
+            font-size: 11px;
+            resize: vertical;
+            background-color: #fcfcfc;
+        }
+
+        .grid-container {
+            max-height: 460px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .table-sticky thead {
+            position: sticky;
+            top: 0;
+            background-color: #f5f5f5;
+            z-index: 2;
+        }
+
+        .radio-inline {
+            margin-top: 0 !important;
+            font-weight: normal;
+            font-size: 11px;
+            padding-top: 0;
+        }
+
+        .status-trans {
+            color: #2b542c;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .status-skip {
+            color: #a94442;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="main-card">
+            <h2>HBManager - Bulk Budget Query Script Processing</h2>
+            <hr />
+            <div id="summaryPanel" class="alert" style="display:none; padding: 15px; margin-bottom: 20px;">
+                <h4 id="summaryStatus" style="margin-top: 0; font-weight: bold;"></h4>
+                <ul style="margin-bottom: 5px;">
+                    <li><strong>Records Inserted Successfully:</strong> <span id="statInserted">0</span></li>
+                    <li><strong>Duplicate Records Skipped:</strong> <span id="statDuplicates">0</span></li>
+                </ul>
+                <p id="summaryMessage" style="margin-top: 10px; font-style: italic;"></p>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    @using (Html.BeginForm("ImportInitiate", "Import", FormMethod.Post, new { id = "sqlScriptForm" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="form-group">
+                            <label class="control-label" style="font-weight:bold; margin-bottom: 8px;">Paste SQL Insert Statement Block:</label>
+                            <textarea id="sqlScript" name="sqlScript" class="form-control textarea-sql" rows="18"
+                                      placeholder="INSERT INTO [dbo].[BudgetInitiate]..."></textarea>
+                        </div>
+
+                        <div class="form-group" style="margin-top:15px;">
+                            <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-flash"></span> Execute Import</button>
+                            <button type="button" id="btnClear" class="btn btn-default">Clear Everything</button>
+                        </div>
+                    }
+                </div>
+                <div class="col-md-8">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <h4 style="margin: 0; font-weight: bold;">Database Live Audit View (Latest 50 Entries)</h4>
+                        <button type="button" id="btnMove" class="btn btn-sm btn-success" style="font-weight: bold; padding: 5px 20px;">
+                            <span class="glyphicon glyphicon-export"></span> Move
+                        </button>
+                    </div>
+
+                    <div class="grid-container">
+                        <table class="table table-striped table-bordered table-condensed table-sticky" id="auditGrid" style="font-size: 11px; margin-bottom:0;">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Bank</th>
+                                    <th>Period</th>
+                                    <th>Type</th>
+                                    <th style="min-width: 120px; text-align: center;">IsTransfered?</th>
+                                    <th>Amount</th>
+                                    <th>Date</th>
+                                    <th>Details</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            loadGridData();
+
+            $("#btnClear").click(function () {
+                $("#sqlScript").val("");
+                $("#summaryPanel").slideUp();
+            });
+
+            // Script form insertion logic mapping
+            $("#sqlScriptForm").submit(function (e) {
+                e.preventDefault();
+                var rawScript = $("#sqlScript").val().trim();
+                if (!rawScript) { alert("Please paste structural data script blocks first."); return false; }
+
+                $.ajax({
+                    url: $(this).attr("action"),
+                    type: "POST",
+                    data: $(this).serialize(),
+                    success: function (res) {
+                        $("#summaryPanel").slideUp(200, function () {
+                            if (res.success) {
+                                $("#statInserted").text(res.inserted);
+                                $("#statDuplicates").text(res.duplicates);
+                                $("#summaryMessage").text(res.message);
+                                $("#summaryPanel").removeClass("alert-danger alert-info alert-success").addClass(res.inserted > 0 ? "alert-success" : "alert-info");
+                                $("#summaryStatus").text(res.inserted > 0 ? "Data Sync Completed Successfully" : "Process Complete (No Rows Added)");
+                                $("#summaryPanel").slideDown();
+                                loadGridData();
+                            } else {
+                                $("#summaryPanel").removeClass("alert-success alert-info").addClass("alert-danger").slideDown();
+                                $("#summaryStatus").text("Processing Interrupted");
+                                $("#summaryMessage").text(res.message);
+                            }
+                        });
+                    }
+                });
+            });
+
+            // NEW MOVE BUTTON INTERACTION: Captures selected radio arrays and dispatches to server endpoint
+            $("#btnMove").click(function () {
+                var selectedItems = [];
+
+                // Select only the inputs that the user checked
+                $('#auditGrid tbody input[type="radio"]:checked').each(function () {
+                    var radioName = $(this).attr('name'); // e.g., "status_3"
+                    var rowId = radioName.split('_')[1];  // extracts the ID number
+                    var optionValue = $(this).val();      // "trans" or "skip"
+
+                    selectedItems.push({
+                        Id: parseInt(rowId),
+                        Status: optionValue
+                    });
+                });
+
+                if (selectedItems.length === 0) {
+                    alert("Please select at least one Trans or Skip option before clicking the Move button.");
+                    return;
+                }
+
+                $.ajax({
+                    url: '@Url.Action("MoveData", "Import")',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ items: selectedItems }),
+                    success: function (response) {
+                        if (response.success) {
+                            alert(response.message);
+                            loadGridData(); // Refresh grid layout immediately to show textual transformations
+                        } else {
+                            alert("Error processing updates: " + response.message);
+                        }
+                    },
+                    error: function () {
+                        alert("System connectivity fault executing batch status assignments.");
+                    }
+                });
+            });
+        });
+
+        // Dynamic grid building process mapping
+        function loadGridData() {
+            $.ajax({
+                url: '@Url.Action("GetBudgetData", "Import")',
+                type: "GET",
+                dataType: "json",
+                success: function (payload) {
+                    var htmlBuffer = "";
+                    $("#auditGrid tbody").empty();
+
+                    $.each(payload, function (idx, obj) {
+                        var shortDetails = obj.Details && obj.Details.length > 25 ? obj.Details.substring(0, 25) + "..." : (obj.Details || "");
+                        var highlightClass = obj.TransactionType === "Credit" ? "success" : "";
+
+                        htmlBuffer += "<tr class='" + highlightClass + "'>";
+                        htmlBuffer += "<td>" + obj.Id + "</td>";
+                        htmlBuffer += "<td>" + (obj.BankName || '') + "</td>";
+                        htmlBuffer += "<td>" + obj.Year + "/" + obj.Month + "</td>";
+                        htmlBuffer += "<td>" + obj.TransactionType + "</td>";
+
+                        // NEW DYNAMIC TRANS/SKIP COLUMN RENDERING
+                        htmlBuffer += "<td style='text-align: center; vertical-align: middle;'>";
+                        if (obj.IsTransferStatus === "Transfered") {
+                            htmlBuffer += "<span class='status-trans'>Transfered</span>";
+                        } else if (obj.IsTransferStatus === "Skiped") {
+                            htmlBuffer += "<span class='status-skip'>Skiped</span>";
+                        } else {
+                            // If unassigned, render dynamic interactive radio buttons bound to row ID
+                            htmlBuffer += "<label class='radio-inline'><input type='radio' name='status_" + obj.Id + "' value='trans'>Trans</label>";
+                            htmlBuffer += "<label class='radio-inline' style='margin-left: 10px;'><input type='radio' name='status_" + obj.Id + "' value='skip'>Skip</label>";
+                        }
+                        htmlBuffer += "</td>";
+
+                        htmlBuffer += "<td style='font-weight: bold;'>₹" + parseFloat(obj.Amount).toFixed(2) + "</td>";
+                        htmlBuffer += "<td style='white-space:nowrap; text-transform: uppercase;'>" + obj.TransactionDate + "</td>";
+                        htmlBuffer += "<td title='" + (obj.Details || '') + "'>" + shortDetails + "</td>";
+                        htmlBuffer += "</tr>";
+                    });
+
+                    $("#auditGrid tbody").append(htmlBuffer);
+                }
+            });
+        }
+    </script>
+</body>
+</html>

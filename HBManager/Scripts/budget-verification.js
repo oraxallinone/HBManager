@@ -54,7 +54,9 @@
     function loadData() {
         var year = $('#ddlYear').val();
         var month = $('#ddlMonth').val();
-        $.getJSON('/Budget/GetBudgetVerificationData', { year: year, month: month }, function (data) {
+        $.getJSON('/Budget/GetBudgetVerificationData',
+            { year: year, month: month },
+            function (data) {
             // Totals
         
 

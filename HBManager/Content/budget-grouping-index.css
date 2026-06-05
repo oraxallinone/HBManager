@@ -142,7 +142,7 @@
 
 /* 2nd column Date*/
 #gridTableBudget th:nth-child(2) {
-    width: 10%;
+    width: 15%;
     text-align: center;
     background-color: #1d68a0;
     color: white;

@@ -64,7 +64,7 @@
         if (itmName == "-- Select One --") { swal("", "Please select an item", "error"); return false; }
         if (itmHsn == "") { swal("", "HSN should not be empty", "error"); return false; }
         if (itmQty == "") { swal("", "Qantity should not be empty", "error"); return false; }
-        if (parseFloat(itmQty) < 1) { swal("", "Please add a quantity", "error"); return false; }
+        if (parseFloat(itmQty) < 0) { swal("", "Please add a quantity", "error"); return false; }
         if (itmRate == "") { alert("Rate should not be empty"); return false; }
         if (itmValue == "" || itmValue == 0) { alert("Value should not be empty"); return false; }
 

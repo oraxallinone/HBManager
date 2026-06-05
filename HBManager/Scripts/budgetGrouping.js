@@ -837,7 +837,8 @@
             html += "<td class='" + dayClass + " doubleClick' title=" + item.Id + " >" + (item.Details || "") + "</td>";
 
             // --- G1 COLUMN ---
-            html += "<td class='" + dayClass + "'> <div class='div-g1-c" + item.G1 + "'>" + (extractNameById(item.G1) || "") + "</div> </td>";
+            const itmClass = parseInt(item.G1) > 56 ? '14' : item.G1;
+            html += `<td class="${dayClass}"><div class="div-g1-c${itmClass}">${extractNameById(item.G1) || ""}</div></td>`;
 
             // --- G2 COLUMN (with style div like sample) ---
             html += "<td class='" + dayClass + "'>";
@@ -883,28 +884,122 @@
     function ToDateAndDay(jsonDate) {
         if (!jsonDate) return "";
 
-        // Extract ticks from /Date(1762626600000)/
         var ticks = parseInt(jsonDate.replace(/\/Date\((\d+)\)\//, "$1"));
-
         var date = new Date(ticks);
 
-        // Day, Month, Year
-        var day = date.getDate();
-        var year = date.getFullYear();
+        var istOptions = {
+            timeZone: 'Asia/Kolkata',
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true
+        };
 
-        // Short month names
-        var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
-            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        var formatter = new Intl.DateTimeFormat('en-IN', istOptions);
+        var parts = formatter.formatToParts(date);
 
-        // Day names (3 letters)
-        var days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+        var d = parts.find(p => p.type === 'day').value;
+        var m = parts.find(p => p.type === 'month').value;
+        var y = parts.find(p => p.type === 'year').value;
+        var h = parts.find(p => p.type === 'hour').value;
+        var min = parts.find(p => p.type === 'minute').value;
+        var dayPeriod = parts.find(p => p.type === 'dayPeriod').value;
 
-        var monthName = months[date.getMonth()];
-        var dayName = days[date.getDay()];
+        var dayName = new Intl.DateTimeFormat('en-IN', { timeZone: 'Asia/Kolkata', weekday: 'short' }).format(date);
 
-        // Final output
-        return `${day} ${monthName} ${year} (${dayName})`;
+        // Initial base string
+        var formattedResult = `${d} ${m} ${y} (${dayName})`;
+
+        // Check if it is NOT 12:00 AM
+        // Using !== for string comparison
+        if (!(h === "12" && min === "00" && dayPeriod.toUpperCase() === "AM")) {
+            formattedResult += ` ${h}:${min} ${dayPeriod.toUpperCase()}`;
+        }
+
+        return formattedResult;
     }
+    //function ToDateAndDay(jsonDate) {
+    //    if (!jsonDate) return "";
+
+    //    // Extract ticks from /Date(1762626600000)/
+    //    var ticks = parseInt(jsonDate.replace(/\/Date\((\d+)\)\//, "$1"));
+    //    var date = new Date(ticks);
+
+    //    // --- Base Date Components (Runs for all dates) ---
+    //    var day = date.getDate();
+    //    var year = date.getFullYear();
+
+    //    // Short month names
+    //    var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+    //        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+    //    // Day names (3 letters)
+    //    var days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+    //    var monthName = months[date.getMonth()];
+    //    var dayName = days[date.getDay()];
+
+    //    // Ensure day always has a leading zero if below 10 (e.g., "05" instead of "5")
+    //    var strDay = day < 10 ? '0' + day : day;
+
+    //    // Construct the base format: "31 Oct 2025 (Fri)"
+    //    var formattedResult = `${strDay} ${monthName} ${year} (${dayName})`;
+
+    //    // Set the target comparison date: 22 May 2026 (00:00:00 Local Time)
+    //    var targetDate = new Date(2026, 4, 19); // Month is 0-indexed (4 = May)
+
+    //    // --- Conditional Time Extension ---
+    //    // Check if the date is greater than or equal to 22 May 2026
+    //    if (date >= targetDate) {
+    //        var hours = date.getHours();
+    //        var minutes = date.getMinutes();
+    //        var ampm = hours >= 12 ? 'PM' : 'AM';
+
+    //        // Convert 24-hour format to 12-hour format
+    //        hours = hours % 12;
+    //        hours = hours ? hours : 12; // The hour '0' should be '12'
+
+    //        // Pad single-digit hours and minutes with a leading zero
+    //        var strHours = hours < 10 ? '0' + hours : hours;
+    //        var strMinutes = minutes < 10 ? '0' + minutes : minutes;
+
+    //        // Append the time to the base date string
+    //        formattedResult += ` ${strHours}:${strMinutes} ${ampm}`;
+    //    }
+
+    //    // --- Clean up 12:00 AM ---
+    //    // If the result ends with " 12:00 AM", remove it
+    //    return formattedResult.replace(/ 12:00 AM$/, "");
+    //}
+
+
+    //function ToDateAndDay(jsonDate) {
+    //    if (!jsonDate) return "";
+
+    //    // Extract ticks from /Date(1762626600000)/
+    //    var ticks = parseInt(jsonDate.replace(/\/Date\((\d+)\)\//, "$1"));
+
+    //    var date = new Date(ticks);
+
+    //    // Day, Month, Year
+    //    var day = date.getDate();
+    //    var year = date.getFullYear();
+
+    //    // Short month names
+    //    var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+    //        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+    //    // Day names (3 letters)
+    //    var days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+    //    var monthName = months[date.getMonth()];
+    //    var dayName = days[date.getDay()];
+
+    //    // Final output
+    //    return `${day} ${monthName} ${year} (${dayName})`;
+    //}
 
     function DeleteBudgetById(id) {
         if (!confirm("Are you sure you want to delete this record?")) return;

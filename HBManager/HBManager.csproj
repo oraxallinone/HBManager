@@ -183,6 +183,7 @@
     <Compile Include="Models\BarGraphData.cs" />
     <Compile Include="Models\BirthdayModel.cs" />
     <Compile Include="Models\Budget.cs" />
+    <Compile Include="Models\BudgetImportViewModel.cs" />
     <Compile Include="Models\BudgetVerificationModels.cs" />
     <Compile Include="Models\CalenderDataViewModel.cs" />
     <Compile Include="Models\CalenderDateViewModel.cs" />
@@ -194,6 +195,7 @@
     <Compile Include="Models\GroupMaster.cs" />
     <Compile Include="Models\GstType.cs" />
     <Compile Include="Models\QueryViewModel.cs" />
+    <Compile Include="Models\RowStatusItem.cs" />
     <Compile Include="Models\SalaryMaster.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\BirthdayService.cs" />
@@ -418,6 +420,7 @@
     <Content Include="Views\Upload\Index.cshtml" />
     <Content Include="Views\Budget\BudgetVerification.cshtml" />
     <Content Include="Views\Import\ExecuteQuery.cshtml" />
+    <Content Include="Views\Import\ImportInitiate.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.37203.1 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HBManager", "HBManager\HBManager.csproj", "{9FC5A80E-86B9-4F1F-B109-1F3F0680A6B8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HBManager", "HBManager\HBManager.csproj", "{991871CA-61F7-29B2-6BAC-2B2DBB49F4FC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{59CA686D-9923-41E4-81F1-0C69FC7DBF00}"
 	ProjectSection(SolutionItems) = preProject
@@ -16,12 +16,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{9FC5A80E-86B9-4F1F-B109-1F3F0680A6B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9FC5A80E-86B9-4F1F-B109-1F3F0680A6B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9FC5A80E-86B9-4F1F-B109-1F3F0680A6B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9FC5A80E-86B9-4F1F-B109-1F3F0680A6B8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{991871CA-61F7-29B2-6BAC-2B2DBB49F4FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{991871CA-61F7-29B2-6BAC-2B2DBB49F4FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{991871CA-61F7-29B2-6BAC-2B2DBB49F4FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{991871CA-61F7-29B2-6BAC-2B2DBB49F4FC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AE59A135-28C1-4B9B-9B0A-6870DECEB308}
 	EndGlobalSection
 EndGlobal

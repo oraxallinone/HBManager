@@ -63,6 +63,45 @@
             font-weight: bold;
             text-transform: uppercase;
         }
+
+        .btn-revert {
+            background-color: #d9534f;
+            border-color: #d43f3a;
+            color: #fff;
+            padding: 4px 10px;
+            font-size: 11px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .btn-revert:hover {
+            background-color: #c9302c;
+            border-color: #ac2925;
+        }
+
+        .sort-arrow {
+            font-size: 10px;
+            margin-left: 3px;
+        }
+
+        #auditGrid thead th {
+            background-color: #f5f5f5 !important;
+            border-bottom: 2px solid #ddd !important;
+        }
+
+        #auditGrid tbody tr {
+            border-bottom: 1px solid #eee;
+        }
+
+        #auditGrid tbody tr.success {
+            background-color: #dff0d8 !important;
+        }
+
+        .input-sm {
+            height: 28px;
+            padding: 3px 6px;
+            font-size: 12px;
+        }
     </style>
 </head>
 <body>
@@ -204,6 +243,36 @@
                     }
                 });
             });
+
+            // Revert button handler for each row
+            $(document).on('click', '.btn-revert', function () {
+                var rowId = $(this).data('id');
+                if (!rowId) {
+                    alert('Unable to determine record id for revert.');
+                    return;
+                }
+
+                // Confirmation check
+                if (!confirm('Are you sure you want to revert this record?')) {
+                    return; // If user clicks Cancel, exit the function
+                }
+
+                $.ajax({
+                    url: '@Url.Action("RevertTransfer", "Import")',
+                    type: 'POST',
+                    data: { id: rowId },
+                    success: function (response) {
+                        if (response.success) {
+                            loadGridDataWithYearMonth();
+                        } else {
+                            alert('Revert failed: ' + response.message);
+                        }
+                    },
+                    error: function () {
+                        alert('System fault while reverting the record.');
+                    }
+                });
+            });
         });
 
         // Dynamic grid building process mapping
@@ -213,40 +282,41 @@
                 type: "GET",
                 dataType: "json",
                 success: function (payload) {
-                    var htmlBuffer = "";
-                    $("#auditGrid tbody").empty();
+            var htmlBuffer = "";
+            $("#auditGrid tbody").empty();
 
                     $.each(payload, function (idx, obj) {
-                        var shortDetails = obj.Details && obj.Details.length > 25 ? obj.Details.substring(0, 25) + "..." : (obj.Details || "");
-                        var highlightClass = obj.TransactionType === "Credit" ? "success" : "";
+                var shortDetails = obj.Details && obj.Details.length > 25 ? obj.Details.substring(0, 25) + "..." : (obj.Details || "");
+                var highlightClass = obj.TransactionType === "Credit" ? "success" : "";
 
-                        htmlBuffer += "<tr class='" + highlightClass + "'>";
-                        htmlBuffer += "<td>" + obj.Id + "</td>";
-                        htmlBuffer += "<td>" + (obj.BankName || '') + "</td>";
+                htmlBuffer += "<tr class='" + highlightClass + "'>";
+                htmlBuffer += "<td>" + obj.Id + "</td>";
+                htmlBuffer += "<td>" + (obj.BankName || '') + "</td>";
                         htmlBuffer += "<td>" + obj.Year + "/" + obj.Month + "</td>";
-                        htmlBuffer += "<td>" + obj.TransactionType + "</td>";
+                htmlBuffer += "<td>" + obj.TransactionType + "</td>";
 
-                        // NEW DYNAMIC TRANS/SKIP COLUMN RENDERING
-                        htmlBuffer += "<td style='text-align: center; vertical-align: middle;'>";
-                        if (obj.IsTransferStatus === "Transfered") {
-                            htmlBuffer += "<span class='status-trans'>Transfered</span>";
-                        } else if (obj.IsTransferStatus === "Skiped") {
-                            htmlBuffer += "<span class='status-skip'>Skiped</span>";
-                        } else {
-                            // If unassigned, render dynamic interactive radio buttons bound to row ID
-                            htmlBuffer += "<label class='radio-inline'><input type='radio' name='status_" + obj.Id + "' value='trans'>Trans</label>";
-                            htmlBuffer += "<label class='radio-inline' style='margin-left: 10px;'><input type='radio' name='status_" + obj.Id + "' value='skip'>Skip</label>";
-                        }
-                        htmlBuffer += "</td>";
-
-                        htmlBuffer += "<td style='font-weight: bold;'>₹" + parseFloat(obj.Amount).toFixed(2) + "</td>";
-                        htmlBuffer += "<td style='white-space:nowrap; text-transform: uppercase;'>" + obj.TransactionDate + "</td>";
-                        htmlBuffer += "<td title='" + (obj.Details || '') + "'>" + shortDetails + "</td>";
-                        htmlBuffer += "</tr>";
-                    });
-
-                    $("#auditGrid tbody").append(htmlBuffer);
+                // NEW DYNAMIC TRANS/SKIP COLUMN RENDERING
+                htmlBuffer += "<td style='text-align: center; vertical-align: middle;'>";
+                if (obj.IsTransferStatus === "Transfered") {
+                    htmlBuffer += "<span class='status-trans'>Transfered</span>";
+                } else if (obj.IsTransferStatus === "Skiped") {
+                    htmlBuffer += "<span class='status-skip'>Skiped</span>";
+                } else {
+                    // If unassigned, render dynamic interactive radio buttons bound to row ID
+                    htmlBuffer += "<label class='radio-inline'><input type='radio' name='status_" + obj.Id + "' value='trans'>Trans</label>";
+                    htmlBuffer += "<label class='radio-inline' style='margin-left: 10px;'><input type='radio' name='status_" + obj.Id + "' value='skip'>Skip</label>";
                 }
+                htmlBuffer += "</td>";
+
+                htmlBuffer += "<td style='font-weight: bold;'>₹" + parseFloat(obj.Amount).toFixed(2) + "</td>";
+                htmlBuffer += "<td style='white-space:nowrap; text-transform: uppercase;'>" + obj.TransactionDate + "</td>";
+                htmlBuffer += "<td title='" + (obj.Details || '') + "'>" + shortDetails + "</td>";
+                htmlBuffer += "<td style='text-align:center; vertical-align:middle;'><button type='button' class='btn-revert' data-id='" + obj.Id + "'>Revert</button></td>";
+                htmlBuffer += "</tr>";
+            });
+
+            $("#auditGrid tbody").append(htmlBuffer);
+        }
             });
         }
     </script>

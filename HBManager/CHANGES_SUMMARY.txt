@@ -1,0 +1,52 @@
+========================================
+SUMMARY OF CHANGES - BankName Addition
+========================================
+
+CHANGES MADE:
+
+1. ✅ Budget Model (Budget.cs)
+   - Added property: public string BankName { get; set; }
+   - Location: Between Details and G1 properties
+
+2. ✅ BudgetService.cs (Map function)
+   - Updated Map(IDataRecord r) method
+   - Added: BankName = r["BankName"] == DBNull.Value ? null : r["BankName"].ToString(),
+   - Placed after Details mapping
+
+3. ✅ Stored Procedure: sp_GetBudgetByFromToDateWithGroup
+   - Added BankName to SELECT clause
+   - Both in dynamic SQL and empty result set
+   - SELECT now includes: Amount, Details, BankName, G1, G2, G3, G4...
+
+4. ✅ UI Display (BudgetGroupingIndex.cshtml)
+   - Added BankName column header between Details and G1
+
+5. ✅ JavaScript (budgetGrouping.js)
+   - Added BankName rendering in bindBudgetTable function
+   - Applied bold font-weight for visibility
+   - Positioned after Details column
+
+REQUIRED ACTIONS:
+
+1. Execute the updated stored procedure in SQL Server:
+   - File: UPDATED_SP_GetBudgetByFromToDateWithGroup.sql
+   - Run: CREATE or ALTER procedure as needed
+
+2. Ensure your Budget table has BankName column:
+   - ALTER TABLE [dbo].[Budget] ADD BankName NVARCHAR(100) NULL;
+
+3. Other stored procedures to update (if they query Budget):
+   - sp_GetBudgetByFromToDate
+   - sp_GetBudgetById
+   - sp_InsertBudget (if BankName should be inserted)
+   - sp_UpdateBudgetById (if BankName should be updated)
+
+4. If BankName needs to be inserted/updated:
+   - Add BankName parameter to InsertBudget method
+   - Add BankName parameter to UpdateBudgetById method
+   - Update corresponding stored procedures
+
+COLUMN ORDER IN GRID (After changes):
+Action | Date | Amt | Details | BankName (BOLD) | G1 | G2 | G3 | G4
+
+All changes have been successfully applied!

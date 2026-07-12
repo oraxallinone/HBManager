@@ -135,7 +135,7 @@
 /* 1st column Action*/
 #gridTableBudget th:nth-child(1) {
     text-align: center;
-    width: 10%;
+    width: 8%;
     background-color: #1d68a0;
     color: white;
 }
@@ -166,34 +166,44 @@
 /* 5rd column Details*/
 #gridTableBudget th:nth-child(5) {
     background-color: #1d68a0;
-    width: 20%;
+    width: 18%;
     color: white;
 }
 
-/* G1 column ----*/
+/* BankName column ----*/
 #gridTableBudget th:nth-child(6) {
+    background-color: #1d68a0;
+    width: 10%;
+    color: white;
+    text-align: center;
+    font-family: calibri;
+    font-weight: 500;
+}
+
+/* G1 column ----*/
+#gridTableBudget th:nth-child(7) {
     width: 10%;
     background-color: #1d68a0;
     text-align: center;
     color: white;
 }
 /* G2 column ----*/
-#gridTableBudget th:nth-child(7) {
-    width: 12%;
-    background-color: #1d68a0;
-    text-align: center;
-    color: white;
-}
-/* G3 column ----*/
 #gridTableBudget th:nth-child(8) {
     width: 10%;
     background-color: #1d68a0;
     text-align: center;
     color: white;
 }
-/* G4 column ----*/
+/* G3 column ----*/
 #gridTableBudget th:nth-child(9) {
-    width: 10%;
+    width: 9%;
+    background-color: #1d68a0;
+    text-align: center;
+    color: white;
+}
+/* G4 column ----*/
+#gridTableBudget th:nth-child(10) {
+    width: 9%;
     background-color: #1d68a0;
     text-align: center;
     color: white;
@@ -216,27 +226,34 @@
 #gridTableBudget td:nth-child(3) {
     text-align: right;
 }
-/* 4rd column Details*/
+/* 4rd column checkbox*/
 #gridTableBudget td:nth-child(4) {
     width: 3%;
 }
-/* 5rd column ----*/
+/* 5rd column Details*/
 #gridTableBudget td:nth-child(5) {
 }
-/* G1 column ----*/
+/* BankName column ----*/
 #gridTableBudget td:nth-child(6) {
     text-align: center;
+    font-family: calibri;
+    text-transform: uppercase;
+    font-size: 10px;
 }
-/* G2 column ----*/
+/* G1 column ----*/
 #gridTableBudget td:nth-child(7) {
     text-align: center;
 }
-/* G3 column ----*/
+/* G2 column ----*/
 #gridTableBudget td:nth-child(8) {
     text-align: center;
 }
-/* G4 column ----*/
+/* G3 column ----*/
 #gridTableBudget td:nth-child(9) {
+    text-align: center;
+}
+/* G4 column ----*/
+#gridTableBudget td:nth-child(10) {
     text-align: center;
 }
 

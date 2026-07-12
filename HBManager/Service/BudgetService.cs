@@ -245,6 +245,7 @@ namespace HBManager.Service
                 SpendDate = r["SpendDate"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(r["SpendDate"]),
                 Amount = Convert.ToDecimal(r["Amount"]),
                 Details = r["Details"] == DBNull.Value ? null : r["Details"].ToString(),
+                BankName = r["BankName"] == DBNull.Value ? null : r["BankName"].ToString(),
                 G1 = r["G1"] == DBNull.Value ? (int?)null : Convert.ToInt32(r["G1"]),
                 G2 = r["G2"] == DBNull.Value ? (int?)null : Convert.ToInt32(r["G2"]),
                 G3 = r["G3"] == DBNull.Value ? (int?)null : Convert.ToInt32(r["G3"]),

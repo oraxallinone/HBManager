@@ -38,27 +38,27 @@ namespace YourProjectNamespace.Controllers
                 FROM [dbo].[BudgetInitiate] 
                 ORDER BY [TransactionDate], Id DESC";
 
-            using (SqlConnection con = new SqlConnection(connectionString))
-            {
-                using (SqlCommand cmd = new SqlCommand(query, con))
+                using (SqlConnection con = new SqlConnection(connectionString))
                 {
-                    con.Open();
-                    using (SqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        while (reader.Read())
+                using (SqlCommand cmd = new SqlCommand(query, con))
                         {
-                            var row = new Dictionary<string, object>();
-                            for (int i = 0; i < reader.FieldCount; i++)
+                        con.Open();
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
                             {
-                                row[reader.GetName(i)] = reader.GetValue(i);
+                                var row = new Dictionary<string, object>();
+                                for (int i = 0; i < reader.FieldCount; i++)
+                                {
+                                    row[reader.GetName(i)] = reader.GetValue(i);
+                                }
+                                rows.Add(row);
                             }
-                            rows.Add(row);
                         }
                     }
                 }
+                return Json(rows, JsonRequestBehavior.AllowGet);
             }
-            return Json(rows, JsonRequestBehavior.AllowGet);
-        }
 
 
         [HttpPost]
@@ -85,7 +85,7 @@ namespace YourProjectNamespace.Controllers
                         // Query 2: Migrates 'trans' rows into the main Budget destination table
                         string migrateQuery = @"
                     INSERT INTO [dbo].[Budget] 
-                    ([Year], [Month], [SpendDate], [Amount], [Details], [G1], [G2], [G3], [G4], [CreatedTime], [IsVerified])
+                    ([Year], [Month], [SpendDate], [Amount], [Details], [G1], [G2], [G3], [G4], [CreatedTime], [IsVerified],[BankName])
                     SELECT 
                         [Year], 
                         [Month], 
@@ -97,7 +97,8 @@ namespace YourProjectNamespace.Controllers
                         NULL AS [G3], 
                         NULL AS [G4], 
                         GETDATE() AS [CreatedTime], 
-                        0 AS [IsVerified]
+                        0 AS [IsVerified],
+                        [BankName]
                     FROM [dbo].[BudgetInitiate]
                     WHERE [Id] = @Id";
 
@@ -138,6 +139,36 @@ namespace YourProjectNamespace.Controllers
             catch (Exception ex)
             {
                 return Json(new { success = false, message = "Error handling data transfer migration: " + ex.Message });
+            }
+        }
+
+        [HttpPost]
+        public JsonResult RevertTransfer(int id)
+        {
+            if (id <= 0)
+            {
+                return Json(new { success = false, message = "Invalid record id for revert." });
+            }
+
+            try
+            {
+                using (SqlConnection con = new SqlConnection(connectionString))
+                {
+                    con.Open();
+                    string revertQuery = @" UPDATE [dbo].[BudgetInitiate] SET [IsTransfer] = 0 WHERE [Id] = @Id";
+
+                    using (SqlCommand cmd = new SqlCommand(revertQuery, con))
+                    {
+                        cmd.Parameters.AddWithValue("@Id", id);
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+
+                return Json(new { success = true, message = "Record reverted successfully." });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Error reverting record: " + ex.Message });
             }
         }
 

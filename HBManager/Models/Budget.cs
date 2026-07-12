@@ -13,6 +13,7 @@ namespace HBManager.Models
         public DateTime? SpendDate { get; set; }
         public decimal Amount { get; set; }
         public string Details { get; set; }
+        public string BankName { get; set; }
         public int? G1 { get; set; }
         public int? G2 { get; set; }
         public int? G3 { get; set; }

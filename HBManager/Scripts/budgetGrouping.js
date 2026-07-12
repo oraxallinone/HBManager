@@ -836,6 +836,9 @@
             // --- DETAILS COLUMN ---
             html += "<td class='" + dayClass + " doubleClick' title=" + item.Id + " >" + (item.Details || "") + "</td>";
 
+            // --- BANKNAME COLUMN ---
+            html += "<td class='" + dayClass + "' style=''>" + (item.BankName || "") + "</td>";
+
             // --- G1 COLUMN ---
             const itmClass = parseInt(item.G1) > 56 ? '14' : item.G1;
             html += `<td class="${dayClass}"><div class="div-g1-c${itmClass}">${extractNameById(item.G1) || ""}</div></td>`;

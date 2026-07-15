@@ -13,6 +13,14 @@
 
     var selectedBudgetIds = [];  // Global array to store selected IDs
 
+    function hideSaveButton() {
+        $("#btnSaveBudget").hide();
+    }
+
+    function showSaveButton() {
+        $("#btnSaveBudget").show();
+    }
+
     // global container for uncut group list (name requested)
     var GobalGroupMasterUncut = [];
 
@@ -133,6 +141,7 @@
 
         // Show/hide update button based on selection
         if (selectedBudgetIds.length > 0) {
+            hideSaveButton();
             $("#btnsingleSearch").hide();
             $("#btnUpdateBudgetGroupSingle").hide();
             $("#btnUpdateBudgetGroup").show();
@@ -142,6 +151,7 @@
             $("#divDDLMulti").show();
         }
         else {
+            showSaveButton();
             $('#btnsingleSearch').show();
             $('#btnUpdateBudgetGroupSingle').hide();
             $('#btnUpdateBudgetGroup').hide();
@@ -430,8 +440,10 @@
     }
 
     $(document).on('click', '.class-btnViewBudget', function () {
+        debugger
         // Show the update button when any checkbox is clicked
         $("#btnUpdateBudgetGroupSingle").show();
+        hideSaveButton();
         var id = parseInt($(this).attr('data-id'));
 
         $.ajax({
@@ -507,7 +519,7 @@
                     GetAllBudgetFromToWithGroup();
                     $("#btnUpdateBudgetGroupSingle").hide();
                     $('#divDDLSingle').hide()
-                    $("#btnSaveBudget").show();
+                    showSaveButton();
                     fnClearAmtDetails();
                     $("#hidenBudgetID").val("");
                     showMessage(rowIffected);
@@ -675,6 +687,7 @@
                     selectedBudgetIds = [];
                     $(".budget-checkbox").prop('checked', false);
                     $("#btnUpdateBudgetGroup").hide();
+                    showSaveButton();
 
                     // Reset dropdowns
                     $("#ddlUpdateG1Group").val(0);

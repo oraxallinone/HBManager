@@ -74,10 +74,10 @@
             cursor: pointer;
         }
 
-        .btn-revert:hover {
-            background-color: #c9302c;
-            border-color: #ac2925;
-        }
+            .btn-revert:hover {
+                background-color: #c9302c;
+                border-color: #ac2925;
+            }
 
         .sort-arrow {
             font-size: 10px;
@@ -93,9 +93,9 @@
             border-bottom: 1px solid #eee;
         }
 
-        #auditGrid tbody tr.success {
-            background-color: #dff0d8 !important;
-        }
+            #auditGrid tbody tr.success {
+                background-color: #dff0d8 !important;
+            }
 
         .input-sm {
             height: 28px;
@@ -107,8 +107,8 @@
 <body>
     <div class="container-fluid">
         <div class="main-card">
-            <h2>HBManager - Bulk Budget Query Script Processing</h2>
-            <hr />
+            
+            
             <div id="summaryPanel" class="alert" style="display:none; padding: 15px; margin-bottom: 20px;">
                 <h4 id="summaryStatus" style="margin-top: 0; font-weight: bold;"></h4>
                 <ul style="margin-bottom: 5px;">
@@ -136,10 +136,36 @@
                 </div>
                 <div class="col-md-8">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                        <h4 style="margin: 0; font-weight: bold;">Database Live Audit View (Latest 50 Entries)</h4>
-                        <button type="button" id="btnMove" class="btn btn-sm btn-success" style="font-weight: bold; padding: 5px 20px;">
-                            <span class="glyphicon glyphicon-export"></span> Move
-                        </button>
+                        
+
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <select class="form-control input-sm filter-group-inline" id="ddlYear" style="width: 100px;">
+                                <option value="0">--Year--</option>
+                                <option value="2025">2025</option>
+                                <option value="2026">2026</option>
+                                <option value="2027">2027</option>
+                            </select>
+
+                            <select class="form-control input-sm filter-group-inline" id="ddlMonth" style="width: 120px;">
+                                <option value="0">--Month--</option>
+                                <option value="1">January</option>
+                                <option value="2">February</option>
+                                <option value="3">March</option>
+                                <option value="4">April</option>
+                                <option value="5">May</option>
+                                <option value="6">June</option>
+                                <option value="7">July</option>
+                                <option value="8">August</option>
+                                <option value="9">September</option>
+                                <option value="10">October</option>
+                                <option value="11">November</option>
+                                <option value="12">December</option>
+                            </select>
+
+                            <button type="button" id="btnMove" class="btn btn-sm btn-success" style="font-weight: bold; padding: 5px 20px;">
+                                <span class="glyphicon glyphicon-export"></span> Move
+                            </button>
+                        </div>
                     </div>
 
                     <div class="grid-container">
@@ -154,6 +180,8 @@
                                     <th>Amount</th>
                                     <th>Date</th>
                                     <th>Details</th>
+                                    <th style="text-align:center;">Delete</th>
+                                    <th style="text-align:center;">Revert</th>
                                 </tr>
                             </thead>
                             <tbody></tbody>
@@ -167,7 +195,29 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
+            var currentDate = new Date();
+            var currentYear = currentDate.getFullYear();      // Returns the 4-digit year (e.g., 2026)
+            var currentMonth = currentDate.getMonth() + 1;    // Returns 1-12 (January is 1, etc.)
+
+            if ($("#ddlYear option[value='" + currentYear + "']").length > 0) {
+                $("#ddlYear").val(currentYear);
+            }
+            $("#ddlMonth").val(currentMonth);
+
+
             loadGridData();
+
+
+            // Year & Month filter change
+            $("#ddlYear, #ddlMonth").change(function () {
+
+                var year = $("#ddlYear").val().trim();
+                var month = $("#ddlMonth").val().trim();
+
+                if (year && year !== "0" && month && month !== "0") {
+                    loadGridData();
+                }
+            });
 
             $("#btnClear").click(function () {
                 $("#sqlScript").val("");
@@ -273,12 +323,55 @@
                     }
                 });
             });
+
+            //delete button handler
+            $(document).on('click', '.btnDelete', function () {
+                var id = $(this).data('id');
+                if (!confirm('Are you sure you want to delete this record?'))
+                    return;
+                $.ajax({
+                    url: '@Url.Action("DeleteBudgetInitiate","Import")',
+                    type: 'POST',
+                    data: { id: id },
+                    success: function (response) {
+                        if (response.success) {
+                            alert("Record deleted successfully.");
+                            loadGridData();
+                        } else {
+                            alert(response.message);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(xhr);
+                        alert("Status: " + xhr.status);
+                        alert("Error: " + error);
+                        alert("Response: " + xhr.responseText);
+                    }
+                });
+            });
         });
 
         // Dynamic grid building process mapping
         function loadGridData() {
+
+            var year = $("#ddlYear").val();
+            var month = $("#ddlMonth").val();
+
+            if (year == "0" || month == "0") {
+
+                $("#auditGrid tbody").html(
+                    "<tr><td colspan='10' style='text-align:center;padding:40px;'>Select Year and Month filters to load target transaction streams.</td></tr>"
+                );
+
+                return;
+            }
+
             $.ajax({
                 url: '@Url.Action("GetBudgetData", "Import")',
+                data: {
+                    year: $("#ddlYear").val(),
+                    month: $("#ddlMonth").val()
+                },
                 type: "GET",
                 dataType: "json",
                 success: function (payload) {
@@ -286,37 +379,44 @@
             $("#auditGrid tbody").empty();
 
                     $.each(payload, function (idx, obj) {
-                var shortDetails = obj.Details && obj.Details.length > 25 ? obj.Details.substring(0, 25) + "..." : (obj.Details || "");
-                var highlightClass = obj.TransactionType === "Credit" ? "success" : "";
+                        var shortDetails = obj.Details && obj.Details.length > 25 ? obj.Details.substring(0, 25) + "..." : (obj.Details || "");
+                        var highlightClass = obj.TransactionType === "Credit" ? "success" : "";
 
-                htmlBuffer += "<tr class='" + highlightClass + "'>";
-                htmlBuffer += "<td>" + obj.Id + "</td>";
-                htmlBuffer += "<td>" + (obj.BankName || '') + "</td>";
-                        htmlBuffer += "<td>" + obj.Year + "/" + obj.Month + "</td>";
-                htmlBuffer += "<td>" + obj.TransactionType + "</td>";
+                        htmlBuffer += "<tr class='" + highlightClass + "'>";
+                        htmlBuffer += "<td>" + obj.Id + "</td>";
+                        htmlBuffer += "<td>" + (obj.BankName || '') + "</td>";
+                                htmlBuffer += "<td>" + obj.Year + "/" + obj.Month + "</td>";
+                        htmlBuffer += "<td>" + obj.TransactionType + "</td>";
 
-                // NEW DYNAMIC TRANS/SKIP COLUMN RENDERING
-                htmlBuffer += "<td style='text-align: center; vertical-align: middle;'>";
-                if (obj.IsTransferStatus === "Transfered") {
-                    htmlBuffer += "<span class='status-trans'>Transfered</span>";
-                } else if (obj.IsTransferStatus === "Skiped") {
-                    htmlBuffer += "<span class='status-skip'>Skiped</span>";
-                } else {
-                    // If unassigned, render dynamic interactive radio buttons bound to row ID
-                    htmlBuffer += "<label class='radio-inline'><input type='radio' name='status_" + obj.Id + "' value='trans'>Trans</label>";
-                    htmlBuffer += "<label class='radio-inline' style='margin-left: 10px;'><input type='radio' name='status_" + obj.Id + "' value='skip'>Skip</label>";
+                        // NEW DYNAMIC TRANS/SKIP COLUMN RENDERING
+                        htmlBuffer += "<td style='text-align: center; vertical-align: middle;'>";
+                        if (obj.IsTransferStatus === "Transfered") {
+                            htmlBuffer += "<span class='status-trans'>Transfered</span>";
+                        } else if (obj.IsTransferStatus === "Skiped") {
+                            htmlBuffer += "<span class='status-skip'>Skiped</span>";
+                        } else {
+                            // If unassigned, render dynamic interactive radio buttons bound to row ID
+                            htmlBuffer += "<label class='radio-inline'><input type='radio' name='status_" + obj.Id + "' value='trans'>Trans</label>";
+                            htmlBuffer += "<label class='radio-inline' style='margin-left: 10px;'><input type='radio' name='status_" + obj.Id + "' value='skip'>Skip</label>";
+                        }
+                        htmlBuffer += "</td>";
+
+                        htmlBuffer += "<td style='font-weight: bold;'>₹" + parseFloat(obj.Amount).toFixed(2) + "</td>";
+                        htmlBuffer += "<td style='white-space:nowrap; text-transform: uppercase;'>" + obj.TransactionDate + "</td>";
+                                htmlBuffer += "<td title='" + (obj.Details || '') + "'>" + shortDetails + "</td>";
+                                // Delete column
+                                htmlBuffer += "<td style='text-align:center; vertical-align:middle;'>";
+                                htmlBuffer += "<button type='button' class='btn btn-danger btn-xs btnDelete' data-id='" + obj.Id + "'>";
+                                htmlBuffer += "<span class='glyphicon glyphicon-trash'></span>";
+                                htmlBuffer += "</button>";
+                                htmlBuffer += "</td>";
+
+                        htmlBuffer += "<td style='text-align:center; vertical-align:middle;'><button type='button' class='btn-revert' data-id='" + obj.Id + "'>Revert</button></td>";
+                        htmlBuffer += "</tr>";
+                    });
+
+                    $("#auditGrid tbody").append(htmlBuffer);
                 }
-                htmlBuffer += "</td>";
-
-                htmlBuffer += "<td style='font-weight: bold;'>₹" + parseFloat(obj.Amount).toFixed(2) + "</td>";
-                htmlBuffer += "<td style='white-space:nowrap; text-transform: uppercase;'>" + obj.TransactionDate + "</td>";
-                htmlBuffer += "<td title='" + (obj.Details || '') + "'>" + shortDetails + "</td>";
-                htmlBuffer += "<td style='text-align:center; vertical-align:middle;'><button type='button' class='btn-revert' data-id='" + obj.Id + "'>Revert</button></td>";
-                htmlBuffer += "</tr>";
-            });
-
-            $("#auditGrid tbody").append(htmlBuffer);
-        }
             });
         }
     </script>

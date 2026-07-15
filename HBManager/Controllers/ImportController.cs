@@ -21,7 +21,7 @@ namespace YourProjectNamespace.Controllers
         // GET: /Import/GetBudgetData
         // Fetches all records to populate the jQuery grid
         [HttpGet]
-        public JsonResult GetBudgetData()
+        public JsonResult GetBudgetData(int year, int month)
         {
             var rows = new List<Dictionary<string, object>>();
             // CASE statement handles converting BIT/NULL into "Transfered", "Skiped", or blank string if unassigned
@@ -36,13 +36,17 @@ namespace YourProjectNamespace.Controllers
                         ELSE ''
                     END AS IsTransferStatus
                 FROM [dbo].[BudgetInitiate] 
+                      WHERE [Year] = @Year
+                      AND [Month] = @Month
                 ORDER BY [TransactionDate], Id DESC";
 
                 using (SqlConnection con = new SqlConnection(connectionString))
                 {
                 using (SqlCommand cmd = new SqlCommand(query, con))
                         {
-                        con.Open();
+                    cmd.Parameters.AddWithValue("@Year", year);
+                    cmd.Parameters.AddWithValue("@Month", month);
+                    con.Open();
                         using (SqlDataReader reader = cmd.ExecuteReader())
                         {
                             while (reader.Read())
@@ -85,7 +89,7 @@ namespace YourProjectNamespace.Controllers
                         // Query 2: Migrates 'trans' rows into the main Budget destination table
                         string migrateQuery = @"
                     INSERT INTO [dbo].[Budget] 
-                    ([Year], [Month], [SpendDate], [Amount], [Details], [G1], [G2], [G3], [G4], [CreatedTime], [IsVerified],[BankName])
+                    ([Year], [Month], [SpendDate], [Amount], [Details], [G1], [G2], [G3], [G4], [CreatedTime], [IsVerified],[BankName], [ReferenceId])
                     SELECT 
                         [Year], 
                         [Month], 
@@ -98,7 +102,8 @@ namespace YourProjectNamespace.Controllers
                         NULL AS [G4], 
                         GETDATE() AS [CreatedTime], 
                         0 AS [IsVerified],
-                        [BankName]
+                        [BankName],
+                        [Id]
                     FROM [dbo].[BudgetInitiate]
                     WHERE [Id] = @Id";
 
@@ -301,6 +306,61 @@ namespace YourProjectNamespace.Controllers
             catch (Exception ex)
             {
                 return Json(new { success = false, message = "Execution Failure: " + ex.Message });
+            }
+        }
+
+
+
+        [HttpPost]
+        public JsonResult DeleteBudgetInitiate(int id)
+        {
+            try
+            {
+                using (SqlConnection con = new SqlConnection(connectionString))
+                {
+                    con.Open();
+
+                    // Check if already transferred
+                    string checkQuery = "SELECT IsTransfer FROM BudgetInitiate WHERE Id=@Id";
+
+                    using (SqlCommand cmd = new SqlCommand(checkQuery, con))
+                    {
+                        cmd.Parameters.AddWithValue("@Id", id);
+
+                        object result = cmd.ExecuteScalar();
+
+                        if (result != DBNull.Value && Convert.ToBoolean(result))
+                        {
+                            return Json(new
+                            {
+                                success = false,
+                                message = "Can't be deleted as it has already been transferred."
+                            });
+                        }
+                    }
+
+                    // Delete
+                    string deleteQuery = "DELETE FROM BudgetInitiate WHERE Id=@Id";
+
+                    using (SqlCommand cmd = new SqlCommand(deleteQuery, con))
+                    {
+                        cmd.Parameters.AddWithValue("@Id", id);
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    return Json(new
+                    {
+                        success = true
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = ex.Message
+                });
             }
         }
 

@@ -189,7 +189,7 @@
         $td.data('original-content', valueOfTd);
         // Build inline editor
         var editorHtml = `
-                <input type="text" class="inline-edit-details form-control" value="${valueOfTd.replace(/"/g, '&quot;')}" style="width:195px; height:24px; font-size:12px; padding:2px 4px; display:inline-block; vertical-align:middle;" />
+                <input type="text" class="inline-edit-details form-control" value="${valueOfTd.replace(/"/g, '&quot;')}" style="width:76%; height:24px; font-size:12px; padding:2px 4px; display:inline-block; vertical-align:middle;" />
                 <button class="btn btn-success inline-update-details" data-id="${titleValue}" style="margin-left:4px; padding:2px 8px; font-size:12px; height:26px; line-height:1;">U</button>
                 <button class="btn btn-secondary inline-cancel-details" style="margin-left:2px; padding:2px 8px; font-size:12px; height:26px; line-height:1;">x</button>
             `;
@@ -850,7 +850,7 @@
             html += "<td class='" + dayClass + " doubleClick' title=" + item.Id + " >" + (item.Details || "") + "</td>";
 
             // --- BANKNAME COLUMN ---
-            html += "<td class='" + dayClass + "' style=''>" + (item.BankName || "") + "</td>";
+            html += `<td class='${dayClass}'>${item.BankName ? `<div class='div-bank'>${item.BankName}</div>` : ''}</td>`;
 
             // --- G1 COLUMN ---
             const itmClass = parseInt(item.G1) > 56 ? '14' : item.G1;
@@ -858,11 +858,11 @@
 
             // --- G2 COLUMN (with style div like sample) ---
             html += "<td class='" + dayClass + "'>";
-            html += "<div class='div-g2-c" + item.G2 + "'>" + (extractNameById(item.G2) || "") + "</div>";
+            html += `<div class='div-g2-c${item.G2}'>` + (item.G2 === 4 ? `<span class='blink'>${extractNameById(item.G2) || ""}</span>` : (extractNameById(item.G2) || "")) + `</div>`;
             html += "</td>";
 
             // --- G3 COLUMN ---
-            html += "<td class='" + dayClass + "'>" + (extractNameById(item.G3) || "") + "</td>";
+            html += `<td class="${dayClass}">${item.G3 && extractNameById(item.G3) ? `<div class='div-g3'>${extractNameById(item.G3)}</div>` : ''}</td>`;
 
             // --- G4 COLUMN (Repeat style box) ---
             html += "<td class='" + dayClass + "'> <div class='div-g4-c" + item.G4 + "'>" + (extractNameById(item.G4) || "") + "</div> </td>";

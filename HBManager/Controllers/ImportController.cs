@@ -32,7 +32,7 @@ namespace YourProjectNamespace.Controllers
                     Details,
                     CASE 
                         WHEN IsTransfer = 1 THEN 'Transfered'
-                        WHEN IsTransfer IS NULL THEN 'Skiped'
+                        WHEN IsTransfer = 0 THEN 'Skiped'
                         ELSE ''
                     END AS IsTransferStatus
                 FROM [dbo].[BudgetInitiate] 
@@ -78,67 +78,92 @@ namespace YourProjectNamespace.Controllers
                 using (SqlConnection con = new SqlConnection(connectionString))
                 {
                     con.Open();
-                    using (SqlTransaction trans = con.BeginTransaction())
-                    {
-                        // Query 1: Updates staging status
-                        string updateQuery = @"
-                    UPDATE [dbo].[BudgetInitiate]
-                    SET [IsTransfer] = @IsTransfer
-                    WHERE [Id] = @Id";
 
-                        // Query 2: Migrates 'trans' rows into the main Budget destination table
-                        string migrateQuery = @"
-                    INSERT INTO [dbo].[Budget] 
-                    ([Year], [Month], [SpendDate], [Amount], [Details], [G1], [G2], [G3], [G4], [CreatedTime], [IsVerified],[BankName], [ReferenceId])
-                    SELECT 
-                        [Year], 
-                        [Month], 
-                        [TransactionDate] AS [SpendDate], 
-                        [Amount], 
-                        [Details], 
-                        NULL AS [G1], 
-                        NULL AS [G2], 
-                        NULL AS [G3], 
-                        NULL AS [G4], 
-                        GETDATE() AS [CreatedTime], 
-                        0 AS [IsVerified],
-                        [BankName],
-                        [Id]
-                    FROM [dbo].[BudgetInitiate]
-                    WHERE [Id] = @Id";
+                    // We set up the command pointing to the stored procedure outside the loop
+                    using (SqlCommand cmd = new SqlCommand("dbo.usp_moveInitiateToBudget", con))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        // Define parameters once
+                        cmd.Parameters.Add("@Id", SqlDbType.Int);
+                        cmd.Parameters.Add("@Status", SqlDbType.VarChar, 10);
 
                         foreach (var item in items)
                         {
-                            // Execute Query 1: Update Status
-                            using (SqlCommand cmd = new SqlCommand(updateQuery, con, trans))
-                            {
-                                cmd.Parameters.AddWithValue("@Id", item.Id);
+                            // Update parameter values for the current item
+                            cmd.Parameters["@Id"].Value = item.Id;
+                            cmd.Parameters["@Status"].Value = item.Status;
 
-                                if (item.Status == "trans")
-                                {
-                                    cmd.Parameters.AddWithValue("@IsTransfer", 1);
-                                }
-                                else // "skip"
-                                {
-                                    cmd.Parameters.AddWithValue("@IsTransfer", DBNull.Value);
-                                }
-
-                                cmd.ExecuteNonQuery();
-                            }
-
-                            // Execute Query 2: Cross-Table Insert (Only if selected state is 'trans')
-                            if (item.Status == "trans")
-                            {
-                                using (SqlCommand migrateCmd = new SqlCommand(migrateQuery, con, trans))
-                                {
-                                    migrateCmd.Parameters.AddWithValue("@Id", item.Id);
-                                    migrateCmd.ExecuteNonQuery();
-                                }
-                            }
+                            // Execute the procedure
+                            cmd.ExecuteNonQuery();
                         }
-                        trans.Commit();
                     }
                 }
+
+                //using (SqlConnection con = new SqlConnection(connectionString))
+                //{
+                //    con.Open();
+                //    using (SqlTransaction trans = con.BeginTransaction())
+                //    {
+                //        // Query 1: Updates staging status
+                //        string updateQuery = @"
+                //    UPDATE [dbo].[BudgetInitiate]
+                //    SET [IsTransfer] = @IsTransfer
+                //    WHERE [Id] = @Id";
+
+                //        // Query 2: Migrates 'trans' rows into the main Budget destination table
+                //        string migrateQuery = @"
+                //    INSERT INTO [dbo].[Budget] 
+                //    ([Year], [Month], [SpendDate], [Amount], [Details], [G1], [G2], [G3], [G4], [CreatedTime], [IsVerified],[BankName], [ReferenceId])
+                //    SELECT 
+                //        [Year], 
+                //        [Month], 
+                //        [TransactionDate] AS [SpendDate], 
+                //        [Amount], 
+                //        [Details], 
+                //        NULL AS [G1], 
+                //        NULL AS [G2], 
+                //        NULL AS [G3], 
+                //        NULL AS [G4], 
+                //        GETDATE() AS [CreatedTime], 
+                //        0 AS [IsVerified],
+                //        [BankName],
+                //        [Id]
+                //    FROM [dbo].[BudgetInitiate]
+                //    WHERE [Id] = @Id";
+
+                //        foreach (var item in items)
+                //        {
+                //            // Execute Query 1: Update Status
+                //            using (SqlCommand cmd = new SqlCommand(updateQuery, con, trans))
+                //            {
+                //                cmd.Parameters.AddWithValue("@Id", item.Id);
+
+                //                if (item.Status == "trans")
+                //                {
+                //                    cmd.Parameters.AddWithValue("@IsTransfer", 1);
+                //                }
+                //                else // "skip"
+                //                {
+                //                    cmd.Parameters.AddWithValue("@IsTransfer", DBNull.Value);
+                //                }
+
+                //                cmd.ExecuteNonQuery();
+                //            }
+
+                //            // Execute Query 2: Cross-Table Insert (Only if selected state is 'trans')
+                //            if (item.Status == "trans")
+                //            {
+                //                using (SqlCommand migrateCmd = new SqlCommand(migrateQuery, con, trans))
+                //                {
+                //                    migrateCmd.Parameters.AddWithValue("@Id", item.Id);
+                //                    migrateCmd.ExecuteNonQuery();
+                //                }
+                //            }
+                //        }
+                //        trans.Commit();
+                //    }
+                //}
                 return Json(new { success = true, message = "Successfully updated statuses and transferred records to the Budget database!" });
             }
             catch (Exception ex)
@@ -160,7 +185,7 @@ namespace YourProjectNamespace.Controllers
                 using (SqlConnection con = new SqlConnection(connectionString))
                 {
                     con.Open();
-                    string revertQuery = @" UPDATE [dbo].[BudgetInitiate] SET [IsTransfer] = 0 WHERE [Id] = @Id";
+                    string revertQuery = @" UPDATE [dbo].[BudgetInitiate] SET [IsTransfer] = NULL WHERE [Id] = @Id";
 
                     using (SqlCommand cmd = new SqlCommand(revertQuery, con))
                     {

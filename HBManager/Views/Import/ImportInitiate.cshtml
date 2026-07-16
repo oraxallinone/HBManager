@@ -313,7 +313,8 @@
                     data: { id: rowId },
                     success: function (response) {
                         if (response.success) {
-                            loadGridDataWithYearMonth();
+                            //loadGridDataWithYearMonth();
+                            loadGridData(); // Refresh grid layout immediately to show textual transformations
                         } else {
                             alert('Revert failed: ' + response.message);
                         }

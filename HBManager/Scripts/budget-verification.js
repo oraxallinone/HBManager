@@ -61,7 +61,7 @@
         
 
             $('#totalIn').text(data.TotalIn.toLocaleString());
-            $('#totalCompareIn').text(data.TotalIn.toLocaleString() + '  _ Init');
+            $('#totalCompareIn').text(data.TotalIn.toLocaleString() + '  _ month beginning');
             $('#totalOut').text(data.TotalOut.toLocaleString());
             $('#totalNow').text(data.TotalNow.toLocaleString());
 
@@ -76,7 +76,7 @@
 
 
             let out_Now = parseFloat(data.TotalOut) + parseFloat(data.TotalNow);
-            $('#totalCompare').text(out_Now.toLocaleString() + ' _  ONow');
+                $('#totalCompare').text(out_Now.toLocaleString() + ' _ having, spending');
 
             //difference between #totalCompareIn - #totalCompare= ?
             let difference = parseFloat(data.TotalIn) - parseFloat(out_Now);
@@ -154,14 +154,14 @@
             // M IN
             var inRows = '';
             $.each(data.InList, function (i, item) {
-                inRows += `<tr data-id="${item.IdIn}"><td>${item.DateIn ? formatDateForDisplay(item.DateIn) : ''}</td><td>${item.AmountIn.toLocaleString()}</td><td>${item.DetailsIn || ''}</td><td><button class="btn btn-primary btn-xs edit-in" style="padding:2px 8px;font-size:11px;" title="Edit"><i class="fa fa-pencil"></i></button> <button class="btn btn-danger btn-xs delete-in" style="padding:2px 8px;font-size:11px;" title="Delete"><i class="fa fa-trash"></i></button></td></tr>`;
+                inRows += `<tr data-id="${item.IdIn}"><td>${item.DateIn ? formatDateForDisplay(item.DateIn) : ''}</td><td>${item.AmountIn.toLocaleString()}</td><td>${item.DetailsIn || ''}</td><td><button class="btn btn-primary btn-xs edit-in new-edit-btn"  title="Edit"><i class="fa fa-pencil"></i></button> <button class="btn btn-danger btn-xs delete-in new-delete-btn" title="Delete"><i class="fa fa-trash"></i></button></td></tr>`;
             });
             $('#tblMin tbody').html(inRows);
 
             // M Now
             var nowRows = '';
             $.each(data.NowList, function (i, item) {
-                nowRows += `<tr data-id="${item.IdNow}"><td>${item.DateNow ? formatDateForDisplay(item.DateNow) : ''}</td><td>${item.AmountNow.toLocaleString()}</td><td>${item.DetailsNow || ''}</td><td><button class="btn btn-primary btn-xs edit-now" style="padding:2px 8px;font-size:11px;" title="Edit"><i class="fa fa-pencil"></i></button> <button class="btn btn-danger btn-xs delete-now" style="padding:2px 8px;font-size:11px;" title="Delete"><i class="fa fa-trash"></i></button></td></tr>`;
+                nowRows += `<tr data-id="${item.IdNow}"><td>${item.DateNow ? formatDateForDisplay(item.DateNow) : ''}</td><td>${item.AmountNow.toLocaleString()}</td><td>${item.DetailsNow || ''}</td><td><button class="btn btn-primary btn-xs edit-now new-edit-btn"  title="Edit"><i class="fa fa-pencil"></i></button> <button class="btn btn-danger btn-xs delete-now new-delete-btn" title="Delete"><i class="fa fa-trash"></i></button></td></tr>`;
             });
             // Delete for M IN
             $('#tblMin').on('click', '.delete-in', function () {

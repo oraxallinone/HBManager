@@ -23,12 +23,12 @@ namespace HBManager.Controllers
         {
             try
             {
-                // validate
+                
                 if (string.IsNullOrWhiteSpace(name)) return Json(new { success = false, message = "Name is required" });
                 DateTime dob;
                 if (!DateTime.TryParse(dateOfBirth, out dob)) return Json(new { success = false, message = "Invalid DateOfBirth" });
 
-                // call service
+                
                 var id = _birthdayService.AddBirthday(name.Trim(), dob.Date, isActive);
                 if (id > 0) return Json(new { success = true, id = id });
                 return Json(new { success = false, message = "Could not insert (possible duplicate)" });

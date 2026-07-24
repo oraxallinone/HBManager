@@ -31,9 +31,21 @@
 
 
 
+.new-edit-btn {
+    padding: 2px 8px;
+    font-size: 11px;
+    background-color: #518cb9 !important;
+    border-color: #ffffff !important;
+    width: 45%;
+}
 
-
-
+.new-delete-btn {
+    padding: 2px 8px;
+    font-size: 11px;
+    background-color: #b90a65 !important;
+    border-color: #ffffff !important;
+    width: 45%;
+}
 
 
 

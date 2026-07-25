@@ -173,11 +173,11 @@ namespace HBManager.Service
             return list;
         }
 
-        public List<Budget> GetBudgetByFromToDateWithGroup(int year, int month, int g1, int g2, int g3, int g4, bool isAll)
+        public List<Budget> GetBudgetByFromToDateWithGroup(int year, int month, int g1, int g2, int g3, int g4, bool isAll, string searchText)
         {
             var list = new List<Budget>();
             using (var conn = new SqlConnection(_connString))
-            using (var cmd = new SqlCommand("sp_GetBudgetByFromToDateWithGroup", conn))
+            using (var cmd = new SqlCommand("sp_GetBudgetByFromToDateWithGroup1", conn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@Year", year);
@@ -187,7 +187,7 @@ namespace HBManager.Service
                 cmd.Parameters.AddWithValue("@g3", g3);
                 cmd.Parameters.AddWithValue("@g4", g4);
                 cmd.Parameters.AddWithValue("@isAll", isAll);
-
+                cmd.Parameters.AddWithValue("@searchText", searchText);
 
                 conn.Open();
                 using (var rdr = cmd.ExecuteReader())

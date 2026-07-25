@@ -47,11 +47,12 @@
         var g2 = parseInt($("#searchDDlG2").val(), 10) || 0;
         var g3 = parseInt($("#searchDDlG3").val(), 10) || 0;
         var g4 = parseInt($("#searchDDlG4").val(), 10) || 0;
+        var searchText = $("#searchTest").val() == '' ? null : $("#searchTest").val();
         // Call API with year=0, month=0 to get all data for group
         $.ajax({
             url: "/Budget/GetAllBudgetFromToWithGroup",
             type: "GET",
-            data: { year: 0, month: 0, g1: g1, g2: g2, g3: g3, g4: g4, isAll: isAll },
+            data: { year: 0, month: 0, g1: g1, g2: g2, g3: g3, g4: g4, isAll: isAll, searchText: searchText },
             dataType: "json",
             success: function (res) {
                 if (res && res.length > 0) {
@@ -73,6 +74,14 @@
             getAllBudgetForGroupOnly();
         } else {
             GetAllBudgetFromToWithGroup();
+        }
+    });
+
+    $("#btnsingleSearch").click(function () {
+        if ($('#checkForAll').is(':checked')) {
+            getAllBudgetForGroupOnly();//checked search from All
+        } else {
+            GetAllBudgetFromToWithGroup();// current month
         }
     });
 
@@ -774,6 +783,7 @@
         var g2 = parseInt($("#searchDDlG2").val(), 10) || 0;
         var g3 = parseInt($("#searchDDlG3").val(), 10) || 0;
         var g4 = parseInt($("#searchDDlG4").val(), 10) || 0;
+        var searchText = $("#searchTest").val() == '' ? null : $("#searchTest").val();
 
         if (year === "0" || month === "0") {
             //alert("Please select Year and Month first");
@@ -783,7 +793,7 @@
         $.ajax({
             url: "/Budget/GetAllBudgetFromToWithGroup",
             type: "GET",
-            data: { year: year, month: month, g1: g1, g2: g2, g3: g3, g4: g4, isAll: isAll },
+            data: { year: year, month: month, g1: g1, g2: g2, g3: g3, g4: g4, isAll: isAll, searchText: searchText },
             dataType: "json",
             success: function (res) {
                 if (res && res.length > 0) {

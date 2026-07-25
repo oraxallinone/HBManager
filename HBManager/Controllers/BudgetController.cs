@@ -46,9 +46,9 @@ namespace HBManager.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetAllBudgetFromToWithGroup(int year, int month, int g1, int g2, int g3, int g4, bool isAll)
+        public JsonResult GetAllBudgetFromToWithGroup(int year, int month, int g1, int g2, int g3, int g4, bool isAll, string searchText)
         {
-            var list = _svc.GetBudgetByFromToDateWithGroup(year, month, g1, g2, g3, g4, isAll);
+            var list = _svc.GetBudgetByFromToDateWithGroup(year, month, g1, g2, g3, g4, isAll, searchText);
             return Json(list, JsonRequestBehavior.AllowGet);
         }
 

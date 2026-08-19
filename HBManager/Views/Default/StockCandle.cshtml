@@ -1,0 +1,106 @@
+﻿@{
+    ViewBag.Title = "NSE Stock Candle";
+    Layout = "~/Views/Shared/_WebLayout.cshtml";
+}
+
+<div class="app-content">
+    <div class="container-fluid">
+        <div class="row g-4">
+            <div class="col-md-12">
+                <div class="card card-primary card-outline">
+                    <div class="card-body">
+                        <form id="stockForm" class="row g-3 align-items-end">
+                            <div class="col-md-4">
+                                <label for="txtStockSymbol" class="form-label">NSE Stock Symbol</label>
+                                <input id="txtStockSymbol" type="text" class="form-control" value="RELIANCE" placeholder="Enter stock name or symbol, e.g. RELIANCE, INFY" required />
+                            </div>
+                            <div class="col-md-2">
+                                <button type="submit" class="btn btn-primary w-100">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <div id="stockSummaryPanel" class="card card-primary card-outline" style="border:1px solid #1d78b4;">
+                    <div class="card-body" style="padding:12px 14px;">
+                        <div style="font-size:18px; font-weight:600; color:#1a3f5f; margin-bottom:10px;">Stock Summary</div>
+                        <div style="font-size:13px; color:#666;">Loading summary...</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <div class="card card-primary card-outline">
+                    <div class="card-body" style="padding: 12px;">
+                        <div id="stockChartContainer" style="height: 380px; width: 100%; overflow-x: auto;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Technical Data Section -->
+            <div class="col-md-12">
+                <div class="card card-info card-outline">
+                    <div class="card-header">
+                        <h3 class="card-title">Technical Data</h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="technicalDataContainer">
+                            <div class="text-center text-muted">No data loaded yet.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fundamental Data Section -->
+            <div class="col-md-12">
+                <div class="card card-success card-outline">
+                    <div class="card-header">
+                        <h3 class="card-title">Fundamental Data</h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="fundamentalDataContainer">
+                            <div class="text-center text-muted">No data loaded yet.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <div class="card card-primary card-outline">
+                    <div class="card-header">
+                        <h3 class="card-title">Last 9 Months Candle Data</h3>
+                    </div>
+                    <div class="card-body p-0">
+                        <div style="max-height: 650px; overflow-y: auto; border:1px solid #d6d9dd; border-top:0;">
+                            <table id="stockTable" class="table table-striped table-bordered table-sm mb-0" style="font-size:12px; width:100%; border-collapse:collapse; table-layout:auto;">
+                                <thead style="position:sticky; top:0; z-index:2; background:#f2f2f2;">
+                                    <tr>
+                                        <th style="position:sticky; top:0; background:#f2f2f2; border:1px solid #d6d9dd;">Date</th>
+                                        <th style="position:sticky; top:0; background:#f2f2f2; border:1px solid #d6d9dd;">Open</th>
+                                        <th style="position:sticky; top:0; background:#f2f2f2; border:1px solid #d6d9dd;">High</th>
+                                        <th style="position:sticky; top:0; background:#f2f2f2; border:1px solid #d6d9dd;">Low</th>
+                                        <th style="position:sticky; top:0; background:#f2f2f2; border:1px solid #d6d9dd;">Close</th>
+                                        <th style="position:sticky; top:0; background:#f2f2f2; border:1px solid #d6d9dd;">Today Change %</th>
+                                        <th style="position:sticky; top:0; background:#f2f2f2; border:1px solid #d6d9dd;">Today Change Amt</th>
+                                        <th style="position:sticky; top:0; background:#f2f2f2; border:1px solid #d6d9dd;">Change Status</th>
+                                        <th style="position:sticky; top:0; background:#f2f2f2; border:1px solid #d6d9dd;">Volume</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="6" class="text-center text-muted">No data loaded yet.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script src="~/Scripts/stock-candle.js"></script>

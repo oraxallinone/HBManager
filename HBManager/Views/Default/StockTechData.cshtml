@@ -1,0 +1,130 @@
+﻿@{
+    ViewBag.Title = "Stock Technical & Fundamental Data (FMP)";
+    Layout = "~/Views/Shared/_WebLayout.cshtml";
+}
+
+<div class="app-content">
+    <div class="container-fluid">
+        <div class="row g-4">
+            <div class="col-md-12">
+                <div class="card card-primary card-outline">
+                    <div class="card-header">
+                        <h3 class="card-title">Stock Analysis - Technical & Fundamental Data</h3>
+                    </div>
+                    <div class="card-body">
+                        <form id="stockSearchForm" class="row g-3 align-items-end">
+                            <div class="col-md-6">
+                                <label for="txtStockSymbol" class="form-label">Stock Symbol</label>
+                                <input id="txtStockSymbol" type="text" class="form-control" placeholder="Enter stock symbol (e.g., AAPL, MSFT, GOOGL)" required />
+                            </div>
+                            <div class="col-md-2">
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fas fa-search"></i> Search
+                                </button>
+                            </div>
+                            <div class="col-md-4">
+                                <div id="loadingSpinner" style="display:none; text-align:center;">
+                                    <div class="spinner-border spinner-border-sm" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                    <span style="margin-left:8px;">Fetching data...</span>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Company Overview Section -->
+            <div class="col-md-12">
+                <div id="companyOverviewSection" style="display:none;">
+                    <div class="card card-info card-outline">
+                        <div class="card-header">
+                            <h3 class="card-title">Company Overview</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="companyOverviewContainer"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Technical Data Section -->
+            <div class="col-md-12">
+                <div id="technicalDataSection" style="display:none;">
+                    <div class="card card-info card-outline">
+                        <div class="card-header">
+                            <h3 class="card-title">Technical Data (Key Metrics)</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="technicalDataContainer"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fundamental Data Section -->
+            <div class="col-md-12">
+                <div id="fundamentalDataSection" style="display:none;">
+                    <div class="card card-success card-outline">
+                        <div class="card-header">
+                            <h3 class="card-title">Fundamental Data (Ratios & Growth)</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="fundamentalDataContainer"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Financial Statements Section -->
+            <div class="col-md-12">
+                <div id="financialStatementsSection" style="display:none;">
+                    <div class="card card-warning card-outline">
+                        <div class="card-header">
+                            <h3 class="card-title">Financial Statements</h3>
+                        </div>
+                        <div class="card-body">
+                            <ul class="nav nav-tabs" id="finStatementsTab" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="incomeTab" data-bs-toggle="tab" href="#incomeStatement" role="tab">Income Statement</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="balanceTab" data-bs-toggle="tab" href="#balanceStatement" role="tab">Balance Sheet</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="cashFlowTab" data-bs-toggle="tab" href="#cashFlowStatement" role="tab">Cash Flow</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content" id="finStatementsContent">
+                                <div class="tab-pane fade show active" id="incomeStatement" role="tabpanel">
+                                    <div id="incomeStatementContainer" style="margin-top:15px;"></div>
+                                </div>
+                                <div class="tab-pane fade" id="balanceStatement" role="tabpanel">
+                                    <div id="balanceStatementContainer" style="margin-top:15px;"></div>
+                                </div>
+                                <div class="tab-pane fade" id="cashFlowStatement" role="tabpanel">
+                                    <div id="cashFlowStatementContainer" style="margin-top:15px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Error Message Section -->
+            <div class="col-md-12">
+                <div id="errorSection" style="display:none;">
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <strong>Error!</strong> <span id="errorMessage"></span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/Scripts/jquery-1.9.0.min.js"></script>
+<script src="~/Scripts/stock-tech-data.js"></script>

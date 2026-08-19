@@ -1,0 +1,619 @@
+﻿@{
+    ViewBag.Title = "Purchase Stock Tracker";
+    Layout = "~/Views/Shared/_WebLayout.cshtml";
+}
+
+<style>
+    body {
+        font-size: 12px;
+    }
+
+    .app-content,
+    .card,
+    .table,
+    .table-responsive,
+    .form-control,
+    .alert,
+    .modal {
+        font-size: 12px;
+    }
+
+    .stock-detail-btn {
+        width: 22px;
+        height: 22px;
+        border-radius: 4px;
+        border: 1px solid #d0d7de;
+        background: #f8f9fa;
+        color: #0d6efd;
+        font-size: 11px;
+        font-weight: bold;
+        line-height: 1;
+        padding: 0;
+        cursor: pointer;
+        vertical-align: middle;
+    }
+
+        .stock-detail-btn:hover {
+            background: #0d6efd;
+            color: #fff;
+            border-color: #0d6efd;
+        }
+
+    .stock-candle-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: #fff;
+        border: 1px solid #dfe3e8;
+        font-size: 11px;
+    }
+
+        .stock-candle-table th,
+        .stock-candle-table td {
+            border: 1px solid #dfe3e8;
+            padding: 5px 6px;
+            text-align: center;
+            font-size: 11px;
+        }
+
+        .stock-candle-table thead th {
+            background: #eef3f8;
+            color: #1f2937;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 2;
+        }
+
+        .stock-candle-table tbody tr:nth-child(even) {
+            background: #f8fafc;
+        }
+
+    .stock-change-up {
+        color: #1e7f3b;
+        font-weight: 600;
+    }
+
+    .stock-change-down {
+        color: #d9534f;
+        font-weight: 600;
+    }
+
+    .stock-change-flat {
+        color: #6c757d;
+        font-weight: 600;
+    }
+
+    #purchaseStockTable {
+        font-size: 12px;
+    }
+
+        #purchaseStockTable th,
+        #purchaseStockTable td {
+            padding: 8px 6px;
+            vertical-align: middle;
+        }
+
+        #purchaseStockTable thead th {
+            font-size: 12px;
+            font-weight: 700;
+            background: #f3f3f3;
+            cursor: pointer;
+            user-select: none;
+            position: relative;
+            padding-right: 18px;
+        }
+
+            #purchaseStockTable thead th:hover {
+                background: #e8e8e8;
+            }
+
+        #purchaseStockTable tbody td {
+            font-size: 12px;
+        }
+
+    .stock-exchange-badge {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 10px;
+        font-weight: 600;
+        line-height: 1.4;
+        vertical-align: middle;
+        border: 1px solid transparent;
+        text-align: center;
+    }
+
+        .stock-exchange-badge.nse {
+            background: #fdecec;
+            color: #d62929;
+            border-color: #f7b8b8;
+        }
+
+        .stock-exchange-badge.bse {
+            background: #edf5ff;
+            color: #1c66d6;
+            border-color: #bfd7ff;
+        }
+
+    .stock-filter-row td {
+        padding: 6px !important;
+        background: #f8f8f8;
+    }
+
+    .stock-filter-row input {
+        width: 100%;
+        height: 26px;
+        font-size: 11px;
+        padding: 3px 5px;
+        border: 1px solid #cfcfcf;
+        border-radius: 3px;
+    }
+
+    .stock-sort-icon {
+        position: absolute;
+        right: 4px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 10px;
+        color: #999;
+        font-weight: bold;
+    }
+
+        .stock-sort-icon.asc::after {
+            content: '▲';
+            color: #0d6efd;
+        }
+
+        .stock-sort-icon.desc::after {
+            content: '▼';
+            color: #0d6efd;
+        }
+
+    .summary-card {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        padding: 12px 16px;
+        line-height: 1.8;
+    }
+
+    /* Modal Fullscreen & Control Button Styles */
+    .modal-fullscreen-custom {
+        max-width: 98vw !important;
+        width: 98vw !important;
+        margin: 1vh auto !important;
+    }
+
+        .modal-fullscreen-custom .modal-content {
+            height: 98vh;
+        }
+
+        .modal-fullscreen-custom .modal-body {
+            overflow-y: auto;
+            max-height: calc(98vh - 120px);
+        }
+
+        .modal-fullscreen-custom .stock-candle-container {
+            max-height: calc(98vh - 160px) !important;
+        }
+
+    .modal-btn-action {
+        background: transparent;
+        border: none;
+        font-size: 14px;
+        color: #6c757d;
+        cursor: pointer;
+        padding: 0 6px;
+        line-height: 1;
+    }
+
+        .modal-btn-action:hover {
+            color: #000;
+        }
+    /* Main Table Hover Override */
+    #purchaseStockTable.table tbody tr:hover td,
+    #purchaseStockTable.table-striped tbody tr:hover > td {
+        background-color: #e9f3ff !important;
+        cursor: pointer;
+    }
+
+    /* Popup Candle Table Hover Override */
+    .stock-candle-table tbody tr:hover td {
+        background-color: #edf5ff !important;
+        cursor: pointer;
+    }
+
+    /* --- Popup Modal Candle Table Hover Effect --- */
+    .stock-candle-table tbody tr:hover {
+        background-color: #aebbcb !important;
+        transition: background-color 0.15s ease-in-out;
+    }
+</style>
+
+<div class="app-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-primary card-outline">
+                    <div class="card-header">
+                        <h3 class="card-title">Purchase Stock Tracker</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="purchaseStockTable" class="table table-bordered table-striped table-hover table-sm">
+                                <thead>
+                                    <tr>
+                                        <th data-column="0">Stock<span class="stock-sort-icon"></span></th>
+                                        <th data-column="1">Exchange<span class="stock-sort-icon"></span></th>
+                                        <th data-column="2">Age<span class="stock-sort-icon"></span></th>
+                                        <th data-column="3">Pur. Date<span class="stock-sort-icon"></span></th>
+                                        <th data-column="4">Qty<span class="stock-sort-icon"></span></th>
+                                        <th data-column="5">Pur. Price<span class="stock-sort-icon"></span></th>
+                                        <th data-column="6">Last Price<span class="stock-sort-icon"></span></th>
+                                        <th data-column="7">Amt Chg<span class="stock-sort-icon"></span></th>
+                                        <th data-column="8">% Chg<span class="stock-sort-icon"></span></th>
+                                        <th data-column="9">My Chg<span class="stock-sort-icon"></span></th>
+                                        <th data-column="10">Tot. Pur. Amt<span class="stock-sort-icon"></span></th>
+                                        <th data-column="11">Valuation<span class="stock-sort-icon"></span></th>
+                                        <th data-column="12">Inc Days<span class="stock-sort-icon"></span></th>
+                                        <th data-column="13">Dec Days<span class="stock-sort-icon"></span></th>
+                                        <th data-column="14">Live Price<span class="stock-sort-icon"></span></th>
+                                        <th data-column="15">Live Chg Amt<span class="stock-sort-icon"></span></th>
+                                        <th data-column="16">Live Chg %<span class="stock-sort-icon"></span></th>
+                                    </tr>
+                                    <tr class="stock-filter-row">
+                                        <td><input type="text" data-column="0" placeholder="Search" /></td>
+                                        <td><input type="text" data-column="1" placeholder="Search" /></td>
+                                        <td><input type="text" data-column="2" placeholder="Search" /></td>
+                                        <td><input type="text" data-column="3" placeholder="Search" /></td>
+                                        <td><input type="text" data-column="4" placeholder="Search" /></td>
+                                        <td><input type="text" data-column="5" placeholder="Search" /></td>
+                                        <td><input type="text" data-column="6" placeholder="Search" /></td>
+                                        <td><input type="text" data-column="7" placeholder="Search" /></td>
+                                        <td><input type="text" data-column="8" placeholder="Search" /></td>
+                                        <td><input type="text" data-column="9" placeholder="Search" /></td>
+                                        <td><input type="text" data-column="10" placeholder="Search" /></td>
+                                        <td><input type="text" data-column="11" placeholder="Search" /></td>
+                                        <td><input type="text" data-column="12" placeholder="Search" /></td>
+                                        <td><input type="text" data-column="13" placeholder="Search" /></td>
+                                        <td><input type="text" data-column="14" placeholder="Search" /></td>
+                                        <td><input type="text" data-column="15" placeholder="Search" /></td>
+                                        <td><input type="text" data-column="16" placeholder="Search" /></td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="17" class="text-center text-muted">Loading...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Stock Details Modal Popup -->
+<div class="modal fade" id="stockDetailModal" tabindex="-1" role="dialog" aria-labelledby="stockDetailModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered" id="stockModalDialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header d-flex justify-content-between align-items-center">
+                <h5 class="modal-title" id="stockDetailModalTitle">Stock Details</h5>
+                <div class="d-flex align-items-center">
+                    <button type="button" class="modal-btn-action me-2" id="btnToggleFullScreen" title="Toggle Fullscreen">
+                        <span id="fullScreenIcon">&#x26F6;</span>
+                    </button>
+                    <button type="button" class="close btn-close modal-btn-action" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            </div>
+            <div class="modal-body" id="stockDetailModalBody">
+                <!-- Injected dynamically -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/jquery-1.9.0.min.js"></script>
+<script>
+    var currentSortColumn = -1;
+    var currentSortDirection = 'asc';
+    var cachedStockList = [];
+
+    $(document).ready(function () {
+        loadPurchaseStockTracker();
+
+        // Fullscreen toggle event for modal
+        $('#btnToggleFullScreen').on('click', function () {
+            var $dialog = $('#stockModalDialog');
+            $dialog.toggleClass('modal-fullscreen-custom');
+
+            var isFull = $dialog.hasClass('modal-fullscreen-custom');
+            $('#fullScreenIcon').html(isFull ? '&#128471;' : '&#x26F6;');
+        });
+
+        // Reset fullscreen mode on modal close
+        $('#stockDetailModal').on('hidden.bs.modal', function () {
+            $('#stockModalDialog').removeClass('modal-fullscreen-custom');
+            $('#fullScreenIcon').html('&#x26F6;');
+        });
+    });
+
+    function loadPurchaseStockTracker() {
+        $.ajax({
+            url: '/Default/GetPurchaseStockTrackerData',
+            type: 'GET',
+            dataType: 'json',
+            success: function (response) {
+                if (!response || !response.success) {
+                    $('#purchaseStockTable tbody').html('<tr><td colspan="17" class="text-center text-danger">' + (response && response.message ? response.message : 'Unable to load data.') + '</td></tr>');
+                    return;
+                }
+
+                cachedStockList = response.data || [];
+                if (!cachedStockList.length) {
+                    $('#purchaseStockTable tbody').html('<tr><td colspan="17" class="text-center text-muted">No stock records found.</td></tr>');
+                    return;
+                }
+
+                var html = '';
+                $.each(cachedStockList, function (index, item) {
+                    var amountBg = item.amountChange >= 0 ? 'text-success' : 'text-danger';
+                    var percentBg = item.percentChange >= 0 ? 'text-success' : 'text-danger';
+                    var myChangeBg = item.myChangeAmount >= 0 ? 'text-success' : 'text-danger';
+                    var stockName = item.stockName || '';
+                    var exchange = (item.exchange || 'NSE').toUpperCase();
+                    var exchangeClass = (exchange === 'BSE' ? 'bse' : 'nse');
+                    var quantity = parseFloat(item.quantity || 0);
+                    var purchasePrice = parseFloat(item.purchasePrice || 0);
+                    var currentPrice = parseFloat(item.currentPrice || item.lastClosePrice || 0);
+                    var totalPurchaseAmount = quantity * purchasePrice;
+                    var stockValuation = quantity * currentPrice;
+
+                    var livePrice = parseFloat(item.livePrice || item.currentPrice || item.lastClosePrice || 0);
+                    var lastClosePrice = parseFloat(item.lastClosePrice || 0);
+                    var liveChangeAmount = livePrice - lastClosePrice;
+                    var liveChangePercent = lastClosePrice !== 0 ? ((liveChangeAmount / lastClosePrice) * 100) : 0;
+                    var livePriceBg = livePrice > currentPrice ? 'text-success' : (livePrice < currentPrice ? 'text-danger' : 'text-muted');
+                    var liveChangeBg = liveChangeAmount > 0 ? 'text-success' : (liveChangeAmount < 0 ? 'text-danger' : 'text-muted');
+
+                    html += '<tr>' +
+                        '<td><button type="button" class="stock-detail-btn" data-index="' + index + '" title="View 90 Day Details">&#9654;</button> ' + escapeHtml(stockName) + '</td>' +
+                        '<td class="text-center"><span class="stock-exchange-badge ' + exchangeClass + '">' + exchange + '</span></td>' +
+                        '<td>' + (item.ageOfStock || 0) + ' days</td>' +
+                        '<td>' + (item.purchaseDate || '') + '</td>' +
+                        '<td>' + formatNumber(quantity) + '</td>' +
+                        '<td>' + formatCurrency(purchasePrice) + '</td>' +
+                        '<td>' + formatCurrency(item.lastClosePrice) + '</td>' +
+                        '<td class="' + amountBg + '">' + formatCurrency(item.amountChange) + '</td>' +
+                        '<td class="' + percentBg + '">' + formatPercent(item.percentChange) + '</td>' +
+                        '<td class="' + myChangeBg + '">' + formatSignedCurrency(item.myChangeAmount) + '</td>' +
+                        '<td>' + formatCurrency(totalPurchaseAmount) + '</td>' +
+                        '<td>' + formatCurrency(stockValuation) + '</td>' +
+                        '<td>' + (item.increaseDays || 0) + '</td>' +
+                        '<td>' + (item.decreaseDays || 0) + '</td>' +
+                        '<td class="' + livePriceBg + ' font-weight-bold">' + formatCurrency(livePrice) + '</td>' +
+                        '<td class="' + liveChangeBg + ' font-weight-bold">' + formatSignedCurrency(liveChangeAmount) + '</td>' +
+                        '<td class="' + liveChangeBg + ' font-weight-bold">' + formatSignedPercent(liveChangePercent) + '</td>' +
+                        '</tr>';
+                });
+
+                $('#purchaseStockTable tbody').html(html);
+                bindSearchFilters();
+                bindColumnSort();
+
+                $('.stock-detail-btn').off('click').on('click', function () {
+                    var idx = parseInt($(this).attr('data-index'), 10);
+                    var stock = cachedStockList[idx];
+                    if (stock) {
+                        openStockDetailPopup(stock);
+                    }
+                });
+            },
+            error: function () {
+                $('#purchaseStockTable tbody').html('<tr><td colspan="17" class="text-center text-danger">Error loading data.</td></tr>');
+            }
+        });
+    }
+
+    function openStockDetailPopup(item) {
+        var stockName = item.stockName || '';
+        var exchange = (item.exchange || 'NSE').toUpperCase();
+        var exchangeClass = (exchange === 'BSE' ? 'bse' : 'nse');
+        var myChangeBg = item.myChangeAmount >= 0 ? 'text-success' : 'text-danger';
+        var quantity = parseFloat(item.quantity || 0);
+        var purchasePrice = parseFloat(item.purchasePrice || 0);
+        var currentPrice = parseFloat(item.currentPrice || item.lastClosePrice || 0);
+        var dailyChanges = item.dailyChanges || [];
+
+        $('#stockDetailModalTitle').html(
+            escapeHtml(stockName) + ' <span class="stock-exchange-badge ' + exchangeClass + '">' + exchange + '</span> - Last 90 Days History'
+        );
+
+        var modalBodyHtml = '<div class="row">' +
+            '<div class="col-md-2 mb-3">' +
+            '<div class="summary-card">' +
+            '<h6 class="font-weight-bold text-dark border-bottom pb-2 mb-2">Position Summary</h6>' +
+            '<strong>Purchase Date:</strong> ' + (item.purchaseDate || '-') + '<br>' +
+            '<strong>Age:</strong> ' + (item.ageOfStock || 0) + ' days<br>' +
+            '<strong>Purchase Price:</strong> ' + formatCurrency(purchasePrice) + '<br>' +
+            '<strong>Quantity:</strong> ' + formatNumber(quantity) + '<br>' +
+            '<strong>Current / Last Price:</strong> ' + formatCurrency(currentPrice) + '<br>' +
+            '<strong>Total Purchase Amt:</strong> ' + formatCurrency(quantity * purchasePrice) + '<br>' +
+            '<strong>Current Valuation:</strong> ' + formatCurrency(quantity * currentPrice) + '<br>' +
+            '<strong>My Change:</strong> <span class="' + myChangeBg + '">' + formatSignedCurrency(item.myChangeAmount) + ' (' + formatSignedPercent(item.myChangePercent) + ')</span>' +
+            '</div>' +
+            '</div>' +
+            '<div class="col-md-10 mb-3">' +
+            '<div class="stock-candle-container" style="max-height: 400px; overflow-y: auto; border: 1px solid #dfe3e8;">' +
+            buildDailyChangesTable(dailyChanges) +
+            '</div>' +
+            '</div>' +
+            '</div>';
+
+        $('#stockDetailModalBody').html(modalBodyHtml);
+
+        if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+            var modalInstance = bootstrap.Modal.getOrCreateInstance(document.getElementById('stockDetailModal'));
+            modalInstance.show();
+        } else {
+            $('#stockDetailModal').modal('show');
+        }
+    }
+
+    function bindSearchFilters() {
+        $('.stock-filter-row input').off('keyup change').on('keyup change', function () {
+            var query = $(this).val().toLowerCase();
+            var columnIndex = parseInt($(this).attr('data-column'), 10);
+
+            $('#purchaseStockTable tbody tr').each(function () {
+                var $row = $(this);
+                var cellText = $row.find('td').eq(columnIndex).text().toLowerCase();
+                var isMatch = cellText.indexOf(query) !== -1;
+                $row.toggle(isMatch || query === '');
+            });
+        });
+    }
+
+    function bindColumnSort() {
+        $('#purchaseStockTable thead th').off('click').on('click', function () {
+            var columnIndex = parseInt($(this).attr('data-column'), 10);
+            var isAscending = true;
+
+            if (currentSortColumn === columnIndex) {
+                isAscending = currentSortDirection === 'desc';
+            }
+
+            currentSortColumn = columnIndex;
+            currentSortDirection = isAscending ? 'asc' : 'desc';
+
+            sortTableByColumn(columnIndex, isAscending);
+
+            $('#purchaseStockTable thead th .stock-sort-icon').removeClass('asc desc');
+            $(this).find('.stock-sort-icon').addClass(isAscending ? 'asc' : 'desc');
+        });
+    }
+
+    function sortTableByColumn(columnIndex, isAscending) {
+        var $tbody = $('#purchaseStockTable tbody');
+        var rows = $tbody.find('tr').toArray();
+
+        if (rows.length <= 1) return;
+
+        // 1. Map rows into memory first to avoid querying the DOM inside the sort loop
+        var mappedRows = rows.map(function (row, idx) {
+            var rawText = $(row).find('td').eq(columnIndex).text().trim();
+
+            // Clean currency signs, commas, '%', 'days', and '+'
+            var cleanedNum = rawText.replace(/[^\d.-]/g, '');
+            var numVal = parseFloat(cleanedNum);
+
+            return {
+                index: idx,
+                row: row,
+                rawText: rawText.toLowerCase(),
+                numVal: !isNaN(numVal) && cleanedNum !== '' ? numVal : null
+            };
+        });
+
+        // 2. Sort purely in-memory
+        mappedRows.sort(function (a, b) {
+            if (a.numVal !== null && b.numVal !== null) {
+                return isAscending ? a.numVal - b.numVal : b.numVal - a.numVal;
+            }
+            return isAscending ? a.rawText.localeCompare(b.rawText) : b.rawText.localeCompare(a.rawText);
+        });
+
+        // 3. Batch re-insert using DocumentFragment for instant rendering (single reflow)
+        var fragment = document.createDocumentFragment();
+        for (var i = 0; i < mappedRows.length; i++) {
+            fragment.appendChild(mappedRows[i].row);
+        }
+
+        $tbody[0].appendChild(fragment);
+    }
+
+    function buildDailyChangesTable(data) {
+        if (!data || !data.length) {
+            return '<div class="p-3 text-center text-muted">No historical candle data available.</div>';
+        }
+
+        // Sort descending by date so the latest day appears first
+        var sortedData = data.slice().sort(function (a, b) {
+            return new Date(b.date) - new Date(a.date);
+        });
+
+        var html = '<table class="stock-candle-table"><thead><tr>' +
+            '<th>Date</th>' +
+            '<th>Open</th>' +
+            '<th>High</th>' +
+            '<th>Low</th>' +
+            '<th>Close</th>' +
+            '<th>Change %</th>' +
+            '<th>Change Amt</th>' +
+            '<th>Status</th>' +
+            '<th>Volume</th>' +
+            '</tr></thead><tbody>';
+
+        $.each(sortedData, function (index, item) {
+            var changeClass = 'stock-change-flat';
+            if (item.changeAmount > 0) changeClass = 'stock-change-up';
+            if (item.changeAmount < 0) changeClass = 'stock-change-down';
+
+            html += '<tr>' +
+                '<td>' + (item.date || '') + '</td>' +
+                '<td>' + formatCurrency(item.open) + '</td>' +
+                '<td>' + formatCurrency(item.high) + '</td>' +
+                '<td>' + formatCurrency(item.low) + '</td>' +
+                '<td>' + formatCurrency(item.close) + '</td>' +
+                '<td class="' + (item.changePercent >= 0 ? 'stock-change-up' : 'stock-change-down') + '">' + formatPercent(item.changePercent) + '</td>' +
+                '<td class="' + changeClass + '">' + formatCurrency(item.changeAmount) + '</td>' +
+                '<td class="' + changeClass + '">' + (item.changeStatus || 'FLAT') + '</td>' +
+                '<td>' + formatNumber(item.volume) + '</td>' +
+                '</tr>';
+        });
+
+        html += '</tbody></table>';
+        return html;
+    }
+
+    function formatCurrency(value) {
+        var num = parseFloat(value || 0);
+        return isNaN(num) ? '0.00' : num.toFixed(2);
+    }
+
+    function formatSignedCurrency(value) {
+        var num = parseFloat(value || 0);
+        return isNaN(num) ? '+0.00' : ((num >= 0 ? '+' : '') + num.toFixed(2));
+    }
+
+    function formatPercent(value) {
+        var num = parseFloat(value || 0);
+        return isNaN(num) ? '0.00%' : (num.toFixed(2) + '%');
+    }
+
+    function formatSignedPercent(value) {
+        var num = parseFloat(value || 0);
+        return isNaN(num) ? '+0.00%' : ((num >= 0 ? '+' : '') + num.toFixed(2) + '%');
+    }
+
+    function formatNumber(value) {
+        var num = parseFloat(value || 0);
+        return isNaN(num) ? '0' : num.toLocaleString('en-IN');
+    }
+
+    function escapeHtml(value) {
+        return String(value)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+</script>

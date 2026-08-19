@@ -103,32 +103,47 @@
         var curController = ViewContext.RouteData.Values["controller"] != null ? ViewContext.RouteData.Values["controller"].ToString() : "";
         var curAction = ViewContext.RouteData.Values["action"] != null ? ViewContext.RouteData.Values["action"].ToString() : "";
 
-        // Added "ImportController" into the dashIs check group so Dashboard tree expands when on this page
-        var dashIs = (curController == "Default" || curController == "Calender" || curController == "BudgetOverview" || curController == "BudgetGrouping" || curController == "Budget" || curController == "Upload" || curController == "Birthday" || curController == "Notes" || curController == "Import");
+        // Dashboard tree check
+        var dashIs = (curController == "Default" && (curAction == "Dashboard")) ||
+                     curController == "Budget" ||
+                     curController == "BudgetGrouping" ||
+                     curController == "Import";
         var dashOpen = dashIs ? "menu-open" : "";
         var dashActive = dashIs ? "active" : "";
         var dashDashboardActive = (curController == "Default" && curAction == "Dashboard") ? "active" : "";
-        var dashBarChartActive = (curController == "Default" && curAction == "BarChart") ? "active" : "";
-        var dashCalenderActive = (curController == "Calender" && curAction == "CalenderIndex") ? "active" : "";
-        var dashGroupBudgetActive = (curController == "BudgetOverview" && curAction == "GroupBudgetOverview") ? "active" : "";
-        var dashBudgetGroupingActive = (curController == "BudgetGrouping" && curAction == "BudgetGroupingIndex") ? "active" : "";
-        var dashBudgetIndexActive = (curController == "Budget" && curAction == "BudgetIndex") ? "active" : "";
         var dashBudgetVerificationActive = (curController == "Budget" && curAction == "BudgetVerification") ? "active" : "";
         var dashBudgetMobileActive = (curController == "Budget" && curAction == "BudgeMobileIndex") ? "active" : "";
-
-        // Active check state for the new Import By Query link
+        var dashBudgetGroupingActive = (curController == "BudgetGrouping" && curAction == "BudgetGroupingIndex") ? "active" : "";
+        var dashBudgetIndexActive = (curController == "Budget" && curAction == "BudgetIndex") ? "active" : "";
         var dashImportByQueryActive = (curController == "Import" && curAction == "ImportInitiate") ? "active" : "";
 
-        var masterIs = (curController == "Salary" || curController == "Group");
+        // Feature tree check
+        var featureIs = (curController == "Default" && (curAction == "BarChart" || curAction == "StockCandle" || curAction == "StockTechData" || curAction == "PurchaseStockTracker")) ||
+                        curController == "Calender" ||
+                        curController == "BudgetOverview" ||
+                        curController == "Upload" ||
+                        curController == "Birthday" ||
+                        curController == "Notes";
+        var featureOpen = featureIs ? "menu-open" : "";
+        var featureActive = featureIs ? "active" : "";
+        var featureBarChartActive = (curController == "Default" && curAction == "BarChart") ? "active" : "";
+        var featureStockCandleActive = (curController == "Default" && curAction == "StockCandle") ? "active" : "";
+        var featureStockTechDataActive = (curController == "Default" && curAction == "StockTechData") ? "active" : "";
+        var featurePurchaseStockActive = (curController == "Default" && curAction == "PurchaseStockTracker") ? "active" : "";
+        var featureCalenderActive = (curController == "Calender" && curAction == "CalenderIndex") ? "active" : "";
+        var featureGroupBudgetActive = (curController == "BudgetOverview" && curAction == "GroupBudgetOverview") ? "active" : "";
+        var featureUploadFilesActive = (curController == "Upload" && curAction == "Index") ? "active" : "";
+        var featureBirthdayAddActive = (curController == "Birthday" && curAction == "BirthdayIndex") ? "active" : "";
+        var featureBirthdayShowActive = (curController == "Birthday" && curAction == "ShowBirthday") ? "active" : "";
+        var featureNotesActive = (curController == "Notes" && curAction == "NoteIndex") ? "active" : "";
+
+        // Master tree check
+        var masterIs = (curController == "Salary" || curController == "Group" || curController == "UpdateDatetime");
         var masterOpen = masterIs ? "menu-open" : "";
         var masterActive = masterIs ? "active" : "";
         var masterSalaryActive = (curController == "Salary" && curAction == "SalaryIndex") ? "active" : "";
         var masterGroupActive = (curController == "Group" && curAction == "GroupIndex") ? "active" : "";
-        var uploadFiles = (curController == "Upload" && curAction == "Index") ? "active" : "";
-
-        var birthdayAddActive = (curController == "Birthday" && curAction == "BirthdayIndex") ? "active" : "";
-        var birthdayShowActive = (curController == "Birthday" && curAction == "ShowBirthday") ? "active" : "";
-        var notesActive = (curController == "Notes" && curAction == "NoteIndex") ? "active" : "";
+        var masterUpdateDatetimeActive = (curController == "UpdateDatetime" && curAction == "Index") ? "active" : "";
     }
 
     <div class="app-wrapper">
@@ -178,8 +193,7 @@
                         </a>
                         <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                             <li class="user-header text-bg-primary">
-                                <img src="~/Content/theme/assets/img/user2-160x160.jpg" class="rounded-circle shadow"
-                                     alt="User Image" />
+                                <img src="~/Content/theme/assets/img/user2-160x160.jpg" class="rounded-circle shadow" alt="User Image" />
                             </li>
 
                             <li class="user-footer">
@@ -204,8 +218,13 @@
                         data-lte-toggle="treeview"
                         role="menu"
                         data-accordion="false">
-                        <li class="nav-item @(curController == "Default" || curController == "BudgetGrouping" || curController == "Budget" || curController == "Import" ? dashOpen : "")">
-                            <a href="#" class="nav-link @(curController == "Default" || curController == "BudgetGrouping" || curController == "Budget" || curController == "Import" ? dashActive : "")"> <i class="nav-icon bi bi-speedometer"></i> <p style="color:red;"> Dashboard <i class="nav-arrow bi bi-chevron-right"></i> </p> </a>
+
+                        <!-- Dashboard Menu -->
+                        <li class="nav-item @dashOpen">
+                            <a href="#" class="nav-link @dashActive">
+                                <i class="nav-icon bi bi-speedometer"></i>
+                                <p style="color:red;"> Dashboard <i class="nav-arrow bi bi-chevron-right"></i> </p>
+                            </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item"> <a href="@Url.Action("BudgetVerification", "Budget")" class="nav-link @dashBudgetVerificationActive"> <i class="nav-icon bi bi-shield-check"></i> <p>Budget Verification</p> </a> </li>
                                 <li class="nav-item"> <a href="@Url.Action("BudgeMobileIndex", "Budget")" class="nav-link @dashBudgetMobileActive"> <i class="nav-icon bi bi-phone"></i> <p>Budget Mobile</p> </a> </li>
@@ -215,33 +234,46 @@
                                 <li class="nav-item"> <a href="@Url.Action("ImportInitiate", "Import")" class="nav-link @dashImportByQueryActive"> <i class="nav-icon bi bi-database-fill-down"></i> <p>Import By Query</p> </a> </li>
                             </ul>
                         </li>
-                        <li class="nav-item @(curController == "BarChart" || curController == "Calender" || curController == "BudgetOverview" || curController == "Upload" || curController == "Birthday" || curController == "Notes" ? "menu-open" : "")">
-                            <a href="#" class="nav-link @(curController == "BarChart" || curController == "Calender" || curController == "BudgetOverview" || curController == "Upload" || curController == "Birthday" || curController == "Notes" ? "active" : "")"> <i class="nav-icon bi bi-stars"></i> <p style="color:red;"> Feature <i class="nav-arrow bi bi-chevron-right"></i> </p> </a>
+
+                        <!-- Feature Menu -->
+                        <li class="nav-item @featureOpen">
+                            <a href="#" class="nav-link @featureActive">
+                                <i class="nav-icon bi bi-stars"></i>
+                                <p style="color:red;"> Feature <i class="nav-arrow bi bi-chevron-right"></i> </p>
+                            </a>
                             <ul class="nav nav-treeview">
-                                <li class="nav-item"> <a href="@Url.Action("BarChart", "Default")" class="nav-link @dashBarChartActive"> <i class="nav-icon bi bi-bar-chart-line"></i> <p>Bar Graph</p> </a> </li>
-                                <li class="nav-item"> <a href="@Url.Action("CalenderIndex", "Calender")" class="nav-link @dashCalenderActive"> <i class="nav-icon bi bi-calendar3"></i> <p>Calender</p> </a> </li>
-                                <li class="nav-item"> <a href="@Url.Action("GroupBudgetOverview", "BudgetOverview")" class="nav-link @dashGroupBudgetActive"> <i class="nav-icon bi bi-people"></i> <p>Group Sum</p> </a> </li>
-                                <li class="nav-item"> <a href="@Url.Action("Index", "Upload")" class="nav-link @uploadFiles"> <i class="nav-icon bi bi-upload"></i> <p>File Upload</p> </a> </li>
-                                <li class="nav-item"> <a href="@Url.Action("BirthdayIndex", "Birthday")" class="nav-link @(curController == "Birthday" && curAction == "BirthdayIndex" ? "active" : "")"> <i class="nav-icon bi bi-gift"></i> <p>Birthday Add</p> </a> </li>
-                                <li class="nav-item"> <a href="@Url.Action("ShowBirthday", "Birthday")" class="nav-link @(curController == "Birthday" && curAction == "ShowBirthday" ? "active" : "")"> <i class="nav-icon bi bi-calendar-event"></i> <p>Birthday Show</p> </a> </li>
-                                <li class="nav-item"> <a href="@Url.Action("NoteIndex", "Notes")" class="nav-link @(curController == "Notes" && curAction == "NoteIndex" ? "active" : "")"> <i class="nav-icon bi bi-journal-text"></i> <p>Notes</p> </a> </li>
+                                <li class="nav-item"> <a href="@Url.Action("BarChart", "Default")" class="nav-link @featureBarChartActive"> <i class="nav-icon bi bi-bar-chart-line"></i> <p>Bar Graph</p> </a> </li>
+                                <li class="nav-item"> <a href="@Url.Action("StockCandle", "Default")" class="nav-link @featureStockCandleActive"> <i class="nav-icon bi bi-graph-up-arrow"></i> <p>NSE Stock</p> </a> </li>
+                                <li class="nav-item"> <a href="@Url.Action("StockTechData", "Default")" class="nav-link @featureStockTechDataActive"> <i class="nav-icon bi bi-cpu"></i> <p>Stock Tech Data</p> </a> </li>
+                                <li class="nav-item"> <a href="@Url.Action("PurchaseStockTracker", "Default")" class="nav-link @featurePurchaseStockActive"> <i class="nav-icon bi bi-cart-check"></i> <p>Purchase Stock Tracker</p> </a> </li>
+                                <li class="nav-item"> <a href="@Url.Action("CalenderIndex", "Calender")" class="nav-link @featureCalenderActive"> <i class="nav-icon bi bi-calendar3"></i> <p>Calender</p> </a> </li>
+                                <li class="nav-item"> <a href="@Url.Action("GroupBudgetOverview", "BudgetOverview")" class="nav-link @featureGroupBudgetActive"> <i class="nav-icon bi bi-people"></i> <p>Group Sum</p> </a> </li>
+                                <li class="nav-item"> <a href="@Url.Action("Index", "Upload")" class="nav-link @featureUploadFilesActive"> <i class="nav-icon bi bi-upload"></i> <p>File Upload</p> </a> </li>
+                                <li class="nav-item"> <a href="@Url.Action("BirthdayIndex", "Birthday")" class="nav-link @featureBirthdayAddActive"> <i class="nav-icon bi bi-gift"></i> <p>Birthday Add</p> </a> </li>
+                                <li class="nav-item"> <a href="@Url.Action("ShowBirthday", "Birthday")" class="nav-link @featureBirthdayShowActive"> <i class="nav-icon bi bi-calendar-event"></i> <p>Birthday Show</p> </a> </li>
+                                <li class="nav-item"> <a href="@Url.Action("NoteIndex", "Notes")" class="nav-link @featureNotesActive"> <i class="nav-icon bi bi-journal-text"></i> <p>Notes</p> </a> </li>
                             </ul>
                         </li>
-                        <li class="nav-item @masterOpen">
-                            <a href="#" class="nav-link @masterActive"> <i class="nav-icon bi bi-box-seam-fill"></i> <p style="color:red;"> Master <i class="nav-arrow bi bi-chevron-right"></i> </p> </a>
 
+                        <!-- Master Menu -->
+                        <li class="nav-item @masterOpen">
+                            <a href="#" class="nav-link @masterActive">
+                                <i class="nav-icon bi bi-box-seam-fill"></i>
+                                <p style="color:red;"> Master <i class="nav-arrow bi bi-chevron-right"></i> </p>
+                            </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item"> <a href="@Url.Action("SalaryIndex", "Salary")" class="nav-link @masterSalaryActive"> <i class="nav-icon bi bi-currency-dollar"></i> <p>Salary</p> </a> </li>
                                 <li class="nav-item"> <a href="@Url.Action("GroupIndex", "Group")" class="nav-link @masterGroupActive"> <i class="nav-icon bi bi-people-fill"></i> <p>Group</p> </a> </li>
+                                <li class="nav-item"> <a href="@Url.Action("Index", "UpdateDatetime")" class="nav-link @masterUpdateDatetimeActive"> <i class="nav-icon bi bi-clock-history"></i> <p>Update Datetime</p> </a> </li>
                             </ul>
                         </li>
+
                     </ul>
                 </nav>
             </div>
         </aside>
 
         <main class="app-main">
-
             <div class="app-content-header"> </div>
             <div id="loadingSpinner" style="display:none;">
                 <div class="spinner-overlay">
@@ -250,7 +282,6 @@
             </div>
 
             @RenderBody()
-
         </main>
 
     </div>

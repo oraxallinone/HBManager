@@ -1,0 +1,150 @@
+﻿@{
+    ViewBag.Title = "Update Budget Spend Date";
+}
+
+<h2>Update Budget Spend Date</h2>
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="form-group">
+            <label for="month-ddl">Month:</label>
+            <select id="month-ddl" class="form-control"></select>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="form-group">
+            <label for="year-ddl">Year:</label>
+            <select id="year-ddl" class="form-control"></select>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="form-group">
+            <label>&nbsp;</label>
+            <button id="load-data-btn" class="btn btn-primary form-control">Load Data</button>
+        </div>
+    </div>
+</div>
+
+<hr />
+
+<table id="budget-table" class="table table-striped table-bordered" style="width:100%">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Spend Date</th>
+            <th>Amount</th>
+            <th>Details</th>
+            <th>Bank</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+@section scripts {
+    <script>
+    $(document).ready(function () {
+        // Populate dropdowns
+        const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        const currentYear = new Date().getFullYear();
+        for (let i = 0; i < 12; i++) {
+            $('#month-ddl').append(`<option value="${i + 1}">${months[i]}</option>`);
+        }
+        for (let i = currentYear - 5; i <= currentYear + 1; i++) {
+            $('#year-ddl').append(`<option value="${i}">${i}</option>`);
+        }
+        $('#year-ddl').val(currentYear);
+        $('#month-ddl').val(new Date().getMonth() + 1);
+
+        // Load Data Button Click
+        $('#load-data-btn').click(function () {
+            const month = $('#month-ddl').val();
+            const year = $('#year-ddl').val();
+
+            $.ajax({
+                url: '@Url.Action("GetBudgetData", "UpdateDatetime")',
+                type: 'GET',
+                data: { month: month, year: year },
+                success: function (response) {
+                    if (response.Success) {
+                        const tableBody = $('#budget-table tbody');
+                        tableBody.empty();
+                        response.Data.forEach(function (item) {
+                            let spendDate = '';
+                            if (item.SpendDate) {
+                                let d = new Date(parseInt(item.SpendDate.substr(6)));
+                                let pad = (n) => String(n).padStart(2, '0');
+                                spendDate = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+                            }
+
+                            let row = `<tr data-id="${item.Id}">
+                                        <td>${item.Id}</td>
+                                        <td><input type="datetime-local" class="form-control spend-date-input" value="${spendDate}" disabled /></td>
+                                        <td>${item.Amount}</td>
+                                        <td>${item.Details}</td>
+                                        <td>${item.BankName}</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-info edit-btn">Edit</button>
+                                            <button class="btn btn-sm btn-success save-btn" style="display:none;">Save</button>
+                                        </td>
+                                    </tr>`;
+                            tableBody.append(row);
+                        });
+                    } else {
+                        alert('Error loading data: ' + response.Message);
+                    }
+                },
+                error: function () {
+                    alert('An error occurred while fetching data.');
+                }
+            });
+        });
+
+        // Edit button click
+        $('#budget-table').on('click', '.edit-btn', function () {
+            var row = $(this).closest('tr');
+            row.find('.spend-date-input').prop('disabled', false);
+            $(this).hide();
+            row.find('.save-btn').show();
+        });
+
+        // Save button click
+        $('#budget-table').on('click', '.save-btn', function () {
+            debugger
+            var row = $(this).closest('tr');
+            var id = row.data('id');
+            var rawDate = row.find('.spend-date-input').val();
+
+            if (!rawDate) {
+                alert('Please select a valid date.');
+                return;
+            }
+
+            // Extract YYYY-MM-DD and force time to 23:59 (11:59 PM)
+            var dateOnly = rawDate.split('T')[0];
+            var spendDate = rawDate;// + 'T23:59';
+
+            $.ajax({
+                url: '@Url.Action("UpdateBudgetDate", "UpdateDatetime")',
+                type: 'POST',
+                data: { id: id, spendDate: spendDate },
+                success: function (response) {
+                    if (response.Success) {
+                        alert('Date updated successfully!');
+                        // Update the input field value to show 11:59 PM
+                        row.find('.spend-date-input').val(spendDate);
+                        row.find('.spend-date-input').prop('disabled', true);
+                        row.find('.save-btn').hide();
+                        row.find('.edit-btn').show();
+                    } else {
+                        alert('Error updating date.');
+                    }
+                },
+                error: function () {
+                    alert('An error occurred while updating the date.');
+                }
+            });
+        });
+    });
+    </script>
+}

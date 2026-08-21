@@ -1,0 +1,886 @@
+@{
+    ViewBag.Title = "Active Stock Prices";
+    Layout = "~/Views/Shared/_WebLayout.cshtml";
+}
+
+<style>
+    .price-page {
+        min-height: 100vh;
+        padding: 14px 18px;
+        background: #eef2f7;
+        color: #172033;
+        font-family: "Segoe UI", Arial, sans-serif;
+        font-size: 12px;
+    }
+
+    .price-shell {
+        max-width: 1280px;
+        margin: 0 auto;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 8px 22px rgba(16, 42, 67, .12);
+        overflow: hidden;
+    }
+
+    .price-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 14px 20px;
+        color: #fff;
+        background: linear-gradient(120deg, #102a43, #176b87);
+    }
+
+    .price-header h1 {
+        margin: 0 0 3px;
+        font-size: 20px;
+        font-weight: 700;
+    }
+
+    .price-header p {
+        margin: 0;
+        color: rgba(255, 255, 255, .78);
+        font-size: 11px;
+    }
+
+    .refresh-button {
+        height: 31px;
+        padding: 0 12px;
+        border: 1px solid rgba(255, 255, 255, .35);
+        border-radius: 4px;
+        color: #fff;
+        background: rgba(255, 255, 255, .14);
+        cursor: pointer;
+        font-size: 11px;
+        font-weight: 600;
+    }
+
+    .refresh-button:hover {
+        background: rgba(255, 255, 255, .24);
+    }
+
+    .price-body {
+        padding: 16px 20px 20px;
+    }
+
+    .price-toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        margin-bottom: 12px;
+        color: #526579;
+        font-size: 11px;
+    }
+
+    .price-toolbar strong {
+        color: #172033;
+        font-size: 13px;
+    }
+
+    .price-table-wrap {
+        overflow-x: auto;
+        border: 1px solid #dce5ee;
+        border-radius: 6px;
+    }
+
+    .price-table {
+        width: 100%;
+        min-width: 720px;
+        border-collapse: collapse;
+    }
+
+    .price-table th {
+        padding: 9px 11px;
+        text-align: left;
+        color: #fff;
+        background: #243b53;
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+
+    .price-table td {
+        padding: 10px 11px;
+        border-bottom: 1px solid #e6edf3;
+        font-size: 11px;
+    }
+
+    .price-table tbody tr:hover {
+        background: #f6fafc;
+    }
+
+    .exchange-badge,
+    .status-badge {
+        display: inline-block;
+        padding: 3px 8px;
+        border-radius: 20px;
+        font-size: 10px;
+        font-weight: 700;
+    }
+
+    .exchange-nse {
+        color: #125b80;
+        background: #dff3fb;
+    }
+
+    .exchange-bse {
+        color: #69419b;
+        background: #eee4fa;
+    }
+
+    .status-ok {
+        color: #176b43;
+        background: #e4f5ec;
+    }
+
+    .status-error {
+        color: #9f2d25;
+        background: #fde9e7;
+    }
+
+    .close-price {
+        color: #176b43;
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    .stock-info-button {
+        width: 21px;
+        height: 21px;
+        margin-right: 6px;
+        padding: 0;
+        border: 1px solid #9bb7c8;
+        border-radius: 50%;
+        color: #176b87;
+        background: #edf7fa;
+        cursor: pointer;
+        font-size: 11px;
+        font-weight: 700;
+        line-height: 19px;
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .stock-info-button:hover {
+        color: #fff;
+        background: #176b87;
+    }
+
+    .stock-modal-backdrop {
+        position: fixed;
+        z-index: 1050;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+        background: rgba(16, 42, 67, .48);
+    }
+
+    .stock-modal {
+        width: min(1040px, 100%);
+        max-height: calc(100vh - 32px);
+        overflow-y: auto;
+        padding: 20px;
+        border-radius: 8px;
+        background: #fff;
+        box-shadow: 0 16px 40px rgba(16, 42, 67, .28);
+    }
+
+    .stock-modal-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 14px;
+        margin-bottom: 16px;
+    }
+
+    .stock-modal h2 {
+        margin: 0 0 4px;
+        color: #102a43;
+        font-size: 18px;
+    }
+
+    .stock-modal-subtitle {
+        margin: 0;
+        color: #718096;
+        font-size: 11px;
+    }
+
+    .stock-modal-close {
+        width: 26px;
+        height: 26px;
+        border: 0;
+        border-radius: 4px;
+        color: #526579;
+        background: #eef2f7;
+        cursor: pointer;
+        font-size: 18px;
+        line-height: 24px;
+    }
+
+    .stock-company-name {
+        padding: 14px;
+        border-left: 3px solid #168aad;
+        color: #172033;
+        background: #f4f8fb;
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+    .stock-detail-section {
+        margin-top: 14px;
+    }
+
+    .stock-detail-section h3 {
+        margin: 0 0 7px;
+        padding-bottom: 5px;
+        border-bottom: 1px solid #dce5ee;
+        color: #243b53;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: .04em;
+        text-transform: uppercase;
+    }
+
+    .stock-detail-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 7px;
+    }
+
+    .stock-detail-item {
+        min-width: 0;
+        padding: 8px 9px;
+        border: 1px solid #e1e9ef;
+        border-radius: 4px;
+        background: #f8fafc;
+    }
+
+    .stock-detail-label {
+        display: block;
+        margin-bottom: 3px;
+        color: #718096;
+        font-size: 9px;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+
+    .stock-detail-value {
+        display: block;
+        overflow: hidden;
+        color: #172033;
+        font-size: 11px;
+        font-weight: 600;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .stock-detail-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 11px;
+    }
+
+    .stock-detail-table th,
+    .stock-detail-table td {
+        padding: 7px 8px;
+        border-bottom: 1px solid #e6edf3;
+        text-align: left;
+    }
+
+    .stock-detail-table th {
+        color: #526579;
+        background: #f4f8fb;
+        font-size: 9px;
+        text-transform: uppercase;
+    }
+
+    .stock-no-data {
+        padding: 8px 0;
+        color: #718096;
+        font-size: 11px;
+    }
+
+    .candle-toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        margin-bottom: 8px;
+    }
+
+    .candle-range-select {
+        height: 30px;
+        padding: 0 9px;
+        border: 1px solid #cbd5df;
+        border-radius: 4px;
+        color: #243b53;
+        background: #fff;
+        font-size: 11px;
+    }
+
+    .candle-chart-wrap {
+        padding: 8px;
+        border: 1px solid #e1e9ef;
+        border-radius: 5px;
+        background: #f8fafc;
+    }
+
+    .candle-chart {
+        display: block;
+        width: 100%;
+        height: 230px;
+    }
+
+    .candle-chart-line {
+        fill: none;
+        stroke: #168aad;
+        stroke-width: 2.5;
+        vector-effect: non-scaling-stroke;
+    }
+
+    .candle-chart-area {
+        fill: rgba(22, 138, 173, .12);
+    }
+
+    .candle-chart-grid {
+        stroke: #dce5ee;
+        stroke-width: 1;
+    }
+
+    .candle-up {
+        fill: #25855a;
+        stroke: #25855a;
+    }
+
+    .candle-down {
+        fill: #c44536;
+        stroke: #c44536;
+    }
+
+    .candle-data-table-wrap {
+        max-height: 220px;
+        overflow-y: auto;
+        margin-top: 8px;
+        border: 1px solid #e1e9ef;
+        border-radius: 4px;
+    }
+
+    @@media (max-width: 640px) {
+        .stock-detail-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .stock-modal {
+            padding: 14px;
+        }
+    }
+
+    .empty,
+    .loading,
+    .error {
+        padding: 30px;
+        text-align: center;
+        color: #718096;
+        font-size: 11px;
+    }
+
+    .error {
+        color: #9f2d25;
+    }
+</style>
+
+<div id="activeStockPricesApp"></div>
+
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/babel-standalone/babel.min.js"></script>
+
+<script type="text/babel">
+    const { useEffect, useState } = React;
+
+    const pricesUrl = '@Url.Action("GetActiveStockPrices", "StockTracker")';
+    const detailsUrl = '@Url.Action("GetStockDetails", "StockTracker")';
+
+    function App() {
+        const [stocks, setStocks] = useState([]);
+        const [loading, setLoading] = useState(true);
+        const [error, setError] = useState('');
+        const [lastUpdated, setLastUpdated] = useState('');
+        const [selectedStock, setSelectedStock] = useState(null);
+        const [detailsLoading, setDetailsLoading] = useState(false);
+        const [detailsError, setDetailsError] = useState('');
+        const [candleRange, setCandleRange] = useState('1d');
+        const [candleData, setCandleData] = useState([]);
+        const [candleLoading, setCandleLoading] = useState(false);
+        const [candleError, setCandleError] = useState('');
+
+        function loadPrices() {
+            setLoading(true);
+            setError('');
+
+            fetch(pricesUrl, { cache: 'no-store' })
+                .then(response => response.json())
+                .then(result => {
+                    if (!result.success) {
+                        throw new Error(result.message || 'Unable to load prices.');
+                    }
+
+                    setStocks(result.data || []);
+                    setLastUpdated(new Date().toLocaleTimeString());
+                })
+                .catch(loadError => setError(loadError.message))
+                .finally(() => setLoading(false));
+        }
+
+        useEffect(() => {
+            loadPrices();
+        }, []);
+
+        function formatPrice(value) {
+            return value === null || value === undefined
+                ? '-'
+                : Number(value).toFixed(2);
+        }
+
+        function exchangeClass(exchange) {
+            return exchange === 'BSE' ? 'exchange-bse' : 'exchange-nse';
+        }
+
+        function openStockDetails(stock) {
+            setSelectedStock(stock);
+            setDetailsLoading(true);
+            setDetailsError('');
+            setCandleData([]);
+            setCandleError('');
+
+            const query = '?stockName=' + encodeURIComponent(stock.StockName) +
+                '&stockExchange=' + encodeURIComponent(stock.StockExchange || 'NSE');
+
+            fetch(detailsUrl + query, { cache: 'no-store' })
+                .then(response => response.json())
+                .then(result => {
+                    if (!result.success) {
+                        throw new Error(result.message || 'Unable to load stock details.');
+                    }
+
+                    setSelectedStock(result.data);
+                    loadCandles('1d', result.data);
+                })
+                .catch(loadError => setDetailsError(loadError.message))
+                .finally(() => setDetailsLoading(false));
+        }
+
+        function loadCandles(range, stockOverride) {
+            const stock = stockOverride || selectedStock;
+            if (!stock) {
+                return;
+            }
+
+            setCandleRange(range);
+            setCandleLoading(true);
+            setCandleError('');
+
+            const query = '?stockName=' + encodeURIComponent(stock.StockName) +
+                '&stockExchange=' + encodeURIComponent(stock.StockExchange || 'NSE') +
+                '&range=' + encodeURIComponent(range);
+
+            fetch('@Url.Action("GetStockCandles", "StockTracker")' + query, { cache: 'no-store' })
+                .then(response => response.json())
+                .then(result => {
+                    if (!result.success) {
+                        throw new Error(result.message || 'Unable to load candle data.');
+                    }
+
+                    setCandleData(result.data || []);
+                })
+                .catch(loadError => {
+                    setCandleData([]);
+                    setCandleError(loadError.message);
+                })
+                .finally(() => setCandleLoading(false));
+        }
+
+        function chartPoints(data) {
+            if (!data.length) {
+                return '';
+            }
+
+            const values = data.map(item => Number(item.Close));
+            const minimum = Math.min.apply(null, values);
+            const maximum = Math.max.apply(null, values);
+            const spread = maximum - minimum || 1;
+            return values.map((value, index) => {
+                const x = data.length === 1 ? 400 : (index / (data.length - 1)) * 800;
+                const y = 210 - ((value - minimum) / spread) * 180;
+                return x.toFixed(1) + ',' + y.toFixed(1);
+            }).join(' ');
+        }
+
+        function CandleChart({ data, range }) {
+            if (!data.length) {
+                return <div className="stock-no-data">No candle data available for this range.</div>;
+            }
+
+            const line = chartPoints(data);
+            const area = '0,220 ' + line + ' 800,220';
+            const first = data[0];
+            const last = data[data.length - 1];
+
+            if (range) {
+                const chartData = data.length > 250
+                    ? data.filter((item, index) => index % Math.ceil(data.length / 250) === 0 || index === data.length - 1)
+                    : data;
+                const values = chartData.reduce((result, item) => result.concat([item.High, item.Low]), []);
+                const minimum = Math.min.apply(null, values);
+                const maximum = Math.max.apply(null, values);
+                const spread = maximum - minimum || 1;
+                const candleWidth = Math.max(3, Math.min(18, 680 / chartData.length));
+
+                return (
+                    <React.Fragment>
+                        <div className="candle-chart-wrap">
+                            <svg className="candle-chart" viewBox="0 0 800 230" preserveAspectRatio="none" role="img" aria-label="One day candlestick chart">
+                                <line className="candle-chart-grid" x1="0" y1="30" x2="800" y2="30" />
+                                <line className="candle-chart-grid" x1="0" y1="120" x2="800" y2="120" />
+                                <line className="candle-chart-grid" x1="0" y1="210" x2="800" y2="210" />
+                                {chartData.map((item, index) => {
+                                    const center = chartData.length === 1
+                                        ? 400
+                                        : 35 + (index / (chartData.length - 1)) * 730;
+                                    const y = value => 210 - ((value - minimum) / spread) * 180;
+                                    const openY = y(item.Open);
+                                    const closeY = y(item.Close);
+                                    const highY = y(item.High);
+                                    const lowY = y(item.Low);
+                                    const bodyTop = Math.min(openY, closeY);
+                                    const bodyHeight = Math.max(3, Math.abs(openY - closeY));
+                                    const colorClass = item.Close >= item.Open ? 'candle-up' : 'candle-down';
+
+                                    return (
+                                        <React.Fragment key={item.Date + index}>
+                                            <line className={colorClass} x1={center} y1={highY} x2={center} y2={lowY} strokeWidth="2" />
+                                            <rect className={colorClass} x={center - candleWidth / 2} y={bodyTop} width={candleWidth} height={bodyHeight} />
+                                        </React.Fragment>
+                                    );
+                                })}
+                            </svg>
+                        </div>
+                        <table className="stock-detail-table">
+                            <thead>
+                                <tr>
+                                    <th>Date / Day</th>
+                                    <th>Open</th>
+                                    <th>High</th>
+                                    <th>Low</th>
+                                    <th>Close</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {data.map((item, index) => (
+                                    <tr key={item.Date + index}>
+                                        <td>{item.Date}</td>
+                                        <td>{formatPrice(item.Open)}</td>
+                                        <td>{formatPrice(item.High)}</td>
+                                        <td>{formatPrice(item.Low)}</td>
+                                        <td>{formatPrice(item.Close)}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </React.Fragment>
+                );
+            }
+
+            return (
+                <React.Fragment>
+                    <div className="candle-chart-wrap">
+                        <svg className="candle-chart" viewBox="0 0 800 230" preserveAspectRatio="none" role="img" aria-label="Closing price chart">
+                            <line className="candle-chart-grid" x1="0" y1="30" x2="800" y2="30" />
+                            <line className="candle-chart-grid" x1="0" y1="120" x2="800" y2="120" />
+                            <line className="candle-chart-grid" x1="0" y1="210" x2="800" y2="210" />
+                            <polygon className="candle-chart-area" points={area} />
+                            <polyline className="candle-chart-line" points={line} />
+                        </svg>
+                    </div>
+                    <table className="stock-detail-table">
+                        <thead>
+                            <tr>
+                                <th>Date / Day</th>
+                                <th>Last Closing Price</th>
+                                <th>Change Price</th>
+                                <th>Change %</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {data.slice(-100).reverse().map((item, index) => (
+                                <tr key={item.Date + index}>
+                                    <td>{item.Date}</td>
+                                    <td>{formatPrice(item.Close)}</td>
+                                    <td>{item.ChangeAmount >= 0 ? '+' : ''}{formatPrice(item.ChangeAmount)}</td>
+                                    <td>{item.ChangePercent >= 0 ? '+' : ''}{formatPrice(item.ChangePercent)}%</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                    <div className="stock-no-data">
+                        {first.Date} to {last.Date} · {data.length} trading points
+                    </div>
+                </React.Fragment>
+            );
+        }
+
+        function formatDetail(value, suffix) {
+            return value === null || value === undefined || value === ''
+                ? '-'
+                : String(value) + (suffix || '');
+        }
+
+        function formatNumber(value) {
+            return value === null || value === undefined
+                ? '-'
+                : Number(value).toLocaleString('en-IN');
+        }
+
+        function DetailItem({ label, value }) {
+            return (
+                <div className="stock-detail-item">
+                    <span className="stock-detail-label">{label}</span>
+                    <span className="stock-detail-value" title={formatDetail(value)}>
+                        {formatDetail(value)}
+                    </span>
+                </div>
+            );
+        }
+
+        function DetailSection({ title, children }) {
+            return (
+                <section className="stock-detail-section">
+                    <h3>{title}</h3>
+                    {children}
+                </section>
+            );
+        }
+
+        return (
+            <div className="price-page">
+                <div className="price-shell">
+                    <header className="price-header">
+                        <div>
+                            <h1>Active Stock Prices</h1>
+                            <p>Today&apos;s latest daily close from Yahoo Finance</p>
+                        </div>
+                        <button className="refresh-button" type="button" onClick={loadPrices} disabled={loading}>
+                            {loading ? 'Loading...' : 'Refresh'}
+                        </button>
+                    </header>
+
+                    <main className="price-body">
+                        <div className="price-toolbar">
+                            <span><strong>{stocks.length}</strong> active stocks</span>
+                            <span>{lastUpdated ? 'Updated ' + lastUpdated : ''}</span>
+                        </div>
+
+                        {loading && stocks.length === 0 ? (
+                            <div className="loading">Loading active stock prices...</div>
+                        ) : error ? (
+                            <div className="error">{error}</div>
+                        ) : stocks.length === 0 ? (
+                            <div className="empty">No active stocks found in tblStockAnalysis.</div>
+                        ) : (
+                            <div className="price-table-wrap">
+                                <table className="price-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Stock</th>
+                                            <th>Exchange</th>
+                                            <th>Yahoo Symbol</th>
+                                            <th>Priority</th>
+                                            <th>Today Close</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {stocks.map(stock => (
+                                            <tr key={stock.Id}>
+                                                <td>
+                                                    <button
+                                                        className="stock-info-button"
+                                                        type="button"
+                                                        title="View company name"
+                                                        aria-label={'View company name for ' + stock.StockName}
+                                                        onClick={() => openStockDetails(stock)}
+                                                    >
+                                                        i
+                                                    </button>
+                                                    <strong>{stock.StockName}</strong>
+                                                </td>
+                                                <td>
+                                                    <span className={'exchange-badge ' + exchangeClass(stock.StockExchange)}>
+                                                        {stock.StockExchange}
+                                                    </span>
+                                                </td>
+                                                <td>{stock.YahooSymbol}</td>
+                                                <td>{stock.Priority === 5 ? 'New' : stock.Priority}</td>
+                                                <td className="close-price">{formatPrice(stock.TodayClose)}</td>
+                                                <td>
+                                                    <span className={'status-badge ' + (stock.Status === 'OK' ? 'status-ok' : 'status-error')}>
+                                                        {stock.Status}
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        )}
+
+                        {selectedStock && (
+                            <div
+                                className="stock-modal-backdrop"
+                                role="presentation"
+                                onClick={() => setSelectedStock(null)}
+                            >
+                                <div
+                                    className="stock-modal"
+                                    role="dialog"
+                                    aria-modal="true"
+                                    aria-labelledby="stockCompanyNameTitle"
+                                    onClick={event => event.stopPropagation()}
+                                >
+                                    <div className="stock-modal-header">
+                                        <div>
+                                            <h2 id="stockCompanyNameTitle">{selectedStock.StockName}</h2>
+                                            <p className="stock-modal-subtitle">
+                                                {selectedStock.YahooSymbol} company details
+                                            </p>
+                                        </div>
+                                        <button
+                                            className="stock-modal-close"
+                                            type="button"
+                                            aria-label="Close"
+                                            onClick={() => setSelectedStock(null)}
+                                        >
+                                            &times;
+                                        </button>
+                                    </div>
+                                    {detailsLoading ? (
+                                        <div className="stock-company-name">Loading Yahoo Finance details...</div>
+                                    ) : detailsError ? (
+                                        <div className="stock-company-name">{detailsError}</div>
+                                    ) : (
+                                        <React.Fragment>
+                                            <div className="stock-company-name">
+                                                {selectedStock.CompanyName || selectedStock.StockName}
+                                            </div>
+
+                                            <DetailSection title="Identity & Market">
+                                        <div className="stock-detail-grid">
+                                            <DetailItem label="Symbol" value={selectedStock.YahooSymbol} />
+                                            <DetailItem label="Currency" value={selectedStock.Currency} />
+                                            <DetailItem label="Exchange" value={selectedStock.FullExchangeName || selectedStock.ExchangeName} />
+                                            <DetailItem label="Instrument" value={selectedStock.InstrumentType} />
+                                            <DetailItem label="Timezone" value={selectedStock.Timezone} />
+                                            <DetailItem label="Market Time" value={selectedStock.RegularMarketTime} />
+                                            <DetailItem label="First Trade Date" value={selectedStock.FirstTradeDate} />
+                                            <DetailItem label="Priority" value={selectedStock.Priority === 5 ? 'New' : selectedStock.Priority} />
+                                            <DetailItem label="Status" value={selectedStock.Status} />
+                                        </div>
+                                            </DetailSection>
+
+                                            <DetailSection title="Price Snapshot">
+                                        <div className="stock-detail-grid">
+                                            <DetailItem label="Regular Market Price" value={formatPrice(selectedStock.RegularMarketPrice)} />
+                                            <DetailItem label="Today Close" value={formatPrice(selectedStock.TodayClose)} />
+                                            <DetailItem label="Previous Close" value={formatPrice(selectedStock.PreviousClose)} />
+                                            <DetailItem label="Chart Previous Close" value={formatPrice(selectedStock.ChartPreviousClose)} />
+                                            <DetailItem label="52 Week High" value={formatPrice(selectedStock.FiftyTwoWeekHigh)} />
+                                            <DetailItem label="52 Week Low" value={formatPrice(selectedStock.FiftyTwoWeekLow)} />
+                                            <DetailItem label="Day High" value={formatPrice(selectedStock.DayHigh)} />
+                                            <DetailItem label="Day Low" value={formatPrice(selectedStock.DayLow)} />
+                                            <DetailItem label="Market Volume" value={formatNumber(selectedStock.MarketVolume)} />
+                                        </div>
+                                            </DetailSection>
+
+                                            <DetailSection title="Latest Trading Session">
+                                        {selectedStock.LatestCandle ? (
+                                            <div className="stock-detail-grid">
+                                                <DetailItem label="Date" value={selectedStock.LatestCandle.Date} />
+                                                <DetailItem label="Open" value={formatPrice(selectedStock.LatestCandle.Open)} />
+                                                <DetailItem label="High" value={formatPrice(selectedStock.LatestCandle.High)} />
+                                                <DetailItem label="Low" value={formatPrice(selectedStock.LatestCandle.Low)} />
+                                                <DetailItem label="Close" value={formatPrice(selectedStock.LatestCandle.Close)} />
+                                                <DetailItem label="Adjusted Close" value={formatPrice(selectedStock.LatestCandle.AdjustedClose)} />
+                                                <DetailItem label="Volume" value={formatNumber(selectedStock.LatestCandle.Volume)} />
+                                            </div>
+                                        ) : (
+                                            <div className="stock-no-data">No latest candle data available.</div>
+                                        )}
+                                            </DetailSection>
+
+                                            <DetailSection title="Corporate Actions">
+                                        {selectedStock.Actions && selectedStock.Actions.length > 0 ? (
+                                            <table className="stock-detail-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Type</th>
+                                                        <th>Date</th>
+                                                        <th>Amount</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {selectedStock.Actions.map((action, index) => (
+                                                        <tr key={action.Type + action.Date + index}>
+                                                            <td>{action.Type}</td>
+                                                            <td>{action.Date || '-'}</td>
+                                                            <td>{action.Amount === null || action.Amount === undefined ? '-' : formatPrice(action.Amount)}</td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        ) : (
+                                            <div className="stock-no-data">No dividends or splits in the selected Yahoo range.</div>
+                                        )}
+                                            </DetailSection>
+
+                                            <DetailSection title="Closing Price History">
+                                                <div className="candle-toolbar">
+                                                    <span className="stock-modal-subtitle">
+                                                        {candleLoading ? 'Loading candle data...' : 'Select a range to analyze closing-price movement.'}
+                                                    </span>
+                                                    <select
+                                                        className="candle-range-select"
+                                                        value={candleRange}
+                                                        onChange={event => loadCandles(event.target.value)}
+                                                    >
+                                                        <option value="1d">1 Day</option>
+                                                        <option value="5d">1 Week</option>
+                                                        <option value="1mo">1 Month</option>
+                                                        <option value="1y">1 Year</option>
+                                                        <option value="max">Max</option>
+                                                    </select>
+                                                </div>
+                                                {candleError ? (
+                                                    <div className="stock-no-data">{candleError}</div>
+                                                ) : candleLoading ? (
+                                                    <div className="stock-no-data">Fetching Yahoo candle history...</div>
+                                                ) : (
+                                                    <CandleChart data={candleData} range={candleRange} />
+                                                )}
+                                            </DetailSection>
+                                        </React.Fragment>
+                                    )}
+                                </div>
+                            </div>
+                        )}
+                    </main>
+                </div>
+            </div>
+        );
+    }
+
+    ReactDOM.createRoot(document.getElementById('activeStockPricesApp')).render(<App />);
+</script>

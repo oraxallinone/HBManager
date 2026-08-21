@@ -21,7 +21,7 @@ namespace HBManager.Areas.GstBill.Models
         public string ItemDetails { get; set; }
         public string ItemmPart { get; set; }
         public string HSN { get; set; }
-        public Nullable<int> Quantity { get; set; }
+        public Nullable<decimal> Quantity { get; set; }
         public decimal Rate { get; set; }
         public decimal Value { get; set; }
         public decimal GstRate { get; set; }

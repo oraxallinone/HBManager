@@ -109,6 +109,23 @@ namespace HBManager.Areas.GstBill.Controllers
                                 gstType = b.gstType
                             }).OrderByDescending(x => x.IId).ToList();
 
+            foreach (var bill in billList)
+            {
+                var itemTransactions = db.ItemTransactions
+                    .Where(x => x.InvoiceNoT == bill.INo && x.IsActive == true)
+                    .ToList();
+
+                decimal partATotal = itemTransactions
+                    .Where(x => x.ItemmPart != null && x.ItemmPart.ToLower() == "a")
+                    .Sum(x => x.Value);
+                decimal partBTotal = itemTransactions
+                    .Where(x => x.ItemmPart != null && x.ItemmPart.ToLower() == "b")
+                    .Sum(x => x.Value);
+                decimal partAGst = Math.Round(partATotal * 0.05m, 2);
+
+                bill.TotalValue = Math.Round(partATotal + partAGst + partBTotal, 0);
+            }
+
             return View(billList);
         }
         #endregion-------------------------------------------------------

@@ -2,7 +2,7 @@
     //##onload#############################################################
     let isDraft = ($("#IsDraft").val()) == 'False' ? false : true;
 
-    $('[id^=itm_Quantity]').keypress(validateNumber);
+    $('[id^=itm_Quantity]').keypress(validateDecimal);
 
     let slno = 0;
 
@@ -226,7 +226,7 @@
                 itm_ItemCodeT: itm_code,
                 itm_ItemDetails: itm_name,
                 itm_HSN: itm_hsn,
-                itm_Quantity: itm_qty,
+                itm_Quantity: parseFloat(itm_qty),
                 itm_Part: itm_part,
                 itm_Rate: itm_rate,
                 itm_Value: itm_value
@@ -300,6 +300,20 @@
         let value = qty * rate;
         $("#itm_Value").val(value.toFixed(2));
     };
+
+    function validateDecimal(event) {
+        let key = event.which || event.keyCode;
+        let value = event.target.value;
+
+        if (key === 8 || key === 46 || (key >= 48 && key <= 57)) {
+            if (key === 46 && value.indexOf('.') !== -1) {
+                return false;
+            }
+            return true;
+        }
+
+        return false;
+    }
 
     function gstCalculation() {
         let gst5 = 0.00, gst12 = 0.00, gst18 = 0.00, gstAll = 0.00;

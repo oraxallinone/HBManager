@@ -210,7 +210,7 @@
 
 
     </div>
-    <div style="margin-left: 17%;">
+    <div style="text-align: center;">
         <input type="button" class="btn btn-success" onclick="PrintDiv();" value="Print" />| <a href="/GstBill/Invoice/GstInvoiceList">Invoice List</a> | <a href="/GstBill/Invoice/GstInvoiceCreate" style="color:green">Create New Invoice</a>
     </div>
 
@@ -256,7 +256,7 @@
 
 
             let partBSubtotal = parseFloat(pB).toFixed(2);
-            let grandTotal = parseFloat(partASubTotal) + parseFloat(partBSubtotal);
+            let grandTotal = Math.round(parseFloat(partASubTotal) + parseFloat(partBSubtotal));
 
             $('#lbl_sum_partA').html(pA);
             $('#lbl_cgst').html(result25);

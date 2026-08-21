@@ -35,7 +35,7 @@ namespace HBManager.Areas.GstBill.Models
         public string itm_ItemCodeT { get; set; }
         public string itm_ItemDetails { get; set; }
         public string itm_HSN { get; set; }
-        public Nullable<int> itm_Quantity { get; set; }
+        public Nullable<decimal> itm_Quantity { get; set; }
         public string itm_Part { get; set; }
         public decimal itm_Rate { get; set; }
         public decimal itm_Value { get; set; }
@@ -80,7 +80,7 @@ namespace HBManager.Areas.GstBill.Models
         public string ItemDetails { get; set; }
         public string HSN { get; set; }
         public string ItemmPart { get; set; }
-        public Nullable<int> Quantity { get; set; }
+        public Nullable<decimal> Quantity { get; set; }
         public decimal Rate { get; set; }
         public decimal Value { get; set; }
         public decimal GstRate { get; set; }

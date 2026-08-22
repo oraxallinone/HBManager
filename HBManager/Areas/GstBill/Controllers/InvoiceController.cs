@@ -23,6 +23,7 @@ namespace HBManager.Areas.GstBill.Controllers
                     if (draftData.IsActive)
                     {
                         obj.IDONumber = draftData.IDONumber;
+                        obj.IInternalNote = draftData.IInternalNote;
                         obj.INotes = draftData.INotes;
                         obj.IsDraft = true;
                         obj.IDraftNo = draftNo;
@@ -66,6 +67,7 @@ namespace HBManager.Areas.GstBill.Controllers
                                 IDraftNo = a.IDraftNo,
                                 IDONumber = a.IDONumber,
                                 INotes = a.INotes,
+                                IInternalNote = a.IInternalNote,
                                 TotalValue = a.TotalValue,
                                 TotalTotal = a.TotalTotal,
                                 GrandTotal = a.GrandTotal,
@@ -97,6 +99,7 @@ namespace HBManager.Areas.GstBill.Controllers
                                 IDate = a.IDate,
                                 INotes = a.INotes,
                                 IDONumber = a.IDONumber,
+                                IInternalNote = a.IInternalNote,
                                 TotalValue = a.TotalValue,
                                 TotalTotal = a.TotalTotal,
                                 GrandTotal = a.GrandTotal,
@@ -144,6 +147,7 @@ namespace HBManager.Areas.GstBill.Controllers
                                   custName = c.custName,
                                   INotes = s.INotes,
                                   IDONumber = s.IDONumber,
+                                IInternalNote = s.IInternalNote,
                                   cusstAdd1 = c.addr1,
                                   custAdd2 = c.addr2,
                                   custAdd3 = c.addr3,
@@ -250,6 +254,7 @@ namespace HBManager.Areas.GstBill.Controllers
                 inv.IinvoiceStatus = model.IinvoiceStatus;
                 inv.INotes = model.INotes;
                 inv.IDONumber = model.IDONumber;
+                inv.IInternalNote = model.IInternalNote;
                 inv.IDate = model.IDate;
                 inv.ICustId = model.ICustId;
                 inv.TotalValue = model.TotalValue;
@@ -354,6 +359,7 @@ namespace HBManager.Areas.GstBill.Controllers
             data.IsActive = invoiceData.IsActive;
             data.INotes = invoiceData.INotes;
             data.IDONumber = invoiceData.IDONumber;
+            data.IInternalNote = invoiceData.IInternalNote;
 
             data.ItemTransactions = (from d in db.ItemTransactions
                                      where d.DraftNoT == draftNo && d.IsActive == true

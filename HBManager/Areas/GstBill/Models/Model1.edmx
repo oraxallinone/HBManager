@@ -44,6 +44,7 @@
           <Property Name="GrandTotal" Type="decimal" Precision="18" Scale="2" Nullable="false" />
           <Property Name="INotes" Type="nvarchar(max)" />
           <Property Name="IDONumber" Type="nvarchar(max)" />
+          <Property Name="IInternalNote" Type="nvarchar" MaxLength="600" />
           <Property Name="CreatedDate" Type="datetime" />
           <Property Name="UpdatedDate" Type="datetime" />
           <Property Name="IsActive" Type="bit" Nullable="false" />
@@ -135,6 +136,7 @@
           <Property Name="GrandTotal" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
           <Property Name="INotes" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="IDONumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IInternalNote" Type="String" MaxLength="600" FixedLength="false" Unicode="true" />
           <Property Name="CreatedDate" Type="DateTime" Precision="3" />
           <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
@@ -228,6 +230,7 @@
                 <ScalarProperty Name="GrandTotal" ColumnName="GrandTotal" />
                 <ScalarProperty Name="INotes" ColumnName="INotes" />
                 <ScalarProperty Name="IDONumber" ColumnName="IDONumber" />
+                <ScalarProperty Name="IInternalNote" ColumnName="IInternalNote" />
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
                 <ScalarProperty Name="IsActive" ColumnName="IsActive" />

@@ -13,6 +13,7 @@ namespace HBManager.Areas.GstBill.Models
         public bool IsActive { get; set; }
         public string INotes { get; set; }
         public string IDONumber { get; set; }
+        public string IInternalNote { get; set; }
 
         public string custName { get; set; }
         public string addr1 { get; set; }

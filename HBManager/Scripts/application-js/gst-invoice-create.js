@@ -6,11 +6,15 @@
 
     let slno = 0;
 
+    if (!isDraft) {
+        $("#IDate").val(formatDate());
+    }
+
     if (isDraft) {
-        loadDraft();
+        loadCustomers(loadDraft);
     }
     else {
-        $("#IDate").val(formatDate());
+        loadCustomers();
     }
 
     $(document).on("keydown", function (e) {
@@ -20,8 +24,6 @@
     });
 
     hidelFooterGstGroup();
-
-    loadCustomers();
 
     //##events#############################################################
     $("#itm_Quantity").keyup(function () {
@@ -148,7 +150,8 @@
                     let bodyHtml = "";
 
                     $("#custId").val(result.ICustId);
-                    $("#IDate").val(formatDate2(result.IDate));
+                    $("#IDate").val(formatDate());
+                    $("#txtInternalNote").val(result.IInternalNote || '');
                     let deleteImgPath = '/Content/img/delete.png'; // Use absolute path for static content
                     $.each(result.ItemTransactions, function (index, value) {
                         bodyHtml = bodyHtml + " <tr class='fontMenuBody tableBorderitem cTableRow bg-bisq'>" +
@@ -204,6 +207,7 @@
         let invoiceNo = $('#INo').val();
         let iNotes = $('#INotes').val();//new
         let iDONumber = $('#IDONumber').val();//new
+        let iInternalNote = $('#txtInternalNote').val();
         let invoiceDate = $('#IDate').val();
         let invoiceGrand_Value = $('.gItmValue').text();
         if ($('#tblInvoice tbody > tr').length < 1) { swal("", "Please add atlist one item to create invoice", "error"); return false; }
@@ -240,6 +244,7 @@
             INo: invoiceNo,
             INotes: iNotes,//new
             IDONumber: iDONumber,//new
+            IInternalNote: iInternalNote,
             IinvoiceStatus: invoiceStatus,
             IDraftNo: drafteNo,
             IDate: invoiceDate,
@@ -344,7 +349,7 @@
         }
     }
 
-    function loadCustomers() {
+    function loadCustomers(onLoaded) {
         $.ajax({
             url: '/GstBill/Invoice/GetCustomerList',
             type: 'GET',
@@ -354,6 +359,9 @@
                 dropdown.empty(); // Clear existing options
                 dropdown.append('<option value="">-- Select One --</option>');
                 $.each(data, function (i, item) { dropdown.append('<option value="' + item.CustBasicInfo + '">' + item.CustName + '</option>'); });
+                if (onLoaded) {
+                    onLoaded();
+                }
             },
             error: function (xhr, status, error) {
                 console.error("Error loading customers: " + error);

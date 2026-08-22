@@ -9,6 +9,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
+                    
                     <div class="card card-info">
                         <div class="card-header">
                             <div class="col-2">
@@ -20,51 +21,152 @@
                         </div>
                         <div>
                             <div class="card-body">
+                                <div class="card card-info search-report-panel">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="form-group col-md-2">
+                                                <div class="floating-label-group">
+                                                    <input type="text" id="searchDraftNo" class="form-control form-control-sm" placeholder=" " />
+                                                    <label for="searchDraftNo">Draft No</label>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-2">
+                                                <div class="floating-label-group">
+                                                    <input type="text" id="searchInvoiceNo" class="form-control form-control-sm" placeholder=" " />
+                                                    <label for="searchInvoiceNo">Cancel Invoice No</label>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-2">
+                                                <div class="floating-label-group">
+                                                    <input type="text" id="searchCustomer" class="form-control form-control-sm" placeholder=" " />
+                                                    <label for="searchCustomer">Name</label>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-2">
+                                                <div class="floating-label-group">
+                                                    <input type="text" id="searchNote" class="form-control form-control-sm" placeholder=" " />
+                                                    <label for="searchNote">Note</label>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-2">
+                                                <div class="floating-label-group">
+                                                    <input type="text" id="searchDoNumber" class="form-control form-control-sm" placeholder=" " />
+                                                    <label for="searchDoNumber">DO Number</label>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-2">
+                                                <div class="floating-label-group">
+                                                    <input type="text" id="searchInternalNote" class="form-control form-control-sm" placeholder=" " />
+                                                    <label for="searchInternalNote">Internal Note</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group col-md-2">
+                                                <div class="floating-label-group">
+                                                    <select id="searchGstType" class="form-control form-control-sm">
+                                                        <option value="">All</option>
+                                                        <option value="cgst/ sgst">CGST/ SGST</option>
+                                                        <option value="igst">IGST</option>
+                                                        <option value="not defined">-- Not Defined --</option>
+                                                    </select>
+                                                    <label for="searchGstType">Gst Type</label>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-2">
+                                                <div class="floating-label-group">
+                                                    <input type="text" id="searchDate" class="form-control form-control-sm" placeholder="dd-mm-yyyy" />
+                                                    <label for="searchDate">Date</label>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-2">
+                                                <div class="floating-label-group">
+                                                    <input type="text" id="searchTotalValue" class="form-control form-control-sm" placeholder=" " />
+                                                    <label for="searchTotalValue">Total Value</label>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-2 d-flex align-items-end search-actions">
+                                                <button type="button" id="searchDrafts" class="btn btn-sm btn-info">Search</button>
+                                                <button type="button" id="cancelDraftSearch" class="btn btn-sm btn-outline-danger">Cancel</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+
+
+
+
+
+
                                 <div class="row">
-                                    <table width="100%" class="tableCust table-hover" style="border: 1px solid #3574a4b0">
-                                        <tr class="fontMenuHeader textCenter">
-                                            <td style="width:5% ;text-align: center;"> Sl No </td>
-                                            <td style="width: 10%; text-align: left"> Draft No </td>
-                                            <td style="width: 10%; text-align: left"> Invoice No </td>
-                                            <td style="width:11% ;"> Name </td>
-                                            <td style="width:7% ;"> Note </td>
-                                            <td style="width:7% ;"> DO Number </td>
-                                            <td style="width: 10%; text-align: center; "> Gst Type </td>
-                                            <td style="width: 10%; text-align: left"> Date </td>
-                                            <td style="width:10% ;"> Total Value </td>
-                                            <td style="width:10% ;"> ACTION </td>
-                                        </tr>
-                                        @{
-                                            int snNo = Model.Count() + 1;
-                                            foreach (var itm in @Model)
-                                            {
-                                                snNo = snNo - 1;
-                                                string bgModified = itm.IsActive == true ? "" : "#f4240438";
-                                                <tr class="fontMenuBody" style="border: 1px solid #3574a4b0;background-color:@bgModified">
-                                                    <td class="textCenter">@snNo</td>
-                                                    <td class=""> @itm.IDraftNo </td>
-                                                    <td class=""> @itm.INo </td>
-                                                    <td class="textLeft">@itm.custName</td>
-                                                    <td class="textLeft">@itm.INotes</td>
-                                                    <td class="textLeft">@itm.IDONumber</td>
-                                                    @if (itm.gstType == 1)
-                                                    {
-                                                        <td class="textCenter">CGST/ SGST</td> }
-                                                    else if (itm.gstType == 2)
-                                                    {
-                                                        <td class="textCenter">IGST</td> }
-                                                    else
-                                                    {
-                                                        <td class="textCenter">-- Not Defined --</td> }
-                                                    <td class=""> @Convert.ToDateTime(itm.IDate).ToString("dd-MM-yyyy")</td>
-                                                    <td class="textCenter">@itm.TotalValue</td>
-                                                    <td class="textCenter">
-                                                        @Html.ActionLink("Load draft", "GstInvoiceCreate", "Invoice", new { draftNo = @itm.IDraftNo }, null)
-                                                    </td>
-                                                </tr>
+                                    <table width="100%" class="tableCust table-hover" style="border: 1px solid #3574a4b0; text-align: left;">
+                                        <thead>
+                                            <tr class="fontMenuHeader" style="text-align: left;">
+                                                <td style="width:5% ;text-align: left;"> Sl No </td>
+                                                <td style="width: 10%; text-align: left"> Draft No </td>
+                                                <td style="width: 10%; text-align: left"> Cancel Invoice No </td>
+                                                <td style="width:11% ;text-align: left;"> Name </td>
+                                                <td style="width:7% ;text-align: left;"> Note </td>
+                                                <td style="width:7% ;text-align: left;"> DO Number </td>
+                                                <td style="width:10% ;text-align: left;"> Internal Note </td>
+                                                <td style="width: 10%; text-align: left; "> Gst Type </td>
+                                                <td style="width: 10%; text-align: left"> Date </td>
+                                                <td style="width:10% ;text-align: left;"> Total Value </td>
+                                                <td style="width:10% ;text-align: left;"> ACTION </td>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="draftTableBody">
+                                            @{
+                                                int snNo = Model.Count() + 1;
+                                                foreach (var itm in @Model)
+                                                {
+                                                    snNo = snNo - 1;
+                                                    string bgModified = itm.IsActive == true ? "" : "#f4240438";
+                                                    string internalNote = itm.IInternalNote ?? "";
+                                                    string internalNotePreview = internalNote.Length > 15 ? internalNote.Substring(0, 10) : internalNote;
+                                                    <tr class="fontMenuBody draft-row" data-draft-no="@itm.IDraftNo" data-invoice-no="@itm.INo" data-customer="@itm.custName" data-note="@itm.INotes" data-do-number="@itm.IDONumber" data-internal-note="@itm.IInternalNote" data-gst-type="@(itm.gstType == 1 ? "CGST/ SGST" : itm.gstType == 2 ? "IGST" : "-- Not Defined --")" data-date="@Convert.ToDateTime(itm.IDate).ToString("dd-MM-yyyy")" data-total-value="@itm.TotalValue" style="border: 1px solid #3574a4b0;background-color:@bgModified">
+                                                        <td style="text-align: left;">@snNo</td>
+                                                        <td class=""> @itm.IDraftNo </td>
+                                                        <td class=""> @itm.INo </td>
+                                                        <td class="textLeft">@itm.custName</td>
+                                                        <td class="textLeft">@itm.INotes</td>
+                                                        <td class="textLeft">@itm.IDONumber</td>
+                                                        <td style="text-align: left;">
+                                                            @internalNotePreview
+                                                            @if (internalNote.Length > 15)
+                                                            {
+                                                                <button type="button" class="internal-note-more" data-note="@internalNote" title="Show full internal note" aria-label="Show full internal note">
+                                                                    <i class="fa fa-ellipsis-h"></i>
+                                                                </button>
+                                                            }
+                                                        </td>
+
+                                                        @if (itm.gstType == 1)
+                                                        {
+                                                            <td style="text-align: left;">CGST/ SGST</td>
+                                                        }
+                                                        else if (itm.gstType == 2)
+                                                        {
+                                                            <td style="text-align: left;">IGST</td>
+                                                        }
+                                                        else
+                                                        {
+                                                            <td style="text-align: left;">-- Not Defined --</td>
+                                                        }
+                                                        <td class=""> @Convert.ToDateTime(itm.IDate).ToString("dd-MM-yyyy")</td>
+                                                        <td style="text-align: left;">@itm.TotalValue</td>
+                                                        <td style="text-align: left;">
+                                                            @Html.ActionLink("Load draft", "GstInvoiceCreate", "Invoice", new { draftNo = @itm.IDraftNo }, null)
+                                                        </td>
+                                                    </tr>
+                                                }
                                             }
-                                        }
+                                        </tbody>
                                     </table>
+                                    <div id="draftPagination" class="col-md-12 text-center"></div>
                                 </div>
                             </div>
                         </div>
@@ -74,4 +176,179 @@
         </div>
     </section>
 </div>
+
+<style type="text/css">
+    .search-report-panel .floating-label-group label,
+    .search-report-panel .floating-label-group .form-control,
+    .search-report-panel .btn {
+        font-size: 10px !important;
+    }
+
+    .search-report-panel .card-body {
+        padding: 12px 18px 4px;
+    }
+
+    .search-report-panel .form-group {
+        margin-bottom: 8px;
+    }
+
+    .search-report-panel .floating-label-group {
+        margin-bottom: 10px;
+    }
+
+    .search-actions {
+        gap: 6px;
+        padding-bottom: 10px;
+    }
+
+    .floating-label-group {
+        position: relative;
+        margin-bottom: 25px;
+    }
+
+    .floating-label-group .form-control {
+        padding: 5px 12px;
+        height: auto;
+        border: 1px solid #276ea5;
+        border-radius: 4px;
+        background: transparent;
+    }
+
+    .floating-label-group label {
+        position: absolute;
+        border-radius: 4px;
+        top: 6px;
+        left: 12px;
+        color: #656889;
+        font-size: 14px;
+        pointer-events: none;
+        transition: all 0.2s ease;
+        background-color: #f0f0f0;
+        padding: 0 4px;
+    }
+
+    .floating-label-group input:focus + label,
+    .floating-label-group input:not(:placeholder-shown) + label,
+    .floating-label-group select + label {
+        top: -10px;
+        left: 8px;
+        font-size: 12px;
+        color: #333;
+    }
+
+    #draftPagination .pagination {
+        justify-content: center;
+        margin-top: 12px;
+    }
+
+    #draftPagination .page-link {
+        cursor: pointer;
+    }
+</style>
+
+<style type="text/css">
+    .internal-note-more {
+        border: 0;
+        background: transparent;
+        color: #3574a4;
+        cursor: pointer;
+        padding: 0 4px;
+    }
+</style>
+
+<script type="text/javascript">
+    (function () {
+        var rows = Array.prototype.slice.call(document.querySelectorAll('#draftTableBody .draft-row'));
+        var filteredRows = rows.slice();
+        var currentPage = 1;
+        var rowsPerPage = 20;
+
+        function getSearchValue(id) {
+            return document.getElementById(id).value.trim().toLowerCase();
+        }
+
+        function filterRows() {
+            var filters = {
+                'data-draft-no': getSearchValue('searchDraftNo'),
+                'data-invoice-no': getSearchValue('searchInvoiceNo'),
+                'data-customer': getSearchValue('searchCustomer'),
+                'data-note': getSearchValue('searchNote'),
+                'data-do-number': getSearchValue('searchDoNumber'),
+                'data-internal-note': getSearchValue('searchInternalNote'),
+                'data-gst-type': getSearchValue('searchGstType'),
+                'data-date': getSearchValue('searchDate'),
+                'data-total-value': getSearchValue('searchTotalValue')
+            };
+
+            filteredRows = rows.filter(function (row) {
+                return Object.keys(filters).every(function (attribute) {
+                    var filterValue = filters[attribute];
+                    var rowValue = (row.getAttribute(attribute) || '').toLowerCase();
+                    return filterValue === '' || rowValue.indexOf(filterValue) !== -1;
+                });
+            });
+            currentPage = 1;
+            renderTable();
+            renderPagination();
+        }
+
+        function renderTable() {
+            rows.forEach(function (row) {
+                row.style.display = 'none';
+            });
+
+            var start = (currentPage - 1) * rowsPerPage;
+            filteredRows.slice(start, start + rowsPerPage).forEach(function (row) {
+                row.style.display = '';
+            });
+        }
+
+        function renderPagination() {
+            var totalPages = Math.ceil(filteredRows.length / rowsPerPage);
+            var pagination = document.getElementById('draftPagination');
+            pagination.innerHTML = '';
+
+            if (totalPages <= 1) {
+                return;
+            }
+
+            var list = document.createElement('ul');
+            list.className = 'pagination';
+            for (var page = 1; page <= totalPages; page++) {
+                var item = document.createElement('li');
+                item.className = 'page-item' + (page === currentPage ? ' active' : '');
+                var link = document.createElement('a');
+                link.className = 'page-link';
+                link.textContent = page;
+                link.setAttribute('data-page', page);
+                item.appendChild(link);
+                list.appendChild(item);
+            }
+            pagination.appendChild(list);
+        }
+
+        document.getElementById('searchDrafts').addEventListener('click', filterRows);
+        document.getElementById('cancelDraftSearch').addEventListener('click', function () {
+            ['searchDraftNo', 'searchInvoiceNo', 'searchCustomer', 'searchNote', 'searchDoNumber', 'searchInternalNote', 'searchDate', 'searchTotalValue']
+                .forEach(function (id) {
+                    document.getElementById(id).value = '';
+                });
+            document.getElementById('searchGstType').value = '';
+            filterRows();
+        });
+        document.getElementById('draftPagination').addEventListener('click', function (event) {
+            if (event.target.classList.contains('page-link')) {
+                currentPage = parseInt(event.target.getAttribute('data-page'), 10);
+                renderTable();
+                renderPagination();
+            }
+        });
+
+        filterRows();
+    }());
+
+    $(document).on('click', '.internal-note-more', function () {
+        swal('Internal Note', $(this).data('note'), 'info');
+    });
+</script>
 

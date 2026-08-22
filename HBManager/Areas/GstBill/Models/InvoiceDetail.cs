@@ -26,6 +26,7 @@ namespace HBManager.Areas.GstBill.Models
         public decimal GrandTotal { get; set; }
         public string INotes { get; set; }
         public string IDONumber { get; set; }
+        public string IInternalNote { get; set; }
         public Nullable<System.DateTime> CreatedDate { get; set; }
         public Nullable<System.DateTime> UpdatedDate { get; set; }
         public bool IsActive { get; set; }

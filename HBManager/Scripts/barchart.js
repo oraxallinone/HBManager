@@ -4,12 +4,18 @@
     $('#searchDDlG3').hide();
     $('#searchDDlG4').hide();
 
-    const COLORS = ['#0d6efd', '#dc3545', '#28a745', '#ffc107'];
-
     // Load groups on page load
     loadGroupDropdowns();
 
+    window.trendChart = null;
+
     $("#btnLoadTrendChart").on("click", loadTrendChart);
+    $("#toggleMonthlyAmount, #toggleRunningAverage, #toggleMonthlyAverage, #toggleCumulativeSum")
+        .on("change", function () {
+            if (window.trendChartData) {
+                renderTrendChart(window.trendChartData);
+            }
+        });
     $("#ddlG1, #ddlG2, #ddlG3, #ddlG4").on("change", function () {
         // When a dropdown changes, clear the other three so only one is selected at a time
         var changedId = $(this).attr('id');
@@ -82,6 +88,7 @@
                     return;
                 }
 
+                window.trendChartData = res;
                 renderTrendChart(res);
                 populateTrendTable(res);
             },
@@ -93,42 +100,175 @@
     }
 
     function renderTrendChart(data) {
-        const dataPoints = data.map(function (d) {
-            return {
-                label: d.MonthDetails || 'N/A',
-                y: parseFloat(d.Amount || 0)
-            };
+        const amounts = data.map(function (d) {
+            return parseFloat(d.Amount || 0);
+        });
+        const labels = data.map(function (d) {
+            return d.MonthDetails || 'N/A';
+        });
+        let runningTotal = 0;
+        const cumulative = amounts.map(function (amount) {
+            runningTotal += amount;
+            return runningTotal;
+        });
+        const runningAverage = amounts.map(function (amount, index) {
+            return amounts.slice(0, index + 1).reduce(function (total, value) {
+                return total + value;
+            }, 0) / (index + 1);
+        });
+        const overallAverage = amounts.length
+            ? amounts.reduce(function (total, amount) { return total + amount; }, 0) / amounts.length
+            : 0;
+        const monthlyAverage = amounts.map(function () {
+            return overallAverage;
+        });
+        const series = [];
+        const seriesColors = [];
+        const seriesWidths = [];
+        const seriesFills = [];
+
+        if ($('#toggleMonthlyAmount').prop('checked')) {
+            series.push({
+                name: 'Monthly Amount',
+                type: 'column',
+                data: amounts
+            });
+            seriesColors.push('#1769e0');
+            seriesWidths.push(0);
+            seriesFills.push(1);
+        }
+        if ($('#toggleRunningAverage').prop('checked')) {
+            series.push({
+                name: 'Average Till Now',
+                type: 'line',
+                data: runningAverage
+            });
+            seriesColors.push('#9b2226');
+            seriesWidths.push(2);
+            seriesFills.push(1);
+        }
+        if ($('#toggleMonthlyAverage').prop('checked')) {
+            series.push({
+                name: 'Each Month Average',
+                type: 'line',
+                data: monthlyAverage
+            });
+            seriesColors.push('#c27c0e');
+            seriesWidths.push(2);
+            seriesFills.push(1);
+        }
+        if ($('#toggleCumulativeSum').prop('checked')) {
+            series.push({
+                name: 'Cumulative Sum',
+                type: 'area',
+                data: cumulative
+            });
+            seriesColors.push('#3d1d5b');
+            seriesWidths.push(2);
+            seriesFills.push(0.2);
+        }
+
+        if (window.trendChart) {
+            window.trendChart.destroy();
+        }
+
+        window.trendChart = new ApexCharts(document.querySelector('#chartContainerTrend'), {
+            chart: {
+                type: 'line',
+                height: 420,
+                animations: { enabled: true },
+                toolbar: {
+                    show: true,
+                    tools: {
+                        customIcons: [{
+                            icon: '<span class="trend-chart-maximize-icon" aria-hidden="true">⛶</span>',
+                            index: -1,
+                            title: 'Maximize chart',
+                            class: 'trend-chart-maximize-button',
+                            click: function () {
+                                toggleTrendChartMaximize();
+                            }
+                        }]
+                    }
+                },
+                zoom: { enabled: true }
+            },
+            series: series,
+            colors: seriesColors,
+            stroke: {
+                width: seriesWidths,
+                curve: 'smooth'
+            },
+            fill: {
+                opacity: seriesFills
+            },
+            markers: {
+                size: 4,
+                hover: { sizeOffset: 2 }
+            },
+            dataLabels: {
+                enabled: true,
+                formatter: function (value) {
+                    return Number(value).toLocaleString('en-IN', { maximumFractionDigits: 0 });
+                },
+                offsetY: -3,
+                style: { fontSize: '10px', colors: ['#4b5563'] }
+            },
+            xaxis: {
+                categories: labels,
+                tickPlacement: 'on',
+                labels: { rotate: 0, style: { fontSize: '10px' } }
+            },
+            yaxis: {
+                min: 0,
+                labels: {
+                    formatter: function (value) {
+                        return Number(value).toLocaleString('en-IN', { maximumFractionDigits: 0 });
+                    }
+                },
+                title: { text: 'Amount (₹)' }
+            },
+            grid: {
+                padding: {
+                    top: 35
+                }
+            },
+            tooltip: {
+                shared: true,
+                intersect: false,
+                y: {
+                    formatter: function (value) {
+                        return Number(value).toLocaleString('en-IN', { maximumFractionDigits: 2 });
+                    }
+                }
+            },
+            legend: {
+                position: 'bottom',
+                horizontalAlign: 'center'
+            },
+            noData: {
+                text: 'Select a chart series'
+            }
         });
 
-        const chart = new CanvasJS.Chart("chartContainerTrend", {
-            animationEnabled: true,
-            theme: "light2",
-            toolTip: {
-                content: "<strong>{label}</strong> : {y}"
-            },
-            axisY: {
-                prefix: "",
-                includeZero: true,
-                labelFontSize: 10
-            },
-            axisX: {
-                labelAngle: 0,
-                labelFontSize: 10,
-                interval: 1
-            },
-            data: [{
-                type: "column",
-                markerType: "circle",
-                markerSize: 6,
-                lineThickness: 2.5,
-                color: "#0d6efd",
-                dataLabelFontSize: 8,
-                indexLabel: "{y}",
-                dataPoints: dataPoints
-            }]
-        });
+        window.trendChart.render();
+    }
 
-        chart.render();
+    function toggleTrendChartMaximize() {
+        var chartCard = $('#trendChartCard');
+        var isMaximized = chartCard.toggleClass('trend-chart-maximized').hasClass('trend-chart-maximized');
+        $('.trend-chart-maximize-button')
+            .attr('title', isMaximized ? 'Minimize chart' : 'Maximize chart')
+            .find('.trend-chart-maximize-icon')
+            .text(isMaximized ? '⛶' : '⛶');
+
+        if (window.trendChart) {
+            window.trendChart.updateOptions({
+                chart: {
+                    height: isMaximized ? Math.max(window.innerHeight - 105, 420) : 420
+                }
+            }, false, false);
+        }
     }
 
     function populateTrendTable(data) {

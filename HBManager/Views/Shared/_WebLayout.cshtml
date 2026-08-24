@@ -118,7 +118,7 @@
         var dashImportByQueryActive = (curController == "Import" && curAction == "ImportInitiate") ? "active" : "";
 
         // Feature tree check
-        var featureIs = (curController == "Default" && (curAction == "BarChart" || curAction == "StockCandle" || curAction == "StockTechData" || curAction == "PurchaseStockTracker")) ||
+        var featureIs = (curController == "Default" && curAction == "BarChart") ||
                         curController == "Calender" ||
                         curController == "BudgetOverview" ||
                         curController == "Upload" ||
@@ -136,6 +136,20 @@
         var featureBirthdayAddActive = (curController == "Birthday" && curAction == "BirthdayIndex") ? "active" : "";
         var featureBirthdayShowActive = (curController == "Birthday" && curAction == "ShowBirthday") ? "active" : "";
         var featureNotesActive = (curController == "Notes" && curAction == "NoteIndex") ? "active" : "";
+
+        // Investment tree check
+        var investmentIs = (curController == "Default" &&
+                   (curAction == "StockCandle" || curAction == "StockTechData" || curAction == "PurchaseStockTracker")) ||
+                           (curController == "StockTracker" &&
+                           (curAction == "AddToWatchlist" || curAction == "Watchlist" || curAction == "PurchaseStockTrackerAdd"));
+        var investmentOpen = investmentIs ? "menu-open" : "";
+        var investmentActive = investmentIs ? "active" : "";
+        var investmentStockCandleActive = (curController == "Default" && curAction == "StockCandle") ? "active" : "";
+        var investmentStockTechDataActive = (curController == "Default" && curAction == "StockTechData") ? "active" : "";
+        var investmentPurchaseStockActive = (curController == "Default" && curAction == "PurchaseStockTracker") ? "active" : "";
+        var investmentAddedStocksActive = (curController == "StockTracker" && curAction == "AddToWatchlist") ? "active" : "";
+        var investmentStockPricesActive = (curController == "StockTracker" && curAction == "Watchlist") ? "active" : "";
+        var investmentPurchaseDetailsActive = (curController == "StockTracker" && curAction == "PurchaseStockTrackerAdd") ? "active" : "";
 
         // Master tree check
         var masterIs = (curController == "Salary" || curController == "Group" || curController == "UpdateDatetime");
@@ -243,15 +257,28 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item"> <a href="@Url.Action("BarChart", "Default")" class="nav-link @featureBarChartActive"> <i class="nav-icon bi bi-bar-chart-line"></i> <p>Bar Graph</p> </a> </li>
-                                <li class="nav-item"> <a href="@Url.Action("StockCandle", "Default")" class="nav-link @featureStockCandleActive"> <i class="nav-icon bi bi-graph-up-arrow"></i> <p>NSE Stock</p> </a> </li>
-                                <li class="nav-item"> <a href="@Url.Action("StockTechData", "Default")" class="nav-link @featureStockTechDataActive"> <i class="nav-icon bi bi-cpu"></i> <p>Stock Tech Data</p> </a> </li>
-                                <li class="nav-item"> <a href="@Url.Action("PurchaseStockTracker", "Default")" class="nav-link @featurePurchaseStockActive"> <i class="nav-icon bi bi-cart-check"></i> <p>Purchase Stock Tracker</p> </a> </li>
                                 <li class="nav-item"> <a href="@Url.Action("CalenderIndex", "Calender")" class="nav-link @featureCalenderActive"> <i class="nav-icon bi bi-calendar3"></i> <p>Calender</p> </a> </li>
                                 <li class="nav-item"> <a href="@Url.Action("GroupBudgetOverview", "BudgetOverview")" class="nav-link @featureGroupBudgetActive"> <i class="nav-icon bi bi-people"></i> <p>Group Sum</p> </a> </li>
                                 <li class="nav-item"> <a href="@Url.Action("Index", "Upload")" class="nav-link @featureUploadFilesActive"> <i class="nav-icon bi bi-upload"></i> <p>File Upload</p> </a> </li>
                                 <li class="nav-item"> <a href="@Url.Action("BirthdayIndex", "Birthday")" class="nav-link @featureBirthdayAddActive"> <i class="nav-icon bi bi-gift"></i> <p>Birthday Add</p> </a> </li>
                                 <li class="nav-item"> <a href="@Url.Action("ShowBirthday", "Birthday")" class="nav-link @featureBirthdayShowActive"> <i class="nav-icon bi bi-calendar-event"></i> <p>Birthday Show</p> </a> </li>
                                 <li class="nav-item"> <a href="@Url.Action("NoteIndex", "Notes")" class="nav-link @featureNotesActive"> <i class="nav-icon bi bi-journal-text"></i> <p>Notes</p> </a> </li>
+                            </ul>
+                        </li>
+
+                        <!-- Investment Menu -->
+                        <li class="nav-item @investmentOpen">
+                            <a href="#" class="nav-link @investmentActive">
+                                <i class="nav-icon bi bi-graph-up-arrow"></i>
+                                <p style="color:red;"> Investment <i class="nav-arrow bi bi-chevron-right"></i> </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item"> <a href="@Url.Action("StockCandle", "Default")" class="nav-link @investmentStockCandleActive"> <i class="nav-icon bi bi-graph-up-arrow"></i> <p>NSE Stock</p> </a> </li>
+                                <li class="nav-item"> <a href="@Url.Action("StockTechData", "Default")" class="nav-link @investmentStockTechDataActive"> <i class="nav-icon bi bi-cpu"></i> <p>Stock Tech Data</p> </a> </li>
+                                <li class="nav-item"> <a href="@Url.Action("PurchaseStockTracker", "Default")" class="nav-link @investmentPurchaseStockActive"> <i class="nav-icon bi bi-cart-check"></i> <p>Purchase Stock Tracker</p> </a> </li>
+                                <li class="nav-item"> <a href="@Url.Action("AddToWatchlist", "StockTracker")" class="nav-link @investmentAddedStocksActive"> <i class="nav-icon bi bi-plus-circle"></i> <p>Add To Watchlist</p> </a> </li>
+                                <li class="nav-item"> <a href="@Url.Action("Watchlist", "StockTracker")" class="nav-link @investmentStockPricesActive"> <i class="nav-icon bi bi-currency-rupee"></i> <p>Watchlist</p> </a> </li>
+                                <li class="nav-item"> <a href="@Url.Action("PurchaseStockTrackerAdd", "StockTracker")" class="nav-link @investmentPurchaseDetailsActive"> <i class="nav-icon bi bi-receipt"></i> <p>Stock Purchase Details</p> </a> </li>
                             </ul>
                         </li>
 

@@ -62,8 +62,27 @@
 
                 <!-- Trend Chart -->
                 <div class="col-md-12">
-                    <div class="card card-primary card-outline mb-0">
+                    <div id="trendChartCard" class="card card-primary card-outline mb-0">
                         <div class="card-body">
+                            <div class="chart-heading">Monthly Spending Trend</div>
+                            <div class="chart-toggles" role="group" aria-label="Chart series">
+                                <label class="chart-toggle chart-toggle-amount">
+                                    <input type="checkbox" id="toggleMonthlyAmount" checked />
+                                    <span>Monthly Amount Bar</span>
+                                </label>
+                                <label class="chart-toggle chart-toggle-running">
+                                    <input type="checkbox" id="toggleRunningAverage" />
+                                    <span>Average Till Now</span>
+                                </label>
+                                <label class="chart-toggle chart-toggle-monthly-average">
+                                    <input type="checkbox" id="toggleMonthlyAverage" />
+                                    <span>Each Month Average</span>
+                                </label>
+                                <label class="chart-toggle chart-toggle-sum">
+                                    <input type="checkbox" id="toggleCumulativeSum" />
+                                    <span>Cumulative Sum Area</span>
+                                </label>
+                            </div>
                             <div id="chartContainerTrend" style="height:420px; width:100%;"></div>
                         </div>
                     </div>
@@ -90,8 +109,8 @@
     </div>
 </div>
 
-<!-- CanvasJS -->
-<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+<!-- ApexCharts -->
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <!-- jQuery (in case layout does not include it) -->
 @*<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>*@
 <script src="~/Scripts/barchart.js"></script>

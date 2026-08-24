@@ -7,28 +7,28 @@
     body {
         font-size: 12px;
     }
-
-    .app-content,
-    .card,
-    .table,
-    .table-responsive,
-    .form-control,
-    .alert,
-    .modal {
-        font-size: 12px;
-    }
-
-    .stock-detail-btn {
-        width: 22px;
-        height: 22px;
-        border-radius: 4px;
-        border: 1px solid #d0d7de;
-        background: #f8f9fa;
+                                        <th class="stock-details-column">Details</th>
+                                        <th data-column="1">Stock<span class="stock-sort-icon"></span></th>
+                                        <th data-column="2">Exchange<span class="stock-sort-icon"></span></th>
+                                        <th data-column="3">Age<span class="stock-sort-icon"></span></th>
+                                        <th data-column="4">Pur. Date<span class="stock-sort-icon"></span></th>
+                                        <th data-column="5">Qty<span class="stock-sort-icon"></span></th>
+                                        <th data-column="6">Pur. Price<span class="stock-sort-icon"></span></th>
+                                        <th data-column="7">Last Price<span class="stock-sort-icon"></span></th>
+                                        <th data-column="8">Amt Chg<span class="stock-sort-icon"></span></th>
+                                        <th data-column="9">% Chg<span class="stock-sort-icon"></span></th>
+                                        <th data-column="10">My Chg<span class="stock-sort-icon"></span></th>
+                                        <th data-column="11">TPur Amt<span class="stock-sort-icon"></span></th>
+                                        <th data-column="12">Valuation<span class="stock-sort-icon"></span></th>
+                                        <th data-column="13">Inc Days<span class="stock-sort-icon"></span></th>
+                                        <th data-column="14">Dec Days<span class="stock-sort-icon"></span></th>
+                                        <th data-column="15">Live Price<span class="stock-sort-icon"></span></th>
+                                        <th data-column="16">Live Chg Amt<span class="stock-sort-icon"></span></th>
+                                        <th data-column="17">Live Chg %<span class="stock-sort-icon"></span></th>
         color: #0d6efd;
         font-size: 11px;
-        font-weight: bold;
+                                        <td></td>
         line-height: 1;
-        padding: 0;
         cursor: pointer;
         vertical-align: middle;
     }
@@ -39,16 +39,23 @@
             border-color: #0d6efd;
         }
 
+        .stock-details-column {
+            width: 42px;
+            min-width: 42px;
+            text-align: center !important;
+        }
+
     .stock-candle-table {
         width: 100%;
         border-collapse: collapse;
         background: #fff;
         border: 1px solid #dfe3e8;
+                                        <td><input type="text" data-column="17" placeholder="Search" /></td>
         font-size: 11px;
     }
 
         .stock-candle-table th,
-        .stock-candle-table td {
+                                        <td colspan="18" class="text-center text-muted">Loading...</td>
             border: 1px solid #dfe3e8;
             padding: 5px 6px;
             text-align: center;
@@ -243,28 +250,28 @@
                             <table id="purchaseStockTable" class="table table-bordered table-striped table-hover table-sm">
                                 <thead>
                                     <tr>
-                                        <th data-column="0">Stock<span class="stock-sort-icon"></span></th>
-                                        <th data-column="1">Exchange<span class="stock-sort-icon"></span></th>
-                                        <th data-column="2">Age<span class="stock-sort-icon"></span></th>
-                                        <th data-column="3">Pur. Date<span class="stock-sort-icon"></span></th>
-                                        <th data-column="4">Qty<span class="stock-sort-icon"></span></th>
-                                        <th data-column="5">Pur. Price<span class="stock-sort-icon"></span></th>
-                                        <th data-column="6">Last Price<span class="stock-sort-icon"></span></th>
-                                        <th data-column="7">Amt Chg<span class="stock-sort-icon"></span></th>
-                                        <th data-column="8">% Chg<span class="stock-sort-icon"></span></th>
-                                        <th data-column="9">My Chg<span class="stock-sort-icon"></span></th>
-                                        <th data-column="10">Tot. Pur. Amt<span class="stock-sort-icon"></span></th>
-                                        <th data-column="11">Valuation<span class="stock-sort-icon"></span></th>
-                                        <th data-column="12">Inc Days<span class="stock-sort-icon"></span></th>
-                                        <th data-column="13">Dec Days<span class="stock-sort-icon"></span></th>
-                                        <th data-column="14">Live Price<span class="stock-sort-icon"></span></th>
-                                        <th data-column="15">Live Chg Amt<span class="stock-sort-icon"></span></th>
-                                        <th data-column="16">Live Chg %<span class="stock-sort-icon"></span></th>
+                                        <th class="stock-details-column">Details</th>
+                                        <th data-column="1">Stock<span class="stock-sort-icon"></span></th>
+                                        <th data-column="2">Exchange<span class="stock-sort-icon"></span></th>
+                                        <th data-column="3">Age<span class="stock-sort-icon"></span></th>
+                                        <th data-column="4">Pur. Date<span class="stock-sort-icon"></span></th>
+                                        <th data-column="5">Qty<span class="stock-sort-icon"></span></th>
+                                        <th data-column="6">Pur. Price<span class="stock-sort-icon"></span></th>
+                                        <th data-column="7">Last Price<span class="stock-sort-icon"></span></th>
+                                        <th data-column="8">Amt Chg<span class="stock-sort-icon"></span></th>
+                                        <th data-column="9">% Chg<span class="stock-sort-icon"></span></th>
+                                        <th data-column="10">My Chg<span class="stock-sort-icon"></span></th>
+                                        <th data-column="11">TPur Amt<span class="stock-sort-icon"></span></th>
+                                        <th data-column="12">Valuation<span class="stock-sort-icon"></span></th>
+                                        <th data-column="13">Inc Days<span class="stock-sort-icon"></span></th>
+                                        <th data-column="14">Dec Days<span class="stock-sort-icon"></span></th>
+                                        <th data-column="15">Live Price<span class="stock-sort-icon"></span></th>
+                                        <th data-column="16">Live Chg Amt<span class="stock-sort-icon"></span></th>
+                                        <th data-column="17">Live Chg %<span class="stock-sort-icon"></span></th>
                                     </tr>
                                     <tr class="stock-filter-row">
-                                        <td><input type="text" data-column="0" placeholder="Search" /></td>
+                                        <td></td>
                                         <td><input type="text" data-column="1" placeholder="Search" /></td>
-                                        <td><input type="text" data-column="2" placeholder="Search" /></td>
                                         <td><input type="text" data-column="3" placeholder="Search" /></td>
                                         <td><input type="text" data-column="4" placeholder="Search" /></td>
                                         <td><input type="text" data-column="5" placeholder="Search" /></td>
@@ -279,6 +286,7 @@
                                         <td><input type="text" data-column="14" placeholder="Search" /></td>
                                         <td><input type="text" data-column="15" placeholder="Search" /></td>
                                         <td><input type="text" data-column="16" placeholder="Search" /></td>
+                                        <td><input type="text" data-column="17" placeholder="Search" /></td>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -352,13 +360,13 @@
             dataType: 'json',
             success: function (response) {
                 if (!response || !response.success) {
-                    $('#purchaseStockTable tbody').html('<tr><td colspan="17" class="text-center text-danger">' + (response && response.message ? response.message : 'Unable to load data.') + '</td></tr>');
+                    $('#purchaseStockTable tbody').html('<tr><td colspan="18" class="text-center text-danger">' + (response && response.message ? response.message : 'Unable to load data.') + '</td></tr>');
                     return;
                 }
 
                 cachedStockList = response.data || [];
                 if (!cachedStockList.length) {
-                    $('#purchaseStockTable tbody').html('<tr><td colspan="17" class="text-center text-muted">No stock records found.</td></tr>');
+                    $('#purchaseStockTable tbody').html('<tr><td colspan="18" class="text-center text-muted">No stock records found.</td></tr>');
                     return;
                 }
 
@@ -384,7 +392,8 @@
                     var liveChangeBg = liveChangeAmount > 0 ? 'text-success' : (liveChangeAmount < 0 ? 'text-danger' : 'text-muted');
 
                     html += '<tr>' +
-                        '<td><button type="button" class="stock-detail-btn" data-index="' + index + '" title="View 90 Day Details">&#9654;</button> ' + escapeHtml(stockName) + '</td>' +
+                        '<td class="stock-details-column"><button type="button" class="stock-detail-btn" data-index="' + index + '" title="View 90 Day Details">&#9654;</button></td>' +
+                        '<td>' + escapeHtml(stockName) + '</td>' +
                         '<td class="text-center"><span class="stock-exchange-badge ' + exchangeClass + '">' + exchange + '</span></td>' +
                         '<td>' + (item.ageOfStock || 0) + ' days</td>' +
                         '<td>' + (item.purchaseDate || '') + '</td>' +
@@ -417,7 +426,7 @@
                 });
             },
             error: function () {
-                $('#purchaseStockTable tbody').html('<tr><td colspan="17" class="text-center text-danger">Error loading data.</td></tr>');
+                $('#purchaseStockTable tbody').html('<tr><td colspan="18" class="text-center text-danger">Error loading data.</td></tr>');
             }
         });
     }
@@ -482,7 +491,7 @@
     }
 
     function bindColumnSort() {
-        $('#purchaseStockTable thead th').off('click').on('click', function () {
+        $('#purchaseStockTable thead th[data-column]').off('click').on('click', function () {
             var columnIndex = parseInt($(this).attr('data-column'), 10);
             var isAscending = true;
 

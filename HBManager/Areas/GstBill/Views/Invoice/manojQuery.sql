@@ -8,27 +8,73 @@ SELECT TOP (1000) [UserId]
       ,[IsActive]
   FROM [cbtsplco_annapurna].[dbo].[Users]
 
---where IDraftNo='D000014' and IsActive=1
-
-  select * from InvoiceDetail where IDraftNo='D000015' and IsActive=1
-
-
-ALTER TABLE [dbo].[InvoiceDetail]
-ADD [IInternalNote] NVARCHAR(600) NULL;
 
 
 
 
+  select * from CounterMaster where counterValue =630
+  update CounterMaster set counterValue=699 where id =3
+
+
+    select * from InvoiceDetail where IDraftNo='D000019'
+
+  select * from ItemTransaction where DraftNoT='D000019'
+
+
+  select * from [dbo].[InvoiceDetail]
+
+  truncate table [dbo].[InvoiceDetail]
 
 
 
-  select * from ItemTransaction where DraftNoT='D000013' and IsActive=1
 
-IDraftNo
-D000001
+--============================================================================================= delete form draft table
 
--- ALTER TABLE [dbo].[ItemTransaction]
--- ALTER COLUMN [Quantity] DECIMAL(18, 2) NULL;
+--   BEGIN TRANSACTION;
+
+-- -- 1. Delete matching records from child table
+-- DELETE FROM [dbo].[ItemTransaction]
+-- WHERE [DraftNoT] IN (
+--     'D000019',
+--     'D000018',
+--     'D000014',
+--     'D000013',
+--     'D000010',
+--     'D000012',
+--     'D000011',
+--     'D000001'
+-- );
+
+-- -- 2. Delete matching records from parent table
+-- DELETE FROM [dbo].[InvoiceDetail]
+-- WHERE [IDraftNo] IN (
+--     'D000019',
+--     'D000018',
+--     'D000014',
+--     'D000013',
+--     'D000010',
+--     'D000012',
+--     'D000011',
+--     'D000001'
+-- );
+
+-- COMMIT TRANSACTION;
+--=====================================================
 
 
-  select * from CounterMaster
+
+select * from [dbo].[StocksPurchasedTracker]
+
+
+
+
+
+
+
+
+
+
+
+
+
+--s==========================================================================================tock tracket Queries==============

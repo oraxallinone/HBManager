@@ -424,8 +424,9 @@
     <Content Include="Views\Default\StockTechData.cshtml" />
     <Content Include="Views\Default\StockCandle.cshtml" />
     <Content Include="Views\Default\PurchaseStockTracker.cshtml" />
-    <Content Include="Views\StockTracker\AddedNewStocks.cshtml" />
-    <Content Include="Views\StockTracker\StockPrices.cshtml" />
+    <Content Include="Views\StockTracker\AddToWatchlist.cshtml" />
+    <Content Include="Views\StockTracker\Watchlist.cshtml" />
+    <Content Include="Views\StockTracker\PurchaseStockTrackerAdd.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

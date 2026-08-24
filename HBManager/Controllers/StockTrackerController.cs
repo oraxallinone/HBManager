@@ -14,20 +14,157 @@ namespace HBManager.Controllers
 {
     public class StockTrackerController : Controller
     {
-        private readonly string connectionString =
-            ConfigurationManager.ConnectionStrings["ConnectionString"]?.ConnectionString;
+        private readonly string connectionString = ConfigurationManager.ConnectionStrings["ConnectionString"]?.ConnectionString;
 
         [HttpGet]
-        public ActionResult AddedNewStocks()
+        public ActionResult AddToWatchlist()
         {
             return View();
         }
 
         [HttpGet]
-        public ActionResult StockPrices()
+        public ActionResult Watchlist()
         {
             return View();
         }
+
+        #region ================================================================ Stock Purchase Details ===========================================
+
+        [HttpGet]
+        public ActionResult PurchaseStockTrackerAdd()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public JsonResult GetPurchaseStockDetails()
+        {
+            var records = new List<object>();
+
+            try
+            {
+                using (var connection = new SqlConnection(connectionString))
+                using (var command = new SqlCommand(@"
+                    SELECT slno, StockName, PurchaseDate, PurchasePrice, PurchaseQty, IsSale, nsebse
+                    FROM dbo.StocksPurchasedTracker
+                    ORDER BY slno DESC", connection))
+                {
+                    connection.Open();
+
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            records.Add(new
+                            {
+                                slno = Convert.ToInt32(reader["slno"]),
+                                stockName = reader["StockName"] == DBNull.Value ? "" : reader["StockName"].ToString(),
+                                purchaseDate = reader["PurchaseDate"] == DBNull.Value ? "" : Convert.ToDateTime(reader["PurchaseDate"]).ToString("yyyy-MM-dd"),
+                                purchasePrice = reader["PurchasePrice"] == DBNull.Value ? 0m : Convert.ToDecimal(reader["PurchasePrice"]),
+                                purchaseQty = reader["PurchaseQty"] == DBNull.Value ? 0m : Convert.ToDecimal(reader["PurchaseQty"]),
+                                isSale = reader["IsSale"] != DBNull.Value && Convert.ToBoolean(reader["IsSale"]),
+                                nsebse = reader["nsebse"] == DBNull.Value ? "" : reader["nsebse"].ToString()
+                            });
+                        }
+                    }
+                }
+
+                return Json(new { success = true, data = records }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpPost]
+        public JsonResult AddPurchaseStockDetail(string stockName, DateTime purchaseDate, decimal purchasePrice, decimal purchaseQty, bool isSale, string nsebse)
+        {
+            return SavePurchaseStockDetail(null, stockName, purchaseDate, purchasePrice, purchaseQty, isSale, nsebse);
+        }
+
+        [HttpPost]
+        public JsonResult UpdatePurchaseStockDetail(int slno, string stockName, DateTime purchaseDate, decimal purchasePrice, decimal purchaseQty, bool isSale, string nsebse)
+        {
+            return SavePurchaseStockDetail(slno, stockName, purchaseDate, purchasePrice, purchaseQty, isSale, nsebse);
+        }
+
+        [HttpPost]
+        public JsonResult DeletePurchaseStockDetail(int slno)
+        {
+            try
+            {
+                using (var connection = new SqlConnection(connectionString))
+                using (var command = new SqlCommand("DELETE FROM dbo.StocksPurchasedTracker WHERE slno = @slno", connection))
+                {
+                    command.Parameters.Add("@slno", SqlDbType.Int).Value = slno;
+                    connection.Open();
+
+                    if (command.ExecuteNonQuery() == 0)
+                    {
+                        return Json(new { success = false, message = "Purchase record was not found." });
+                    }
+                }
+
+                return Json(new { success = true, message = "Purchase record deleted successfully." });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        private JsonResult SavePurchaseStockDetail(int? slno, string stockName, DateTime purchaseDate, decimal purchasePrice, decimal purchaseQty, bool isSale, string nsebse)
+        {
+            if (string.IsNullOrWhiteSpace(stockName))
+            {
+                return Json(new { success = false, message = "Stock name is required." });
+            }
+
+            try
+            {
+                using (var connection = new SqlConnection(connectionString))
+                using (var command = new SqlCommand(connection.ToString()))
+                {
+                    command.Connection = connection;
+                    command.Parameters.Add("@StockName", SqlDbType.VarChar, 100).Value = stockName.Trim().ToUpperInvariant();
+                    command.Parameters.Add("@PurchaseDate", SqlDbType.Date).Value = purchaseDate.Date;
+                    command.Parameters.Add("@PurchasePrice", SqlDbType.Decimal).Value = purchasePrice;
+                    command.Parameters.Add("@PurchaseQty", SqlDbType.Decimal).Value = purchaseQty;
+                    command.Parameters.Add("@IsSale", SqlDbType.Bit).Value = isSale;
+                    command.Parameters.Add("@nsebse", SqlDbType.VarChar, 10).Value = (nsebse ?? "").Trim().ToLowerInvariant();
+
+                    if (slno.HasValue)
+                    {
+                        command.CommandText = @"
+                            UPDATE dbo.StocksPurchasedTracker
+                            SET StockName = @StockName, PurchaseDate = @PurchaseDate,
+                                PurchasePrice = @PurchasePrice, PurchaseQty = @PurchaseQty,
+                                IsSale = @IsSale, nsebse = @nsebse
+                            WHERE slno = @slno";
+                        command.Parameters.Add("@slno", SqlDbType.Int).Value = slno.Value;
+                    }
+                    else
+                    {
+                        command.CommandText = @"
+                            INSERT INTO dbo.StocksPurchasedTracker
+                                (StockName, PurchaseDate, PurchasePrice, PurchaseQty, IsSale, nsebse)
+                            VALUES (@StockName, @PurchaseDate, @PurchasePrice, @PurchaseQty, @IsSale, @nsebse)";
+                    }
+
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                }
+
+                return Json(new { success = true, message = slno.HasValue ? "Purchase record updated successfully." : "Purchase record added successfully." });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        #endregion
 
         [HttpGet]
         public async Task<JsonResult> GetStockDetails(string stockName, string stockExchange)

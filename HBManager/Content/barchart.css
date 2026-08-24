@@ -14,6 +14,60 @@
     box-shadow: 0 1px 4px rgba(0,0,0,0.04);
 }
 
+#trendChartCard.trend-chart-maximized {
+    background: #fff;
+    bottom: 0;
+    left: 0;
+    margin: 0;
+    overflow: auto;
+    position: fixed;
+    right: 0;
+    top: 0;
+    z-index: 1050;
+}
+
+#trendChartCard.trend-chart-maximized #chartContainerTrend {
+    height: calc(100vh - 105px) !important;
+}
+
+.chart-heading {
+    color: #164e63;
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 8px;
+    text-align: center;
+}
+
+.chart-toggles {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px 18px;
+    margin: 0 0 10px;
+}
+
+.chart-toggle {
+    align-items: center;
+    color: #334155;
+    display: inline-flex;
+    font-size: 11px;
+    gap: 5px;
+    margin: 0;
+    cursor: pointer;
+}
+
+.chart-toggle input {
+    cursor: pointer;
+    height: 13px;
+    margin: 0;
+    width: 13px;
+}
+
+.chart-toggle-amount { color: #075985; }
+.chart-toggle-running { color: #991b1b; }
+.chart-toggle-monthly-average { color: #92400e; }
+.chart-toggle-sum { color: #1e3a8a; }
+
 /* Table */
 .div-responsive { 
     overflow: auto; 

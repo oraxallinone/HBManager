@@ -6,11 +6,132 @@
 
 <link href="~/Content/group.css" rel="stylesheet" />
 
-<div class="app-content">
+<style>
+    .birthday-index-page {
+        background: linear-gradient(135deg, #dff7f4 0%, #e6edff 48%, #f7e8ff 100%);
+        min-height: calc(100vh - 3.5rem);
+        padding: 0.5rem 0.75rem;
+    }
+
+    .birthday-glass-panel {
+        backdrop-filter: blur(22px);
+        -webkit-backdrop-filter: blur(22px);
+        background: rgba(255, 255, 255, 0.58);
+        border: 1px solid rgba(255, 255, 255, 0.78);
+        border-radius: 18px;
+        box-shadow: 0 18px 38px rgba(30, 64, 175, 0.1), inset 0 1px rgba(255, 255, 255, 0.8);
+        margin: 0 auto;
+        max-width: 1400px;
+        padding: 0.75rem;
+    }
+
+    .birthday-form-row {
+        align-items: center;
+        background: linear-gradient(135deg, rgba(224, 242, 254, 0.72), rgba(236, 253, 245, 0.56));
+        border: 1px solid rgba(100, 149, 190, 0.3);
+        border-radius: 12px;
+        box-shadow: inset 0 1px rgba(255, 255, 255, 0.7);
+        padding: 0.65rem;
+    }
+
+    .birthday-index-page .form-control,
+    .birthday-grid-search {
+        background: rgba(255, 255, 255, 0.72);
+        border: 1px solid rgba(100, 149, 190, 0.42);
+        border-radius: 8px;
+        font-size: 12px;
+        min-height: 30px;
+        padding: 0.3rem 0.55rem;
+    }
+
+    .birthday-index-page .form-control:focus,
+    .birthday-grid-search:focus {
+        background: rgba(255, 255, 255, 0.94);
+        border-color: #0891b2;
+        box-shadow: 0 0 0 0.18rem rgba(8, 145, 178, 0.15);
+    }
+
+    .birthday-index-page .form-check {
+        color: #164e63;
+        font-weight: 600;
+    }
+
+    .birthday-index-page .btn {
+        border-radius: 8px;
+        box-shadow: 0 5px 12px rgba(15, 23, 42, 0.12);
+        font-size: 12px;
+        font-weight: 700;
+        padding: 0.3rem 0.65rem;
+    }
+
+    .birthday-index-page .btn-info,
+    .birthday-index-page .btn-warning,
+    .birthday-index-page .btn-secondary,
+    .birthday-index-page .btn-edit,
+    .birthday-index-page .btn-delete {
+        border: 0;
+        color: #fff;
+    }
+
+    .birthday-index-page .btn-info { background: linear-gradient(135deg, #0e7490, #2563eb); }
+    .birthday-index-page .btn-warning,
+    .birthday-index-page .btn-edit { background: linear-gradient(135deg, #d97706, #ea580c); }
+    .birthday-index-page .btn-secondary { background: linear-gradient(135deg, #64748b, #475569); }
+    .birthday-index-page .btn-delete { background: linear-gradient(135deg, #e11d48, #be123c); }
+
+    .birthday-grid-toolbar {
+        align-items: center;
+        display: flex;
+        justify-content: flex-end;
+        margin: 0.7rem 0 0.5rem;
+    }
+
+    .birthday-grid-search {
+        max-width: 260px;
+        width: 100%;
+    }
+
+    #birthdayTable {
+        background: rgba(255, 255, 255, 0.42);
+        border: 1px solid rgba(100, 149, 190, 0.28);
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    #birthdayTable thead th {
+        background: linear-gradient(135deg, #155e75, #1d4ed8);
+        border-color: rgba(255, 255, 255, 0.2);
+        color: #fff;
+        padding: 0.5rem;
+    }
+
+    #birthdayTable tbody tr,
+    #birthdayTable tbody tr:nth-of-type(odd),
+    #birthdayTable tbody tr:hover {
+        background: rgba(255, 255, 255, 0.5);
+    }
+
+    #birthdayTable tbody td {
+        border-color: rgba(100, 149, 190, 0.22);
+        color: #164e63;
+        padding: 0.45rem 0.6rem;
+        vertical-align: middle;
+    }
+
+    @@media (max-width: 768px) {
+        .birthday-index-page { padding: 0.4rem 0.25rem; }
+        .birthday-glass-panel { border-radius: 14px; padding: 0.5rem; }
+        .birthday-form-row { padding: 0.5rem; }
+        .birthday-grid-toolbar { justify-content: stretch; }
+        .birthday-grid-search { max-width: none; }
+        #birthdayTable { font-size: 12px; }
+    }
+</style>
+
+<div class="app-content birthday-index-page">
     <div class="container-fluid">
-        <div class="card card-primary card-outline mb-4">
-            <div class="card-body">
-                <div class="row g-3 mb-3">
+        <div class="birthday-glass-panel">
+                <div class="row g-3 mb-3 birthday-form-row">
                     <div class="col-md-4">
                         <input id="txtName" class="form-control" placeholder="Name" />
                     </div>
@@ -31,7 +152,11 @@
                     </div>
                 </div>
 
-                <table class="table table-hover" id="birthdayTable" style="font-size:13px;">
+                <div class="birthday-grid-toolbar">
+                    <input id="birthdayGridSearch" class="birthday-grid-search" type="search" placeholder="Search all columns..." aria-label="Search all birthday columns" />
+                </div>
+
+                <table class="table table-hover" id="birthdayTable" style="font-size:13px; width:100%;">
                     <thead>
                         <tr><th>#</th><th>Name</th><th>Date Of Birth</th><th>Is Active</th><th>Action</th></tr>
                     </thead>

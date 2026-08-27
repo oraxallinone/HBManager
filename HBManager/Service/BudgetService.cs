@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.Linq;
 
 namespace HBManager.Service
@@ -232,6 +233,73 @@ namespace HBManager.Service
             }
         }
 
+        public List<WasteTracker> GetWasteTrackerByBudgetMonth(int year, int month)
+        {
+            var list = new List<WasteTracker>();
+            using (var conn = new SqlConnection(_connString))
+            using (var cmd = new SqlCommand("sp_GetWasteTrackerByBudgetMonth", conn))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@Year", year);
+                cmd.Parameters.AddWithValue("@Month", month);
+                conn.Open();
+                using (var rdr = cmd.ExecuteReader())
+                {
+                    while (rdr.Read())
+                    {
+                        list.Add(new WasteTracker
+                        {
+                            Id = Convert.ToInt32(rdr["Id"]),
+                            ReferenceID = Convert.ToInt32(rdr["ReferenceID"]),
+                            WasteAmount = Convert.ToDecimal(rdr["WasteAmount"]),
+                            ReasonForWaste = rdr["ReasonForWaste"].ToString(),
+                            SpendDate = rdr["SpendDate"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(rdr["SpendDate"]),
+                            BudgetAmount = Convert.ToDecimal(rdr["BudgetAmount"]),
+                            Details = rdr["Details"] == DBNull.Value ? null : rdr["Details"].ToString()
+                        });
+                    }
+                }
+            }
+            return list;
+        }
+
+        public int InsertWasteTracker(WasteTracker model)
+        {
+            return ExecuteWasteTrackerCommand("sp_InsertWasteTracker", model, false);
+        }
+
+        public int UpdateWasteTracker(WasteTracker model)
+        {
+            return ExecuteWasteTrackerCommand("sp_UpdateWasteTracker", model, true);
+        }
+
+        public int DeleteWasteTracker(int id)
+        {
+            using (var conn = new SqlConnection(_connString))
+            using (var cmd = new SqlCommand("sp_DeleteWasteTracker", conn))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@Id", id);
+                conn.Open();
+                return Convert.ToInt32(cmd.ExecuteScalar());
+            }
+        }
+
+        private int ExecuteWasteTrackerCommand(string procedureName, WasteTracker model, bool includeId)
+        {
+            using (var conn = new SqlConnection(_connString))
+            using (var cmd = new SqlCommand(procedureName, conn))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+                if (includeId) cmd.Parameters.AddWithValue("@Id", model.Id);
+                if (!includeId) cmd.Parameters.AddWithValue("@ReferenceID", model.ReferenceID);
+                cmd.Parameters.AddWithValue("@WasteAmount", model.WasteAmount);
+                cmd.Parameters.AddWithValue("@ReasonForWaste", (object)model.ReasonForWaste ?? DBNull.Value);
+                conn.Open();
+                return Convert.ToInt32(cmd.ExecuteScalar());
+            }
+        }
+
         private Budget Map(IDataRecord r)
         {
             return new Budget
@@ -240,6 +308,7 @@ namespace HBManager.Service
                 Year = Convert.ToInt32(r["Year"]),
                 Month = Convert.ToInt32(r["Month"]),
                 SpendDate = r["SpendDate"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(r["SpendDate"]),
+                SpendDateText = r["SpendDate"] == DBNull.Value ? null : Convert.ToDateTime(r["SpendDate"]).ToString("yyyy-MM-dd HH:mm:ss.fff", CultureInfo.InvariantCulture),
                 Amount = Convert.ToDecimal(r["Amount"]),
                 Details = r["Details"] == DBNull.Value ? null : r["Details"].ToString(),
                 BankName = r["BankName"] == DBNull.Value ? null : r["BankName"].ToString(),

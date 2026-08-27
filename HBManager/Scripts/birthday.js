@@ -4,6 +4,7 @@ $(document).ready(function () {
     $('#searchDDlG3').hide();
     $('#searchDDlG4').hide();
 
+    var birthdayTable = null;
 
     function parseNetDate(d) {
         if (!d) return null;
@@ -28,6 +29,16 @@ $(document).ready(function () {
         return day + '-' + mon + '-' + yr;
     }
 
+    function formatBirthdayDayMonth(d) {
+        if (!d) return '';
+        var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+        return ('0' + d.getDate()).slice(-2) + '-' + months[d.getMonth()];
+    }
+
+    function birthdaySortValue(d) {
+        return d ? (d.getMonth() + 1) * 100 + d.getDate() : 9999;
+    }
+
     function escapeHtml(str) {
         if (!str) return '';
         return String(str).replace(/[&"'<>]/g, function (s) {
@@ -49,13 +60,13 @@ $(document).ready(function () {
             var html = '';
             $.each(list, function (i, it) {
                 var dt = parseNetDate(it.DateOfBirth);
-                var dtText = dt ? formatDateDDMMMYYYY(dt) : 'Invalid Date';
+                var dtText = dt ? formatBirthdayDayMonth(dt) : 'Invalid Date';
                 var dtInput = dt ? toInputDateFormat(dt) : '';
 
                 html += '<tr>';
                 html += '<td>' + (i+1) + '</td>';
                 html += '<td>' + escapeHtml(it.Name) + '</td>';
-                html += '<td>' + dtText + '</td>';
+                html += '<td data-order="' + birthdaySortValue(dt) + '">' + escapeHtml(dtText) + '</td>';
                 html += '<td>' + (it.IsActive ? 'Yes' : 'No') + '</td>';
                 html += '<td>';
                 html += '<a href="#" class="btn btn-sm btn-warning btn-edit" data-id="' + it.Id + '" data-name="' + escapeHtml(it.Name) + '" data-dob="' + dtInput + '" data-active="' + (it.IsActive ? 1 : 0) + '">Edit</a> ';
@@ -63,7 +74,30 @@ $(document).ready(function () {
                 html += '</td>';
                 html += '</tr>';
             });
-            $('#birthdayTable tbody').html(html);
+
+            if ($.fn.DataTable) {
+                if (!birthdayTable) {
+                    $('#birthdayTable tbody').html(html);
+                    birthdayTable = $('#birthdayTable').DataTable({
+                        order: [[2, 'asc']],
+                        paging: false,
+                        info: false,
+                        searching: true,
+                        dom: 'rt'
+                    });
+                    $('#birthdayGridSearch').on('input', function () {
+                        birthdayTable.search(this.value).draw();
+                    });
+                } else {
+                    birthdayTable.clear();
+                    $('<tbody>' + html + '</tbody>').children().each(function () {
+                        birthdayTable.row.add(this);
+                    });
+                    birthdayTable.draw(false);
+                }
+            } else {
+                $('#birthdayTable tbody').html(html);
+            }
         });
     }
 
@@ -164,62 +198,84 @@ $(document).ready(function () {
 
     // calendar for showBirthday page
     function renderCalendar(containerSelector, year, month) {
-        $.getJSON('/Birthday/GetByMonth', { year: year, month: month }, function (list) {
+        $.when(
+            $.getJSON('/Birthday/GetByMonth', { year: year, month: month }),
+            $.getJSON('/Birthday/GetAll')
+        ).done(function (monthResponse, allResponse) {
+            var list = monthResponse[0] || [];
+            var allBirthdays = allResponse[0] || [];
             var container = $(containerSelector);
             container.empty();
             var first = new Date(year, month-1, 1);
             var daysInMonth = new Date(year, month, 0).getDate();
+            var monthName = first.toLocaleString('default', { month: 'long' });
 
             var header = '<div class="calendar-header">' +
-                '<button id="prevMonth" class="btn btn-sm btn-light">&lt;</button>' +
-                '<span class="mx-3">' + first.toLocaleString('default', { month: 'long' }) + ' ' + year + '</span>' +
-                '<button id="nextMonth" class="btn btn-sm btn-light">&gt;</button>' +
+                '<div class="calendar-nav">' +
+                '<button id="prevMonth" class="btn-glass" aria-label="Previous month">&#9664;</button>' +
+                '<span class="current-month-display">' + monthName + ' ' + year + '</span>' +
+                '<button id="nextMonth" class="btn-glass" aria-label="Next month">&#9654;</button>' +
+                '</div>' +
+                '<div class="stats-container">' +
+                '<div class="stat-pill pill-month"><span class="stat-label">THIS MONTH</span><span class="stat-badge" id="month-bday-count">' + list.length + '</span></div>' +
+                '<div class="stat-pill pill-total"><span class="stat-label">TOTAL BIRTHDAYS</span><span class="stat-badge" id="total-bday-count">' + allBirthdays.length + '</span></div>' +
+                '</div>' +
                 '</div>';
 
-            var table = '<table class="table table-bordered calendar-table"><thead><tr>' +
-                '<th>Sun</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th>' +
-                '</tr></thead><tbody>';
+            var weekdays = '<div class="weekdays-grid">' +
+                '<div class="weekday">Sun</div><div class="weekday">Mon</div><div class="weekday">Tue</div>' +
+                '<div class="weekday">Wed</div><div class="weekday">Thu</div><div class="weekday">Fri</div><div class="weekday">Sat</div>' +
+                '</div>';
+            var rows = '<div class="calendar-rows-wrapper" id="calendar-rows-container">';
 
             var startDay = first.getDay();
             var curDay = 1;
-            for (var r=0; r<6; r++) {
-                table += '<tr>';
-                for (var c=0; c<7; c++) {
-                    if ((r===0 && c<startDay) || curDay>daysInMonth) {
-                        table += '<td></td>';
-                    } else {
-                        var dateStr = year + '-' + ('0'+month).slice(-2) + '-' + ('0'+curDay).slice(-2);
-                        // find names for this day
-                        var todays = list.filter(x => {
-                            var d = parseNetDate(x.DateOfBirth);
-                            return d && d.getDate() === curDay; // month/year already filtered
-                        });
-
-                        // highlight today specially (bg-info + text-white). If today also has birthday(s), use today's highlight but still show names.
-                        var nowDate = new Date();
-                        var isToday = (nowDate.getFullYear() === year && (nowDate.getMonth() + 1) === month && nowDate.getDate() === curDay);
-
-                        if (todays && todays.length) {
-                            var names = todays.map(x => escapeHtml(x.Name)).join('<br/>');
-                            var cls = isToday ? 'bg-info text-white' : 'bg-warning';
-                            table += '<td class="' + cls + '"><strong>' + curDay + '</strong><br/>' + names + '</td>';
-                        } else {
-                            var cls = isToday ? 'bg-info text-white' : '';
-                            table += '<td' + (cls ? ' class="' + cls + '"' : '') + '>' + curDay + '</td>';
-                        }
-                        curDay++;
-                    }
-                }
-                table += '</tr>';
-                if (curDay>daysInMonth) break;
+            var cells = [];
+            for (var empty = 0; empty < startDay; empty++) {
+                cells.push({ isEmpty: true });
+            }
+            for (; curDay <= daysInMonth; curDay++) {
+                var todays = list.filter(function (item) {
+                    var date = parseNetDate(item.DateOfBirth);
+                    return date && date.getDate() === curDay;
+                });
+                var now = new Date();
+                cells.push({
+                    isEmpty: false,
+                    day: curDay,
+                    birthdays: todays,
+                    isToday: now.getFullYear() === year && now.getMonth() + 1 === month && now.getDate() === curDay
+                });
+            }
+            while (cells.length % 7 !== 0) {
+                cells.push({ isEmpty: true });
             }
 
-            table += '</tbody></table>';
+            for (var r = 0; r < cells.length / 7; r++) {
+                var week = cells.slice(r * 7, (r + 1) * 7);
+                var maxBirthdays = week.reduce(function (max, cell) {
+                    return Math.max(max, cell.isEmpty ? 0 : cell.birthdays.length);
+                }, 0);
+                rows += '<div class="calendar-week-row row-density-' + Math.min(maxBirthdays, 3) + '">';
+                week.forEach(function (cell) {
+                    if (cell.isEmpty) {
+                        rows += '<div class="day-cell empty"></div>';
+                        return;
+                    }
+                    var classes = 'day-cell' + (cell.isToday ? ' is-today' : '') + (cell.birthdays.length ? ' has-birthday' : '');
+                    var birthdayTags = cell.birthdays.map(function (item) {
+                        return '<div class="bday-tag"><span class="cake-icon">&#127874;</span><span>' + escapeHtml(item.Name) + '</span></div>';
+                    }).join('');
+                    rows += '<div class="' + classes + '"><span class="day-number">' + cell.day + '</span>' + birthdayTags + '</div>';
+                });
+                rows += '</div>';
+            }
+            rows += '</div>';
 
             container.append(header);
-            container.append(table);
+            container.append(weekdays);
+            container.append(rows);
 
-            // attach prev/next
             container.find('#prevMonth').on('click', function () {
                 var prev = new Date(year, month-2, 1);
                 renderCalendar(containerSelector, prev.getFullYear(), prev.getMonth()+1);

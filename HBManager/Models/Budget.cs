@@ -11,6 +11,7 @@ namespace HBManager.Models
         public int Year { get; set; }
         public int Month { get; set; }
         public DateTime? SpendDate { get; set; }
+        public string SpendDateText { get; set; }
         public decimal Amount { get; set; }
         public string Details { get; set; }
         public string BankName { get; set; }

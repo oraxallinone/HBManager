@@ -10,6 +10,8 @@ namespace HBManager.Controllers
     {
         public ActionResult BudgetGroupingIndex()
         {
+            Response.Cache.SetCacheability(HttpCacheability.NoCache);
+            Response.Cache.SetNoStore();
             return View();
         }
     }

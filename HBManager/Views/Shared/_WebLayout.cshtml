@@ -20,6 +20,10 @@
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 
     <style>
+        .app-main {
+            padding-bottom: 0;
+        }
+
         body {
             font-size: 15px;
             font-family: 'Times New Roman';
@@ -79,6 +83,41 @@
             border-radius: 4px;
             border: 0px;
         }
+
+        @@media (min-width: 992px) {
+            body.sidebar-mini.sidebar-collapse .app-sidebar {
+                min-width: 3rem;
+                max-width: 3rem;
+            }
+
+            body.sidebar-mini.sidebar-collapse .sidebar-menu .nav-link {
+                justify-content: center;
+                padding-left: 0;
+                padding-right: 0;
+                width: 100%;
+            }
+
+            body.sidebar-mini.sidebar-collapse .sidebar-menu .nav-link .nav-icon {
+                margin-left: 0;
+                margin-right: 0;
+            }
+
+            body.sidebar-mini.sidebar-collapse .app-sidebar:hover {
+                min-width: var(--lte-sidebar-width);
+                max-width: var(--lte-sidebar-width);
+            }
+
+            body.sidebar-mini.sidebar-collapse .app-sidebar:hover .sidebar-menu .nav-link {
+                justify-content: flex-start;
+                padding-left: 0.5rem;
+                padding-right: 0.5rem;
+                width: auto;
+            }
+
+            body.sidebar-mini.sidebar-collapse .app-sidebar:hover .sidebar-menu .nav-link .nav-icon {
+                margin-right: 0.5rem;
+            }
+        }
     </style>
 
     <script type="text/javascript">
@@ -98,7 +137,7 @@
         });
     </script>
 </head>
-<body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
+<body class="layout-fixed sidebar-expand-lg sidebar-mini sidebar-collapse bg-body-tertiary">
     @{
         var curController = ViewContext.RouteData.Values["controller"] != null ? ViewContext.RouteData.Values["controller"].ToString() : "";
         var curAction = ViewContext.RouteData.Values["action"] != null ? ViewContext.RouteData.Values["action"].ToString() : "";

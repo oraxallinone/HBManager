@@ -824,7 +824,7 @@
         $.each(data, function (idx, item) {
             //var sssss = extractNameById(item.G1); //GetGroupMasterNameById(item.G1);
 
-            var spendDate = item.SpendDate ? ToDateAndDay(item.SpendDate) : "";
+            var spendDate = item.SpendDateText || item.SpendDate ? ToDateAndDay(item.SpendDateText || item.SpendDate) : "";
             var amount = item.Amount; //formatAmount(item.Amount);
             var dayClassMain = ToDayExtraction(spendDate);
             var dayClass = getDayClass(dayClassMain);
@@ -910,11 +910,17 @@
     function ToDateAndDay(jsonDate) {
         if (!jsonDate) return "";
 
-        var ticks = parseInt(jsonDate.replace(/\/Date\((\d+)\)\//, "$1"));
-        var date = new Date(ticks);
+        var databaseDate = jsonDate.match(/^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2})(?::(\d{2}))?/);
+        var date;
+        if (databaseDate) {
+            date = new Date(Date.UTC(parseInt(databaseDate[1], 10), parseInt(databaseDate[2], 10) - 1, parseInt(databaseDate[3], 10), parseInt(databaseDate[4], 10), parseInt(databaseDate[5], 10), parseInt(databaseDate[6] || '0', 10)));
+        } else {
+            var ticks = parseInt(jsonDate.replace(/\/Date\((\d+)\)\//, "$1"));
+            date = new Date(ticks);
+        }
 
         var istOptions = {
-            timeZone: 'Asia/Kolkata',
+            timeZone: databaseDate ? 'UTC' : 'Asia/Kolkata',
             day: '2-digit',
             month: 'short',
             year: 'numeric',
@@ -933,18 +939,9 @@
         var min = parts.find(p => p.type === 'minute').value;
         var dayPeriod = parts.find(p => p.type === 'dayPeriod').value;
 
-        var dayName = new Intl.DateTimeFormat('en-IN', { timeZone: 'Asia/Kolkata', weekday: 'short' }).format(date);
+        var dayName = new Intl.DateTimeFormat('en-IN', { timeZone: databaseDate ? 'UTC' : 'Asia/Kolkata', weekday: 'short' }).format(date);
 
-        // Initial base string
-        var formattedResult = `${d} ${m} ${y} (${dayName})`;
-
-        // Check if it is NOT 12:00 AM
-        // Using !== for string comparison
-        if (!(h === "12" && min === "00" && dayPeriod.toUpperCase() === "AM")) {
-            formattedResult += ` ${h}:${min} ${dayPeriod.toUpperCase()}`;
-        }
-
-        return formattedResult;
+        return `${d} ${m} ${y} (${dayName}) ${h}:${min} ${dayPeriod.toUpperCase()}`;
     }
     //function ToDateAndDay(jsonDate) {
     //    if (!jsonDate) return "";

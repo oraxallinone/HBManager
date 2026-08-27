@@ -214,7 +214,7 @@
             }, function (res) {
                 if (res.success) {
                     $accordionBody.find('.txt-subnote-name').val('');
-                    $accordionBody.find('.txt-subnote-date').val('');
+                    $accordionBody.find('.txt-subnote-date').val(new Date().toISOString().split('T')[0]);
                     loadSubNotes(noteId);
                 } else {
                     alert(res.message || 'Failed to add subnote');

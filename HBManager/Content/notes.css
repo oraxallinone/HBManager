@@ -396,3 +396,122 @@
         font-size: 0.65rem;
     }
 }
+
+/* Glass note workspace */
+.note-input-section,
+.accordion-item,
+.accordion-header,
+.accordion-body,
+.subnote-input-section,
+.subnote-grid-section,
+.subnote-table {
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+}
+
+.note-input-section {
+    background: linear-gradient(135deg, rgba(239, 246, 255, 0.78), rgba(224, 242, 254, 0.54));
+    border: 1px solid rgba(125, 170, 210, 0.38);
+    border-radius: 14px;
+    box-shadow: 0 10px 24px rgba(30, 64, 175, 0.08), inset 0 1px rgba(255, 255, 255, 0.75);
+}
+
+.note-input-section .form-control,
+.subnote-input-section .form-control {
+    background: rgba(255, 255, 255, 0.68);
+    border: 1px solid rgba(100, 149, 190, 0.4);
+    border-radius: 8px;
+}
+
+.note-input-section .form-control:focus,
+.subnote-input-section .form-control:focus {
+    background: rgba(255, 255, 255, 0.9);
+    border-color: #0891b2;
+    box-shadow: 0 0 0 0.18rem rgba(8, 145, 178, 0.16);
+}
+
+.btn-add {
+    background: linear-gradient(135deg, #0e7490, #2563eb);
+    border: 1px solid rgba(14, 116, 144, 0.6);
+    border-radius: 8px;
+    color: #fff;
+    box-shadow: 0 5px 12px rgba(37, 99, 235, 0.2);
+}
+
+.btn-add:hover {
+    background: linear-gradient(135deg, #155e75, #1d4ed8);
+    color: #fff;
+}
+
+.accordion-item {
+    background: rgba(255, 255, 255, 0.38) !important;
+    border: 1px solid rgba(125, 170, 210, 0.42);
+    border-radius: 14px;
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08), inset 0 1px rgba(255, 255, 255, 0.72);
+}
+
+.accordion-header,
+.accordion-header:hover,
+.accordion-header.active {
+    background: linear-gradient(135deg, rgba(14, 116, 144, 0.78), rgba(37, 99, 235, 0.7));
+    border-bottom-color: rgba(255, 255, 255, 0.36);
+    color: #fff;
+}
+
+.accordion-header h3,
+.accordion-header .note-date,
+.accordion-header .accordion-toggle {
+    color: #fff;
+}
+
+.note-priority {
+    background: rgba(254, 240, 138, 0.9);
+    border: 1px solid rgba(234, 179, 8, 0.55);
+    color: #854d0e;
+}
+
+.icon-btn {
+    color: #e0f2fe;
+}
+
+.icon-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+}
+
+.accordion-body {
+    background: rgba(239, 246, 255, 0.58);
+}
+
+.accordion-content .subnote-input-section {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    padding: 12px;
+}
+
+.accordion-content .subnote-table {
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(100, 149, 190, 0.32);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.accordion-content .subnote-table tbody tr,
+.accordion-content .subnote-table tbody tr:hover {
+    background: rgba(165, 243, 224, 0.5) !important;
+    border-bottom-color: rgba(13, 148, 136, 0.22);
+}
+
+.accordion-content .subnote-table tbody td {
+    border-color: rgba(100, 149, 190, 0.25);
+    color: #164e63;
+}
+
+.subnote-icon-btn {
+    color: #0e7490 !important;
+}
+
+.subnote-icon-btn:hover {
+    background: rgba(14, 116, 144, 0.14) !important;
+    color: #1d4ed8 !important;
+}

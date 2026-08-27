@@ -28,6 +28,7 @@ SELECT TOP (1000) [UserId]
 
 
 
+
 --============================================================================================= delete form draft table
 
 --   BEGIN TRANSACTION;
@@ -60,10 +61,25 @@ SELECT TOP (1000) [UserId]
 
 -- COMMIT TRANSACTION;
 --=====================================================
-
+2026-08-20 15:11:00.000
 
 
 select * from [dbo].[StocksPurchasedTracker]
+
+
+select * from budget where [Year]=2026 and [Month]=8 and Amount = 1500
+
+
+
+
+
+
+
+
+--new waste tracker queries
+
+
+select * from dbo.tblWasteTracker
 
 
 

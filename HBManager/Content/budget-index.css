@@ -35,6 +35,40 @@
     .div-responsive #gridTableGroup thead th {
         white-space: nowrap;
     }
+
+    .div-responsive #gridTableBudget thead th {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        background-color: #1d68a0 !important;
+        color: #fff;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, .28);
+        white-space: nowrap;
+    }
+
+    .budget-waste-summary {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 10px;
+        min-height: 38px;
+        padding: 0 12px;
+        color: #fff;
+        background: linear-gradient(135deg, #1769a3, #159aa6);
+        border: 1px solid rgba(255, 255, 255, .75);
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(24, 52, 79, .2);
+        white-space: nowrap;
+    }
+
+    .budget-waste-summary-label {
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    #tdWasteTotal {
+        font-size: 15px;
+    }
 /* optional: ensure cells maintain alignment with header during horizontal scroll */
 #gridTableGroup {
     width: 100%;
@@ -117,15 +151,10 @@
 /* ------------------  section salary  ------------------
        - side to update and save button we have salary section                         tdddddddddddddddddddd
    --------------------------------------------------------------------- */
-.section-salary-div {
-    border: 1px solid #cc2be8 !important;
+.salary-summary-container {
     color: #b628ce;
     font-weight: 900;
-    height: 33px;
-    text-align: center; /* horizontal center for text content */
-    display: flex; /* optional: enables better centering of child elements */
-    align-items: center; /* vertical centering (safe to keep) */
-    justify-content: center; /* horizontal centering for flex children */
+    text-align: center;
 }
 
 
@@ -249,6 +278,20 @@
 /* 10th G4 column ----*/
 #gridTableBudget th:nth-child(10) {
     width: 10%;
+    background-color: #1d68a0;
+    text-align: center;
+    color: white;
+}
+
+
+/* 11th column ----*/
+#gridTableBudget th:nth-child(11) {
+    background-color: #1d68a0;
+    text-align: center;
+    color: white;
+}
+/* 12th column ----*/
+#gridTableBudget th:nth-child(12) {
     background-color: #1d68a0;
     text-align: center;
     color: white;
@@ -383,7 +426,7 @@
 
 /* c2 Need /Essential Spend.  ----*/
 .div-g2-c2 {
-    padding: 5px 45px;
+    padding: 5px 0px;
     transition: 0.5s;
     background-size: 200% auto;
     color: white;
@@ -434,6 +477,435 @@
     background-color: #9C27B0;
     color: white;
     border-radius: 21px 0px 21px 0px;
+}
+
+.salary-summary-container {
+    width: 100%;
+    min-width: 520px;
+    white-space: nowrap;
+}
+
+.salary-summary-column {
+    flex: 0 0 63%;
+    max-width: 63%;
+    text-align: right;
+}
+
+.salary-summary-column .salary-summary-container {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    overflow: hidden;
+}
+
+#tblSalarySummary {
+    width: 100%;
+    min-width: 0;
+    table-layout: fixed;
+    white-space: nowrap;
+}
+
+.card-body > .row:first-child {
+    flex-wrap: nowrap;
+    align-items: center;
+}
+
+.card-body > .row:first-child > .col-md-1 { flex: 0 0 8%; max-width: 8%; }
+.card-body > .row:first-child > .col-md-2:not(.salary-summary-column) { flex: 0 0 13%; max-width: 13%; }
+.card-body > .row:first-child > .col-md-2:nth-child(3),
+.card-body > .row:first-child > .col-md-2:nth-child(4),
+.card-body > .row:first-child > .col-md-2:nth-child(5),
+.card-body > .row:first-child > .col-md-2:nth-child(6) { flex: 0 0 4%; max-width: 4%; }
+
+@media (max-width: 767.98px) {
+    .salary-summary-column {
+        text-align: left;
+    }
+
+    .salary-summary-column .salary-summary-container,
+    #tblSalarySummary {
+        width: 100%;
+        min-width: 0;
+    }
+
+    #tblSalarySummary td {
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+}
+
+#tblSalarySummary td {
+    white-space: nowrap;
+    padding-left: 12px;
+    padding-right: 12px;
+}
+
+.budget-loader {
+    position: absolute;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, .72);
+    color: #1d68a0;
+    font-weight: 700;
+    z-index: 10;
+}
+
+.div-responsive {
+    position: relative;
+}
+
+#gridTableBudget {
+    min-width: 1600px;
+}
+
+#gridTableBudget th:nth-child(1), #gridTableBudget td:nth-child(1) { width: 13%; text-align: center; }
+#gridTableBudget th:nth-child(2), #gridTableBudget td:nth-child(2),
+#gridTableBudget th:nth-child(3), #gridTableBudget td:nth-child(3) { width: 6%; text-align: right; }
+#gridTableBudget th:nth-child(4), #gridTableBudget td:nth-child(4) { width: 8%; text-align: center; }
+#gridTableBudget th:nth-child(5), #gridTableBudget td:nth-child(5) { width: 5%; text-align: center; }
+#gridTableBudget th:nth-child(6), #gridTableBudget td:nth-child(6) { width: 8%; text-align: right; }
+#gridTableBudget th:nth-child(7), #gridTableBudget td:nth-child(7) { width: 25%; text-align: left; }
+#gridTableBudget th:nth-child(8), #gridTableBudget td:nth-child(8) { width: 10%; text-align: center; }
+#gridTableBudget th:nth-child(9), #gridTableBudget td:nth-child(9) { width: 12%; text-align: center; }
+#gridTableBudget th:nth-child(10), #gridTableBudget td:nth-child(10) { width: 10%; text-align: center; }
+#gridTableBudget th:nth-child(11), #gridTableBudget td:nth-child(11) { width: 10%; text-align: center; }
+
+.budget-eye {
+    border: 0;
+    background: transparent;
+    color: #1d68a0;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.waste-budget-cell {
+    color: #b628ce;
+    font-weight: 700;
+}
+
+.waste-tracker-modal {
+    background: rgba(15, 31, 52, .42);
+    backdrop-filter: blur(8px);
+}
+
+.waste-tracker-modal .modal-dialog {
+    max-width: 620px;
+    margin: 7vh auto;
+}
+
+.waste-tracker-modal .modal-content {
+    overflow: hidden;
+    color: #18344f;
+    border: 1px solid rgba(255, 255, 255, .75);
+    border-radius: 22px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, .9), rgba(226, 241, 249, .72));
+    box-shadow: 0 24px 70px rgba(8, 31, 52, .35), inset 0 1px 0 rgba(255, 255, 255, .85);
+    backdrop-filter: blur(22px) saturate(130%);
+}
+
+.waste-tracker-modal .modal-header,
+.waste-tracker-modal .modal-footer {
+    border-color: rgba(46, 102, 139, .16);
+}
+
+.waste-tracker-modal .modal-header {
+    padding: 22px 26px 18px;
+    background: linear-gradient(100deg, rgba(29, 104, 160, .95), rgba(22, 158, 166, .82));
+    color: white;
+}
+
+.waste-tracker-modal .modal-title {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.45rem;
+    letter-spacing: .02em;
+}
+
+.waste-modal-close {
+    filter: brightness(0) invert(1);
+    opacity: .9;
+}
+
+.waste-tracker-modal .modal-body {
+    padding: 24px 26px 20px;
+}
+
+.waste-tracker-modal dl {
+    padding: 16px 18px;
+    border: 1px solid rgba(29, 104, 160, .15);
+    border-radius: 14px;
+    background: rgba(255, 255, 255, .5);
+}
+
+.waste-tracker-modal dt {
+    color: #587086;
+    font-size: .8rem;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+}
+
+.waste-tracker-modal dd {
+    font-weight: 700;
+}
+
+.waste-tracker-modal label {
+    color: #31546d;
+    font-weight: 700;
+}
+
+.waste-tracker-modal .form-control {
+    border: 1px solid rgba(29, 104, 160, .25);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, .66);
+    box-shadow: inset 0 1px 3px rgba(24, 52, 79, .06);
+}
+
+.waste-tracker-modal .form-control:focus {
+    border-color: #159aa6;
+    box-shadow: 0 0 0 3px rgba(21, 154, 166, .16);
+}
+
+.waste-tracker-modal .modal-footer {
+    padding: 16px 26px 22px;
+}
+
+.waste-tracker-modal .btn {
+    border: 0;
+    border-radius: 10px;
+    padding: 9px 18px;
+    font-weight: 700;
+    box-shadow: 0 5px 12px rgba(20, 53, 78, .16);
+}
+
+.waste-tracker-modal .btn-primary {
+    background: linear-gradient(100deg, #1769a3, #159aa6);
+}
+
+.waste-tracker-modal .btn-secondary {
+    background: #647586;
+}
+
+.waste-tracker-modal .btn-danger {
+    margin-right: auto;
+    background: #bf4d5c;
+}
+
+@media (max-width: 575.98px) {
+    .waste-tracker-modal .modal-dialog {
+        margin: 4vh 12px;
+    }
+
+    .waste-tracker-modal .modal-header,
+    .waste-tracker-modal .modal-body,
+    .waste-tracker-modal .modal-footer {
+        padding-left: 18px;
+        padding-right: 18px;
+    }
+}
+
+/* Match the grouping page's row palette and boxed group values. */
+#gridTableBudget {
+    width: 100%;
+    min-width: 1600px;
+    table-layout: fixed;
+}
+
+#gridTableBudget th:nth-child(1), #gridTableBudget td:nth-child(1) { width: 14%; }
+#gridTableBudget th:nth-child(2), #gridTableBudget td:nth-child(2) { width: 5%; }
+#gridTableBudget th:nth-child(3), #gridTableBudget td:nth-child(3) { width: 5%; }
+#gridTableBudget th:nth-child(4), #gridTableBudget td:nth-child(4) { width: 7%; }
+#gridTableBudget th:nth-child(5), #gridTableBudget td:nth-child(5) { width: 4%; }
+#gridTableBudget th:nth-child(6), #gridTableBudget td:nth-child(6) { width: 7%; }
+#gridTableBudget th:nth-child(7), #gridTableBudget td:nth-child(7) { width: 21%; }
+#gridTableBudget th:nth-child(8), #gridTableBudget td:nth-child(8) { width: 6%; }
+#gridTableBudget th:nth-child(9), #gridTableBudget td:nth-child(9) { width: 8%; }
+#gridTableBudget th:nth-child(10), #gridTableBudget td:nth-child(10) { width: 8%; }
+#gridTableBudget th:nth-child(11), #gridTableBudget td:nth-child(11) { width: 7%; }
+#gridTableBudget th:nth-child(12), #gridTableBudget td:nth-child(12) { width: 8%; }
+
+.salary-summary-container {
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+}
+
+#tblSalarySummary {
+    width: 100%;
+    min-width: 0;
+}
+
+#tblSalarySummary td {
+    padding-left: 4px;
+    padding-right: 4px;
+    overflow: hidden;
+    text-overflow: clip;
+}
+
+@media (max-width: 767.98px) {
+    .salary-summary-column .salary-summary-container,
+    #tblSalarySummary {
+        width: 100%;
+        min-width: 0;
+    }
+}
+
+#gridTableBudget .div-bank, #gridTableBudget .div-g3 {
+    width: 95%;
+    display: block;
+    box-sizing: border-box;
+    text-align: center;
+    padding: 7px 0;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, .25);
+    font-family: "Segoe UI", Calibri, Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+#gridTableBudget .div-bank {
+    padding: 5px 0;
+    height: 25px;
+    background: linear-gradient(to right, #e6e6e6, #d6d6d6);
+    color: #333;
+}
+
+#gridTableBudget .div-g3 {
+    background: linear-gradient(to right, #eadcff, #d8c1ff);
+    color: #4b2391;
+}
+
+#gridTableBudget .div-g1-c7 {
+    width: 95%;
+    background-image: linear-gradient(to right, #fff35d9e 0%, #c8c5a19e 100%);
+    box-shadow: #fcc100 0 2px 5px -1px, #00000091 0 1px 3px -1px;
+}
+
+#gridTableBudget .div-g1-c12 { width: 95%; }
+#gridTableBudget .div-g2-c2, #gridTableBudget .div-g2-c3, #gridTableBudget .div-g2-c4 { width: 95%; }
+#gridTableBudget .div-g4-c5 { width: 100%; }
+#gridTableBudget .div-g4-c5 {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+/* Final header layout: filters and salary calculation share one row. */
+.card-body > .row:first-child {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    width: 100%;
+}
+
+.card-body > .row:first-child > .col-md-1:nth-child(1) {
+    flex: 0 0 8.333333% !important;
+    max-width: 8.333333% !important;
+}
+
+.card-body > .row:first-child > .col-md-2:nth-child(2) {
+    flex: 0 0 16.666667% !important;
+    max-width: 16.666667% !important;
+}
+
+.card-body > .row:first-child > .col-md-1:nth-child(3) {
+    flex: 0 0 8.333333% !important;
+    max-width: 8.333333% !important;
+}
+
+.card-body > .row:first-child > .col-md-2:nth-child(4),
+.card-body > .row:first-child > .col-md-2:nth-child(5),
+.card-body > .row:first-child > .col-md-2:nth-child(6),
+.card-body > .row:first-child > .salary-summary-column {
+    flex: 0 0 16.666667% !important;
+    max-width: 16.666667% !important;
+}
+
+.salary-summary-column,
+.salary-summary-column > .row,
+.salary-summary-column .col-12,
+.salary-summary-container {
+    margin: 0 !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+}
+
+/* Prevent any old inline positioning from moving the summary off-screen. */
+.salary-summary-column .col-4,
+.salary-summary-column [style*="margin-left"],
+.salary-summary-column [style*="margin-top"] {
+    margin-left: 0 !important;
+    margin-top: 0 !important;
+}
+
+#tblSalarySummary {
+    display: table;
+    width: 100% !important;
+    min-width: 0 !important;
+    table-layout: fixed;
+}
+
+#tblSalarySummary td:nth-child(1),
+#tblSalarySummary td:nth-child(3),
+#tblSalarySummary td:nth-child(5) {
+    width: 29%;
+}
+
+#tblSalarySummary td:nth-child(2),
+#tblSalarySummary td:nth-child(4) {
+    width: 7.666%;
+}
+
+#tblSalarySummary td {
+    padding-left: 2px;
+    padding-right: 2px;
+    overflow: visible;
+    white-space: nowrap;
+    text-align: center;
+}
+
+@media (max-width: 767.98px) {
+    .card-body > .row:first-child {
+        flex-wrap: wrap !important;
+    }
+
+    .salary-summary-column {
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
+    }
+
+    .salary-summary-container {
+        overflow: hidden !important;
+    }
+}
+
+/* Keep the complete grid inside its panel without a horizontal scrollbar. */
+.div-responsive {
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+#gridTableBudget {
+    width: 100%;
+    min-width: 0;
+    table-layout: fixed;
+}
+
+#gridTableBudget th,
+#gridTableBudget td {
+    overflow-wrap: anywhere;
+    word-break: normal;
+}
+
+#gridTableBudget td:nth-child(1),
+#gridTableBudget td:nth-child(2),
+#gridTableBudget td:nth-child(3),
+#gridTableBudget td:nth-child(5) {
+    white-space: nowrap;
 }
 
 /* ------------------ topic ------------------

@@ -22,6 +22,8 @@ namespace HBManager.Controllers
 
         public ActionResult BudgetIndex()
         {
+            Response.Cache.SetCacheability(HttpCacheability.NoCache);
+            Response.Cache.SetNoStore();
             return View();
         }
 
@@ -42,6 +44,7 @@ namespace HBManager.Controllers
         public JsonResult GetAllBudgetFromTo(int year, int month)
         {
             var list = _svc.GetBudgetByFromToDate(year, month);
+            list.ForEach(item => item.SpendDateText = item.SpendDate.HasValue ? item.SpendDate.Value.ToString("yyyy-MM-dd HH:mm:ss.fff") : null);
             return Json(list, JsonRequestBehavior.AllowGet);
         }
 
@@ -49,6 +52,7 @@ namespace HBManager.Controllers
         public JsonResult GetAllBudgetFromToWithGroup(int year, int month, int g1, int g2, int g3, int g4, bool isAll, string searchText)
         {
             var list = _svc.GetBudgetByFromToDateWithGroup(year, month, g1, g2, g3, g4, isAll, searchText);
+            list.ForEach(item => item.SpendDateText = item.SpendDate.HasValue ? item.SpendDate.Value.ToString("yyyy-MM-dd HH:mm:ss.fff") : null);
             return Json(list, JsonRequestBehavior.AllowGet);
         }
 
@@ -71,6 +75,30 @@ namespace HBManager.Controllers
         {
             var ok = _svc.DeleteBudgetById(id);
             return Json(new { Success = ok });
+        }
+
+        [HttpGet]
+        public JsonResult GetWasteTrackerByBudgetMonth(int year, int month)
+        {
+            return Json(_svc.GetWasteTrackerByBudgetMonth(year, month), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult InsertWasteTracker(WasteTracker model)
+        {
+            return Json(new { Id = _svc.InsertWasteTracker(model) });
+        }
+
+        [HttpPost]
+        public JsonResult UpdateWasteTracker(WasteTracker model)
+        {
+            return Json(new { Rows = _svc.UpdateWasteTracker(model) });
+        }
+
+        [HttpPost]
+        public JsonResult DeleteWasteTracker(int id)
+        {
+            return Json(new { Rows = _svc.DeleteWasteTracker(id) });
         }
 
         [HttpGet]

@@ -81,27 +81,12 @@
                                     </div>*@
                             </div>
 
-
-
-                            <div class="col-md-2">
-                                <div class="row g-1">
-                                    <!-- section salary -->
-                                    <div class="col-12">
-                                        <div class="p-0 border rounded section-salary-div">
-                                            <table style="width:100%" id="tblSalarySummary">
-                                                <tr>
-                                                    <td id="tdSalary">114576</td>
-                                                    <td> - </td>
-                                                    <td id="tdSpending"> 34300 </td>
-                                                    <td> = </td>
-                                                    <td id="tdRemain"> 76700 </td>
-                                                </tr>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-
+                            <div class="col-md-2 budget-waste-summary">
+                                <span class="budget-waste-summary-label">Waste total</span>
+                                <strong id="tdWasteTotal">0</strong>
                             </div>
+
+
 
                         </div>
                         <div class="row">
@@ -109,15 +94,18 @@
                         </div>
 
                         <div class="div-responsive">
+                            <div id="budgetLoader" class="budget-loader" role="status">Loading...</div>
                             <table id="gridTableBudget" class="custom-tbl-common">
                                 <thead>
                                     <tr>
                                         <th>Date</th>
                                         <th>#</th>
                                         <th>#</th>
-                                        <th>#</th>
+                                        <th>WasteBudget</th>
+                                        <th>Eye</th>
                                         <th>Amt</th>
                                         <th>Details</th>
+                                        <th>Bank</th>
                                         <th>G1</th>
                                         <th>G2</th>
                                         <th>G3</th>
@@ -134,7 +122,7 @@
                         <div class="row">
                             <!-- Section 1 fixed for all-->
                             <div class="col-md-6">
-                                <div class="row g-1">
+                                <div class="row g-1" >
 
                                     <div class="col-12">
                                         <div class="p-0 border rounded " style="color: white; font-weight: 900;background-color:#0761a5c7 !important">
@@ -211,5 +199,34 @@
     </div>
 </div>
 
-<script src="~/Scripts/budget.js"></script>
+<div class="modal fade waste-tracker-modal" id="wasteTrackerModal" tabindex="-1" role="dialog" aria-labelledby="wasteTrackerTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="wasteTrackerTitle">Waste budget</h5>
+                <button type="button" class="btn-close waste-modal-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="wasteTrackerId" />
+                <input type="hidden" id="wasteReferenceId" />
+                <dl class="row mb-3">
+                    <dt class="col-sm-4">Date and time</dt><dd class="col-sm-8" id="wasteBudgetDate"></dd>
+                    <dt class="col-sm-4">Amount</dt><dd class="col-sm-8" id="wasteBudgetAmount"></dd>
+                    <dt class="col-sm-4">Details</dt><dd class="col-sm-8" id="wasteBudgetDetails"></dd>
+                </dl>
+                <label for="wasteAmount">Waste amount</label>
+                <input type="number" min="0" step="0.01" class="form-control" id="wasteAmount" />
+                <label for="wasteReason" class="mt-2">Reason for waste</label>
+                <textarea class="form-control" id="wasteReason" maxlength="500" rows="3"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" id="btnDeleteWaste">Delete</button>
+                <button type="button" class="btn btn-secondary waste-modal-cancel" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="btnSaveWaste">Insert</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/budget.js?v=2026082503"></script>
 

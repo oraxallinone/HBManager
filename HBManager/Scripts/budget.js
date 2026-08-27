@@ -3,6 +3,7 @@
 
     // global container for uncut group list (name requested)
     var GobalGroupMasterUncut = [];
+    var wasteByReference = {};
 
     var screenWidth = window.screen.width;
     console.log(screenWidth);
@@ -35,11 +36,6 @@
         GetSalaryByMonthYear();
     });
 
-
-
-    $(".section-salary-div").click(function () {
-        GetSalaryByMonthYear();
-    });
 
 
     function validateBudget() {
@@ -206,6 +202,7 @@
             alert("Please select Year and Month");
             return;
         }
+        $('#budgetLoader').show();
         $.ajax({
             url: '/Budget/GetAllBudgetFromToWithGroup',//GetAllBudgetFromToWithGroup||GetAllBudgetFromTo
             type: 'GET',
@@ -215,7 +212,8 @@
                 $("#gridTableBudget tbody").empty();
 
                 if (!res || !res.length) {
-                    $("#gridTableBudget tbody").html('<tr><td colspan="8" style="text-align:center;">No records found</td></tr>');
+                    $("#gridTableBudget tbody").html('<tr><td colspan="12" style="text-align:center;">No records found</td></tr>');
+                    $('#budgetLoader').hide();
                     return;
                 }
 
@@ -227,35 +225,39 @@
                     let crntSumFormat = Intl.NumberFormat('en-IN').format(crntSum);
                     let remainSalary = crntMonthSalary - crntSum;
 
-                    var spendDate = ToDateAndDay(item.SpendDate);
+                    var spendDate = ToDateAndDay(item.SpendDateText || item.SpendDate);
                     var dayClassMain = ToDayExtraction(spendDate);
                     html += "<tr>";
 
                     //Date
-                    html += "<td class='bg-main-day-" + dayClassMain + "'>" + ToDateAndDay(item.SpendDate) + "</td>";
+                    html += "<td class='bg-main-day-" + dayClassMain + "'>" + spendDate + "</td>";
 
 
                     //#1        
-                    html += "<td>  <span class='txt-spend'>" + crntSumFormat + " </span> </td>";
+                    html += "<td class='" + getDayClass(dayClassMain) + "'>  <span class='txt-spend'>" + crntSumFormat + " </span> </td>";
                     //#2        
-                    html += "<td>  <span class='txt-remain'> " + Intl.NumberFormat('en-IN').format(remainSalary) + "</span> </td>"; //Intl.NumberFormat('en-IN').format(remainSalary)
+                    html += "<td class='" + getDayClass(dayClassMain) + "'>  <span class='txt-remain'> " + Intl.NumberFormat('en-IN').format(remainSalary) + "</span> </td>"; //Intl.NumberFormat('en-IN').format(remainSalary)
                     //#3        
-                    html += "<td>  <input type='checkbox' class='budget-checkbox' data-id='" + (item.Id || '') + "' />  </td>";
+                    var waste = wasteByReference[item.Id] || {};
+                    html += "<td class='waste-budget-cell " + getDayClass(dayClassMain) + "' data-reference-id='" + item.Id + "'>" + (waste.WasteAmount == null ? "" : escapeHtml(Intl.NumberFormat('en-IN').format(waste.WasteAmount))) + "</td>";
+                    html += "<td class='budget-eye-cell " + getDayClass(dayClassMain) + "'><button type='button' class='budget-eye' data-id='" + item.Id + "' title='View or record waste' aria-label='View or record waste'><i class='fa fa-eye'></i></button></td>";
 
 
                     //Amt
-                    html += "<td style='text-align:right;'>" + item.Amount + "</td>";
+                    html += "<td class='" + getDayClass(dayClassMain) + "' style='text-align:right;'>" + item.Amount + "</td>";
 
                     //Details
-                    html += "<td style='padding-left: 15px;'>" + (item.Details || "") + "</td>";
+                    html += "<td class='" + getDayClass(dayClassMain) + "' style='padding-left: 15px;'>" + (item.Details || "") + "</td>";
 
-                    html += "<td> <div class='div-g1-c" + (item.G1 || "") + "' >" + (extractNameById(item.G1) || "") + " </div> </td>";//G1
+                    html += "<td class='" + getDayClass(dayClassMain) + "'>" + (item.BankName ? "<div class='div-bank'>" + escapeHtml(item.BankName) + "</div>" : "") + "</td>";
 
-                    html += "<td> <div class='div-g2-c" + (item.G2 || "") + "' >" + (extractNameById(item.G2) || "") + " </div> </td>";//G2
+                    html += "<td class='" + getDayClass(dayClassMain) + "'>" + (item.G1 ? "<div class='div-g1-c" + item.G1 + "' >" + escapeHtml(extractNameById(item.G1) || "") + "</div>" : "") + "</td>";//G1
 
-                    html += "<td> <div class='div-g3-c" + (item.G3 || "") + "' >" + (extractNameById(item.G3) || "") + " </div> </td>";//G3
+                    html += "<td class='" + getDayClass(dayClassMain) + "'>" + (item.G2 ? "<div class='div-g2-c" + item.G2 + "' >" + escapeHtml(extractNameById(item.G2) || "") + "</div>" : "") + "</td>";//G2
 
-                    html += "<td> <div class='div-g4-c" + (item.G4 || "") + "' >" + (extractNameById(item.G4) || "") + " </div> </td>";//G4
+                    html += "<td class='" + getDayClass(dayClassMain) + "'>" + (item.G3 ? "<div class='div-g3' >" + escapeHtml(extractNameById(item.G3) || "") + "</div>" : "") + "</td>";//G3
+
+                    html += "<td class='" + getDayClass(dayClassMain) + "'>" + (item.G4 ? "<div class='div-g4-c" + item.G4 + "' >" + escapeHtml(extractNameById(item.G4) || "") + "</div>" : "") + "</td>";//G4
 
                     html += "</tr>";
                     idx++;
@@ -271,9 +273,11 @@
                 //tdRemain= crntMonthSalary - crntSum
                 $('#tdSpending').html(Intl.NumberFormat('en-IN').format(crntSum))
                 $('#tdRemain').html(Intl.NumberFormat('en-IN').format(crntMonthSalary - crntSum))
+                loadWasteTracker();
             },
             error: function (xhr, status, err) {
                 console.error('GetAllBudgetFromTo error:', err);
+                $('#budgetLoader').hide();
                 alert('Failed to load data.');
             }
         });
@@ -284,26 +288,28 @@
         if (!jsonDate) return "";
 
         // Extract ticks from /Date(1762626600000)/
-        var ticks = parseInt(jsonDate.replace(/\/Date\((\d+)\)\//, "$1"));
+        var databaseDate = jsonDate.match(/^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2})(?::(\d{2}))?/);
+        var date;
+        if (databaseDate) {
+            date = new Date(Date.UTC(parseInt(databaseDate[1], 10), parseInt(databaseDate[2], 10) - 1, parseInt(databaseDate[3], 10), parseInt(databaseDate[4], 10), parseInt(databaseDate[5], 10), parseInt(databaseDate[6] || '0', 10)));
+        } else {
+            var ticks = parseInt(jsonDate.replace(/\/Date\((\d+)\)\//, "$1"));
+            date = new Date(ticks);
+        }
 
-        var date = new Date(ticks);
-
-        // Day, Month, Year
-        var day = date.getDate();
-        var year = date.getFullYear();
-
-        // Short month names
-        var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
-                      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
-        // Day names (3 letters)
-        var days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-
-        var monthName = months[date.getMonth()];
-        var dayName = days[date.getDay()];
-
-        // Final output
-        return `${day} ${monthName} ${year} (${dayName})`;
+        var options = {
+            timeZone: databaseDate ? 'UTC' : 'Asia/Kolkata',
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric',
+            weekday: 'short',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true
+        };
+        var parts = new Intl.DateTimeFormat('en-IN', options).formatToParts(date);
+        var getPart = function (type) { return parts.find(function (part) { return part.type === type; }).value; };
+        return `${getPart('day')} ${getPart('month')} ${getPart('year')} (${getPart('weekday')}) ${getPart('hour')}:${getPart('minute')} ${getPart('dayPeriod').toUpperCase()}`;
     }
 
     //set current month & year
@@ -360,6 +366,96 @@
         }
 
         return "";
+    }
+
+    function loadWasteTracker() {
+        var year = parseInt($('#ddlYear').val(), 10) || 0;
+        var month = parseInt($('#ddlMonth').val(), 10) || 0;
+        $.ajax({
+            url: '/Budget/GetWasteTrackerByBudgetMonth',
+            type: 'GET',
+            data: { year: year, month: month },
+            dataType: 'json',
+            success: function (res) {
+                wasteByReference = {};
+                var wasteTotal = 0;
+                $.each(res || [], function (i, item) {
+                    wasteByReference[item.ReferenceID] = item;
+                    wasteTotal += parseFloat(item.WasteAmount) || 0;
+                });
+                $('#tdWasteTotal').text(Intl.NumberFormat('en-IN').format(wasteTotal));
+                $('.waste-budget-cell').each(function () {
+                    var waste = wasteByReference[$(this).data('reference-id')];
+                    $(this).text(waste ? Intl.NumberFormat('en-IN').format(waste.WasteAmount) : '')
+                        .attr('title', waste ? waste.ReasonForWaste : '');
+                });
+                $('#budgetLoader').hide();
+            },
+            error: function () {
+                $('#budgetLoader').hide();
+                alert('Failed to load waste budget data.');
+            }
+        });
+    }
+
+    $(document).on('click', '.budget-eye', function () {
+        var $row = $(this).closest('tr');
+        var referenceId = $(this).data('id');
+        var waste = wasteByReference[referenceId] || {};
+        $('#wasteTrackerId').val(waste.Id || '');
+        $('#wasteReferenceId').val(referenceId);
+        $('#wasteBudgetDate').text($row.find('td').eq(0).text().trim());
+        $('#wasteBudgetAmount').text($row.find('td').eq(5).text().trim());
+        $('#wasteBudgetDetails').text($row.find('td').eq(6).text().trim());
+        $('#wasteAmount').val(waste.WasteAmount == null ? '' : waste.WasteAmount);
+        $('#wasteReason').val(waste.ReasonForWaste || '');
+        $('#btnSaveWaste').text(waste.Id ? 'Update' : 'Insert');
+        $('#btnDeleteWaste').toggle(!!waste.Id);
+        bootstrap.Modal.getOrCreateInstance(document.getElementById('wasteTrackerModal')).show();
+    });
+
+    $('#btnSaveWaste').click(function () {
+        var wasteAmount = parseFloat($('#wasteAmount').val());
+        var reason = $('#wasteReason').val().trim();
+        if (isNaN(wasteAmount) || wasteAmount < 0 || !reason) {
+            alert('Enter a waste amount and reason.');
+            return;
+        }
+        var id = parseInt($('#wasteTrackerId').val(), 10) || 0;
+        var payload = { Id: id, ReferenceID: parseInt($('#wasteReferenceId').val(), 10), WasteAmount: wasteAmount, ReasonForWaste: reason };
+        $.ajax({
+            url: id ? '/Budget/UpdateWasteTracker' : '/Budget/InsertWasteTracker',
+            type: 'POST',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(payload),
+            dataType: 'json',
+            success: function () {
+                bootstrap.Modal.getOrCreateInstance(document.getElementById('wasteTrackerModal')).hide();
+                bindData();
+            },
+            error: function () { alert('Failed to save waste budget.'); }
+        });
+    });
+
+    $('#btnDeleteWaste').click(function () {
+        var id = parseInt($('#wasteTrackerId').val(), 10) || 0;
+        if (!id || !confirm('Delete this waste entry?')) return;
+        $.post('/Budget/DeleteWasteTracker', { id: id }, function () {
+            bootstrap.Modal.getOrCreateInstance(document.getElementById('wasteTrackerModal')).hide();
+            bindData();
+        }).fail(function () { alert('Failed to delete waste budget.'); });
+    });
+
+    // Bootstrap sets aria-hidden while closing; release focus first.
+    document.getElementById('wasteTrackerModal').addEventListener('hide.bs.modal', function () {
+        var activeElement = document.activeElement;
+        if (activeElement && this.contains(activeElement)) {
+            activeElement.blur();
+        }
+    });
+
+    function escapeHtml(value) {
+        return $('<div>').text(value == null ? '' : value).html();
     }
 
     //convert day to class bg-day-sun

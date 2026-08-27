@@ -178,6 +178,7 @@
     <Compile Include="Models\BarGraphData.cs" />
     <Compile Include="Models\BirthdayModel.cs" />
     <Compile Include="Models\Budget.cs" />
+    <Compile Include="Models\WasteTracker.cs" />
     <Compile Include="Models\BudgetImportViewModel.cs" />
     <Compile Include="Models\BudgetVerificationModels.cs" />
     <Compile Include="Models\CalenderDataViewModel.cs" />

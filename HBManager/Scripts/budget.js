@@ -227,7 +227,7 @@
 
                     var spendDate = ToDateAndDay(item.SpendDateText || item.SpendDate);
                     var dayClassMain = ToDayExtraction(spendDate);
-                    html += "<tr>";
+                    html += "<tr class='no-css id-" + item.Id + "' id='" + item.Id + "'>";
 
                     //Date
                     html += "<td class='bg-main-day-" + dayClassMain + "'>" + spendDate + "</td>";
@@ -240,7 +240,7 @@
                     //#3        
                     var waste = wasteByReference[item.Id] || {};
                     html += "<td class='waste-budget-cell " + getDayClass(dayClassMain) + "' data-reference-id='" + item.Id + "'>" + (waste.WasteAmount == null ? "" : escapeHtml(Intl.NumberFormat('en-IN').format(waste.WasteAmount))) + "</td>";
-                    html += "<td class='budget-eye-cell " + getDayClass(dayClassMain) + "'><button type='button' class='budget-eye' data-id='" + item.Id + "' title='View or record waste' aria-label='View or record waste'><i class='fa fa-eye'></i></button></td>";
+                    html += "<td class='budget-eye-cell " + getDayClass(dayClassMain) + "'><button type='button' style='font-size:13px;' class='budget-eye' data-id='" + item.Id + "' title='View or record waste' aria-label='View or record waste'><i class='fa fa-eye'></i></button></td>";
 
 
                     //Amt
@@ -414,7 +414,13 @@
         bootstrap.Modal.getOrCreateInstance(document.getElementById('wasteTrackerModal')).show();
     });
 
+    $(document).on('click', '#gridTableBudget tbody tr.no-css', function () {
+        $('#gridTableBudget tbody tr.no-css').removeClass('dynamic-bg-tr');
+        $(this).addClass('dynamic-bg-tr');
+    });
+
     $('#btnSaveWaste').click(function () {
+        debugger
         var wasteAmount = parseFloat($('#wasteAmount').val());
         var reason = $('#wasteReason').val().trim();
         if (isNaN(wasteAmount) || wasteAmount < 0 || !reason) {
@@ -430,6 +436,7 @@
             data: JSON.stringify(payload),
             dataType: 'json',
             success: function () {
+                debugger
                 bootstrap.Modal.getOrCreateInstance(document.getElementById('wasteTrackerModal')).hide();
                 bindData();
             },

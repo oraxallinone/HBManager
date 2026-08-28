@@ -77,6 +77,13 @@ namespace HBManager.Controllers
             return Json(new { Success = ok });
         }
 
+        [HttpPost]
+        public JsonResult MoveBudgetToMonthIn(MoveBudgetToMonthInModel model)
+        {
+            var rows = _svc.MoveBudgetToMonthIn(model);
+            return Json(new { Success = rows > 0 });
+        }
+
         [HttpGet]
         public JsonResult GetWasteTrackerByBudgetMonth(int year, int month)
         {

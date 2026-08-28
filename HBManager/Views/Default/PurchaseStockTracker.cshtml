@@ -4,58 +4,34 @@
 }
 
 <style>
+    :root {
+        --stock-ivory: #f5efe6;
+        --stock-cream: #fffaf3;
+        --stock-blush: #d9aaa2;
+        --stock-sage: #91a08b;
+        --stock-brass: #c8a66b;
+        --stock-walnut: #8d684e;
+        --stock-ink: #3e352d;
+        --stock-line: rgba(141, 104, 78, .22);
+        --stock-glass: rgba(255, 250, 243, .64);
+    }
+
     body {
         font-size: 12px;
+        background: linear-gradient(135deg, #eee3d5 0%, #f8f4ec 48%, #dfe8dc 100%);
+        color: var(--stock-ink);
     }
-                                        <th class="stock-details-column">Details</th>
-                                        <th data-column="1">Stock<span class="stock-sort-icon"></span></th>
-                                        <th data-column="2">Exchange<span class="stock-sort-icon"></span></th>
-                                        <th data-column="3">Age<span class="stock-sort-icon"></span></th>
-                                        <th data-column="4">Pur. Date<span class="stock-sort-icon"></span></th>
-                                        <th data-column="5">Qty<span class="stock-sort-icon"></span></th>
-                                        <th data-column="6">Pur. Price<span class="stock-sort-icon"></span></th>
-                                        <th data-column="7">Last Price<span class="stock-sort-icon"></span></th>
-                                        <th data-column="8">Amt Chg<span class="stock-sort-icon"></span></th>
-                                        <th data-column="9">% Chg<span class="stock-sort-icon"></span></th>
-                                        <th data-column="10">My Chg<span class="stock-sort-icon"></span></th>
-                                        <th data-column="11">TPur Amt<span class="stock-sort-icon"></span></th>
-                                        <th data-column="12">Valuation<span class="stock-sort-icon"></span></th>
-                                        <th data-column="13">Inc Days<span class="stock-sort-icon"></span></th>
-                                        <th data-column="14">Dec Days<span class="stock-sort-icon"></span></th>
-                                        <th data-column="15">Live Price<span class="stock-sort-icon"></span></th>
-                                        <th data-column="16">Live Chg Amt<span class="stock-sort-icon"></span></th>
-                                        <th data-column="17">Live Chg %<span class="stock-sort-icon"></span></th>
-        color: #0d6efd;
-        font-size: 11px;
-                                        <td></td>
-        line-height: 1;
-        cursor: pointer;
-        vertical-align: middle;
-    }
-
-        .stock-detail-btn:hover {
-            background: #0d6efd;
-            color: #fff;
-            border-color: #0d6efd;
-        }
-
-        .stock-details-column {
-            width: 42px;
-            min-width: 42px;
-            text-align: center !important;
-        }
 
     .stock-candle-table {
         width: 100%;
         border-collapse: collapse;
         background: #fff;
         border: 1px solid #dfe3e8;
-                                        <td><input type="text" data-column="17" placeholder="Search" /></td>
         font-size: 11px;
     }
 
         .stock-candle-table th,
-                                        <td colspan="18" class="text-center text-muted">Loading...</td>
+        .stock-candle-table td {
             border: 1px solid #dfe3e8;
             padding: 5px 6px;
             text-align: center;
@@ -235,6 +211,148 @@
         background-color: #aebbcb !important;
         transition: background-color 0.15s ease-in-out;
     }
+
+    .app-content {
+        min-height: calc(100vh - 60px);
+        padding: 22px 14px;
+    }
+
+    .stock-glass-card,
+    #purchaseStockTable,
+    .modal-content {
+        background: var(--stock-glass);
+        border: 1px solid rgba(255, 255, 255, .72) !important;
+        box-shadow: 0 18px 45px rgba(95, 72, 55, .14), inset 0 1px rgba(255, 255, 255, .76);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+    }
+
+    .card.card-primary.card-outline {
+        border-top: 3px solid var(--stock-blush);
+        border-radius: 14px;
+        overflow: hidden;
+        background: transparent;
+    }
+
+    .card-header,
+    .card-body {
+        background: rgba(255, 250, 243, .4) !important;
+    }
+
+    .card-title,
+    .modal-title {
+        color: var(--stock-ink);
+        font-weight: 700;
+        letter-spacing: .02em;
+    }
+
+    #purchaseStockTable {
+        border-collapse: separate;
+        border-spacing: 0;
+        overflow: hidden;
+        color: var(--stock-ink);
+    }
+
+    #purchaseStockTable th,
+    #purchaseStockTable td {
+        border-color: var(--stock-line);
+    }
+
+    #purchaseStockTable thead th {
+        background: rgba(145, 160, 139, .28);
+        color: var(--stock-ink);
+    }
+
+    #purchaseStockTable thead th:hover {
+        background: rgba(217, 170, 162, .35);
+    }
+
+    #purchaseStockTable tbody tr:nth-child(even) {
+        background: rgba(255, 250, 243, .33);
+    }
+
+    #purchaseStockTable.table tbody tr:hover td,
+    #purchaseStockTable.table-striped tbody tr:hover > td {
+        background-color: rgba(217, 170, 162, .25) !important;
+    }
+
+    .stock-details-column,
+    .stock-update-column {
+        width: 50px;
+        min-width: 50px;
+        text-align: center !important;
+    }
+
+    .stock-detail-btn,
+    .stock-update-btn {
+        width: 30px;
+        height: 30px;
+        border: 1px solid var(--stock-brass);
+        border-radius: 50%;
+        background: rgba(255, 250, 243, .72);
+        color: var(--stock-walnut);
+        line-height: 1;
+        cursor: pointer;
+        transition: transform .18s ease, background .18s ease, color .18s ease;
+    }
+
+    .stock-detail-btn:hover,
+    .stock-update-btn:hover {
+        transform: translateY(-2px);
+        background: var(--stock-blush);
+        color: #fff;
+    }
+
+    .stock-update-btn {
+        border-color: var(--stock-sage);
+        color: #65765e;
+        font-size: 18px;
+    }
+
+    .stock-filter-row td {
+        background: rgba(255, 250, 243, .56);
+    }
+
+    .stock-filter-row input,
+    .stock-update-form input,
+    .stock-update-form select {
+        border: 1px solid rgba(141, 104, 78, .32);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, .55);
+        color: var(--stock-ink);
+    }
+
+    .stock-update-form {
+        display: grid;
+        gap: 14px;
+        padding: 8px;
+    }
+
+    .stock-update-form label {
+        color: var(--stock-walnut);
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+
+    .stock-update-form input,
+    .stock-update-form select {
+        width: 100%;
+        height: 36px;
+        padding: 0 10px;
+    }
+
+    .stock-update-form .form-group {
+        margin: 0;
+    }
+
+    .stock-update-save {
+        border: 0;
+        border-radius: 8px;
+        padding: 8px 16px;
+        background: var(--stock-sage);
+        color: #fff;
+    }
 </style>
 
 <div class="app-content">
@@ -245,33 +363,33 @@
                     <div class="card-header">
                         <h3 class="card-title">Purchase Stock Tracker</h3>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body stock-glass-card">
                         <div class="table-responsive">
                             <table id="purchaseStockTable" class="table table-bordered table-striped table-hover table-sm">
                                 <thead>
                                     <tr>
                                         <th class="stock-details-column">Details</th>
-                                        <th data-column="1">Stock<span class="stock-sort-icon"></span></th>
-                                        <th data-column="2">Exchange<span class="stock-sort-icon"></span></th>
-                                        <th data-column="3">Age<span class="stock-sort-icon"></span></th>
-                                        <th data-column="4">Pur. Date<span class="stock-sort-icon"></span></th>
-                                        <th data-column="5">Qty<span class="stock-sort-icon"></span></th>
-                                        <th data-column="6">Pur. Price<span class="stock-sort-icon"></span></th>
-                                        <th data-column="7">Last Price<span class="stock-sort-icon"></span></th>
-                                        <th data-column="8">Amt Chg<span class="stock-sort-icon"></span></th>
-                                        <th data-column="9">% Chg<span class="stock-sort-icon"></span></th>
-                                        <th data-column="10">My Chg<span class="stock-sort-icon"></span></th>
-                                        <th data-column="11">TPur Amt<span class="stock-sort-icon"></span></th>
-                                        <th data-column="12">Valuation<span class="stock-sort-icon"></span></th>
-                                        <th data-column="13">Inc Days<span class="stock-sort-icon"></span></th>
-                                        <th data-column="14">Dec Days<span class="stock-sort-icon"></span></th>
-                                        <th data-column="15">Live Price<span class="stock-sort-icon"></span></th>
-                                        <th data-column="16">Live Chg Amt<span class="stock-sort-icon"></span></th>
-                                        <th data-column="17">Live Chg %<span class="stock-sort-icon"></span></th>
+                                        <th data-column="1">Status<span class="stock-sort-icon"></span></th>
+                                        <th data-column="2">Stock<span class="stock-sort-icon"></span></th>
+                                        <th data-column="3">Exchange<span class="stock-sort-icon"></span></th>
+                                        <th data-column="4">Age<span class="stock-sort-icon"></span></th>
+                                        <th data-column="5">Pur. Date<span class="stock-sort-icon"></span></th>
+                                        <th data-column="6">Qty<span class="stock-sort-icon"></span></th>
+                                        <th data-column="7">Pur. Price<span class="stock-sort-icon"></span></th>
+                                        <th data-column="8">Last Price<span class="stock-sort-icon"></span></th>
+                                        <th data-column="9">Amt Chg<span class="stock-sort-icon"></span></th>
+                                        <th data-column="10">% Chg<span class="stock-sort-icon"></span></th>
+                                        <th data-column="11">My Chg<span class="stock-sort-icon"></span></th>
+                                        <th data-column="12">TPur Amt<span class="stock-sort-icon"></span></th>
+                                        <th data-column="13">Valuation<span class="stock-sort-icon"></span></th>
+                                        <th data-column="14">Inc Days<span class="stock-sort-icon"></span></th>
+                                        <th data-column="15">Dec Days<span class="stock-sort-icon"></span></th>
+                                        <th class="stock-update-column">Update</th>
                                     </tr>
                                     <tr class="stock-filter-row">
                                         <td></td>
                                         <td><input type="text" data-column="1" placeholder="Search" /></td>
+                                        <td><input type="text" data-column="2" placeholder="Search" /></td>
                                         <td><input type="text" data-column="3" placeholder="Search" /></td>
                                         <td><input type="text" data-column="4" placeholder="Search" /></td>
                                         <td><input type="text" data-column="5" placeholder="Search" /></td>
@@ -285,19 +403,59 @@
                                         <td><input type="text" data-column="13" placeholder="Search" /></td>
                                         <td><input type="text" data-column="14" placeholder="Search" /></td>
                                         <td><input type="text" data-column="15" placeholder="Search" /></td>
-                                        <td><input type="text" data-column="16" placeholder="Search" /></td>
-                                        <td><input type="text" data-column="17" placeholder="Search" /></td>
+                                        <td></td>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td colspan="17" class="text-center text-muted">Loading...</td>
+                                        <td colspan="18" class="text-center text-muted">Loading...</td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Stock Update Modal Popup -->
+<div class="modal fade" id="stockUpdateModal" tabindex="-1" role="dialog" aria-labelledby="stockUpdateModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="stockUpdateModalTitle">Update Stock</h5>
+                <button type="button" class="close btn-close modal-btn-action" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="stockUpdateForm" class="stock-update-form">
+                    <div class="form-group">
+                        <label for="updateStockName">Stock Name</label>
+                        <input id="updateStockName" type="text" readonly />
+                    </div>
+                    <div class="form-group">
+                        <label for="updateStockExchange">Stock Exchange</label>
+                        <select id="updateStockExchange">
+                            <option value="NSE">NSE</option>
+                            <option value="BSE">BSE</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="updateStockStatus">Status</label>
+                        <select id="updateStockStatus">
+                            <option value="1">New</option>
+                            <option value="2">Working</option>
+                            <option value="3">Partial Data</option>
+                            <option value="4">API Missing</option>
+                            <option value="5">No Tracking</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light btn-sm" data-dismiss="modal" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="stock-update-save" id="saveStockUpdate">Update</button>
             </div>
         </div>
     </div>
@@ -333,6 +491,7 @@
     var currentSortColumn = -1;
     var currentSortDirection = 'asc';
     var cachedStockList = [];
+    var currentUpdateStock = null;
 
     $(document).ready(function () {
         loadPurchaseStockTracker();
@@ -350,6 +509,42 @@
         $('#stockDetailModal').on('hidden.bs.modal', function () {
             $('#stockModalDialog').removeClass('modal-fullscreen-custom');
             $('#fullScreenIcon').html('&#x26F6;');
+        });
+
+        $('#saveStockUpdate').on('click', function () {
+            if (!currentUpdateStock || !currentUpdateStock.slno) return;
+
+            var $button = $(this);
+            $button.prop('disabled', true).text('Saving...');
+            $.ajax({
+                url: '/Default/UpdatePurchaseStockTracker',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    slno: currentUpdateStock.slno,
+                    nsebse: $('#updateStockExchange').val(),
+                    status: $('#updateStockStatus').val()
+                },
+                success: function (response) {
+                    if (!response || !response.success) {
+                        alert(response && response.message ? response.message : 'Unable to update stock.');
+                        return;
+                    }
+
+                    if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                        bootstrap.Modal.getOrCreateInstance(document.getElementById('stockUpdateModal')).hide();
+                    } else {
+                        $('#stockUpdateModal').modal('hide');
+                    }
+                    loadPurchaseStockTracker();
+                },
+                error: function () {
+                    alert('Unable to update stock.');
+                },
+                complete: function () {
+                    $button.prop('disabled', false).text('Update');
+                }
+            });
         });
     });
 
@@ -381,35 +576,28 @@
                     var quantity = parseFloat(item.quantity || 0);
                     var purchasePrice = parseFloat(item.purchasePrice || 0);
                     var currentPrice = parseFloat(item.currentPrice || item.lastClosePrice || 0);
+                    var isApiMissing = String(item.status || '') === '4';
                     var totalPurchaseAmount = quantity * purchasePrice;
                     var stockValuation = quantity * currentPrice;
 
-                    var livePrice = parseFloat(item.livePrice || item.currentPrice || item.lastClosePrice || 0);
-                    var lastClosePrice = parseFloat(item.lastClosePrice || 0);
-                    var liveChangeAmount = livePrice - lastClosePrice;
-                    var liveChangePercent = lastClosePrice !== 0 ? ((liveChangeAmount / lastClosePrice) * 100) : 0;
-                    var livePriceBg = livePrice > currentPrice ? 'text-success' : (livePrice < currentPrice ? 'text-danger' : 'text-muted');
-                    var liveChangeBg = liveChangeAmount > 0 ? 'text-success' : (liveChangeAmount < 0 ? 'text-danger' : 'text-muted');
-
                     html += '<tr>' +
-                        '<td class="stock-details-column"><button type="button" class="stock-detail-btn" data-index="' + index + '" title="View 90 Day Details">&#9654;</button></td>' +
+                        '<td class="stock-details-column"><button type="button" class="stock-detail-btn" data-index="' + index + '" title="View 90 Day Details" aria-label="View 90 day details">&#8594;</button></td>' +
+                        '<td>' + escapeHtml(formatStatusLabel(item.status)) + '</td>' +
                         '<td>' + escapeHtml(stockName) + '</td>' +
                         '<td class="text-center"><span class="stock-exchange-badge ' + exchangeClass + '">' + exchange + '</span></td>' +
-                        '<td>' + (item.ageOfStock || 0) + ' days</td>' +
+                        '<td>' + formatDaysOrPlaceholder(item.ageOfStock) + '</td>' +
                         '<td>' + (item.purchaseDate || '') + '</td>' +
                         '<td>' + formatNumber(quantity) + '</td>' +
                         '<td>' + formatCurrency(purchasePrice) + '</td>' +
-                        '<td>' + formatCurrency(item.lastClosePrice) + '</td>' +
-                        '<td class="' + amountBg + '">' + formatCurrency(item.amountChange) + '</td>' +
-                        '<td class="' + percentBg + '">' + formatPercent(item.percentChange) + '</td>' +
-                        '<td class="' + myChangeBg + '">' + formatSignedCurrency(item.myChangeAmount) + '</td>' +
-                        '<td>' + formatCurrency(totalPurchaseAmount) + '</td>' +
-                        '<td>' + formatCurrency(stockValuation) + '</td>' +
-                        '<td>' + (item.increaseDays || 0) + '</td>' +
-                        '<td>' + (item.decreaseDays || 0) + '</td>' +
-                        '<td class="' + livePriceBg + ' font-weight-bold">' + formatCurrency(livePrice) + '</td>' +
-                        '<td class="' + liveChangeBg + ' font-weight-bold">' + formatSignedCurrency(liveChangeAmount) + '</td>' +
-                        '<td class="' + liveChangeBg + ' font-weight-bold">' + formatSignedPercent(liveChangePercent) + '</td>' +
+                        '<td>' + (isApiMissing ? '--' : formatCurrency(item.lastClosePrice)) + '</td>' +
+                        '<td class="' + amountBg + '">' + (isApiMissing ? '--' : formatCurrency(item.amountChange)) + '</td>' +
+                        '<td class="' + percentBg + '">' + (isApiMissing ? '--' : formatPercent(item.percentChange)) + '</td>' +
+                        '<td class="' + myChangeBg + '">' + (isApiMissing ? '--' : formatSignedCurrency(item.myChangeAmount)) + '</td>' +
+                        '<td>' + (isApiMissing ? '--' : formatCurrency(totalPurchaseAmount)) + '</td>' +
+                        '<td>' + (isApiMissing ? '--' : formatCurrency(stockValuation)) + '</td>' +
+                        '<td>' + (isApiMissing ? '--' : (item.increaseDays || 0)) + '</td>' +
+                        '<td>' + (isApiMissing ? '--' : (item.decreaseDays || 0)) + '</td>' +
+                        '<td class="stock-update-column"><button type="button" class="stock-update-btn" data-index="' + index + '" title="Update stock" aria-label="Update stock">&#8942;</button></td>' +
                         '</tr>';
                 });
 
@@ -424,11 +612,30 @@
                         openStockDetailPopup(stock);
                     }
                 });
+
+                $('.stock-update-btn').off('click').on('click', function () {
+                    var idx = parseInt($(this).attr('data-index'), 10);
+                    var stock = cachedStockList[idx];
+                    if (stock) openStockUpdatePopup(stock);
+                });
             },
             error: function () {
                 $('#purchaseStockTable tbody').html('<tr><td colspan="18" class="text-center text-danger">Error loading data.</td></tr>');
             }
         });
+    }
+
+    function openStockUpdatePopup(item) {
+        currentUpdateStock = item;
+        $('#updateStockName').val(item.stockName || '');
+        $('#updateStockExchange').val((item.exchangeCode || item.exchange || 'NSE').toUpperCase());
+        $('#updateStockStatus').val(String(item.status || '1'));
+
+        if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+            bootstrap.Modal.getOrCreateInstance(document.getElementById('stockUpdateModal')).show();
+        } else {
+            $('#stockUpdateModal').modal('show');
+        }
     }
 
     function openStockDetailPopup(item) {
@@ -615,6 +822,22 @@
     function formatNumber(value) {
         var num = parseFloat(value || 0);
         return isNaN(num) ? '0' : num.toLocaleString('en-IN');
+    }
+
+    function formatDaysOrPlaceholder(value) {
+        return String(value) === '--' ? '--' : (value || 0) + ' days';
+    }
+
+    function formatStatusLabel(value) {
+        var statusLabels = {
+            '1': 'New',
+            '2': 'Working',
+            '3': 'Partial Data',
+            '4': 'API Missing',
+            '5': 'No Tracking'
+        };
+        var normalizedStatus = String(value || '1');
+        return statusLabels[normalizedStatus] || 'New';
     }
 
     function escapeHtml(value) {

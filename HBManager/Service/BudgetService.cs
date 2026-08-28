@@ -233,6 +233,69 @@ namespace HBManager.Service
             }
         }
 
+        public int MoveBudgetToMonthIn(MoveBudgetToMonthInModel model)
+        {
+            using (var conn = new SqlConnection(_connString))
+            {
+                conn.Open();
+                using (var transaction = conn.BeginTransaction())
+                {
+                    try
+                    {
+                        int year;
+                        int month;
+                        using (var budgetCommand = new SqlCommand(
+                            "SELECT [Year], [Month] FROM dbo.Budget WHERE Id = @BudgetId AND Amount <> 0", conn, transaction))
+                        {
+                            budgetCommand.Parameters.AddWithValue("@BudgetId", model.BudgetId);
+                            using (var reader = budgetCommand.ExecuteReader())
+                            {
+                                if (!reader.Read())
+                                {
+                                    return 0;
+                                }
+
+                                year = Convert.ToInt32(reader["Year"]);
+                                month = Convert.ToInt32(reader["Month"]);
+                            }
+                        }
+
+                        using (var updateCommand = new SqlCommand(
+                            "UPDATE dbo.Budget SET Amount = 0 WHERE Id = @BudgetId", conn, transaction))
+                        {
+                            updateCommand.Parameters.AddWithValue("@BudgetId", model.BudgetId);
+                            if (updateCommand.ExecuteNonQuery() != 1)
+                            {
+                                transaction.Rollback();
+                                return 0;
+                            }
+                        }
+
+                        using (var insertCommand = new SqlCommand(
+                            "INSERT INTO dbo.tblMonthIn (DateIn, AmountIn, DetailsIn, YearIn, MonthIn, ReferenceId) " +
+                            "VALUES (@DateIn, @AmountIn, @DetailsIn, @YearIn, @MonthIn, @ReferenceId)", conn, transaction))
+                        {
+                            insertCommand.Parameters.AddWithValue("@DateIn", (object)model.DateIn ?? DBNull.Value);
+                            insertCommand.Parameters.AddWithValue("@AmountIn", model.AmountIn);
+                            insertCommand.Parameters.AddWithValue("@DetailsIn", (object)model.DetailsIn ?? DBNull.Value);
+                            insertCommand.Parameters.AddWithValue("@YearIn", year);
+                            insertCommand.Parameters.AddWithValue("@MonthIn", month);
+                            insertCommand.Parameters.AddWithValue("@ReferenceId", model.BudgetId);
+                            insertCommand.ExecuteNonQuery();
+                        }
+
+                        transaction.Commit();
+                        return 1;
+                    }
+                    catch
+                    {
+                        transaction.Rollback();
+                        throw;
+                    }
+                }
+            }
+        }
+
         public List<WasteTracker> GetWasteTrackerByBudgetMonth(int year, int month)
         {
             var list = new List<WasteTracker>();

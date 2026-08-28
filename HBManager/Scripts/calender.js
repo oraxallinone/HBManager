@@ -100,7 +100,7 @@
             g3: g3,
             g4: g4
         }
-
+        
         $.ajax({
             type: "POST",
             url: '/Calender/GetDataForCalender',
@@ -108,16 +108,24 @@
             contentType: "application/json; charset=utf-8",
             data: JSON.stringify(CalenderBudgetModelIn),
             success: function (result) {
+                debugger
                 //Main calender function execute form here
-                const today = new Date(result.calenderDate[0].toDate);//last day of this month
+                //const today = new Date(result.calenderDate[0].toDate);//last day of this month
+                const today = result.calenderDate[0].toDate.split(' ')[0].split('-').reverse().join('-');
 
-                const monthStart = new Date(result.calenderDate[0].fromDate);
-                const monthEnd = new Date(result.calenderDate[0].toDate);
+                //const monthStart = new Date(result.calenderDate[0].fromDate);
+                //const monthEnd = new Date(result.calenderDate[0].toDate);
+                const monthStart = result.calenderDate[0].fromDate.split(' ')[0].split('-').reverse().join('-');
+                const monthEnd = result.calenderDate[0].toDate.split(' ')[0].split('-').reverse().join('-');
 
-                const fromMonth = monthStart.getMonth();
-                const fromYear = monthStart.getFullYear();
-                const toMonth = monthEnd.getMonth();
-                const toYear = monthEnd.getFullYear();
+                //const fromMonth = monthStart.getMonth();
+                //const fromYear = monthStart.getFullYear();
+                //const toMonth = monthEnd.getMonth();
+                //const toYear = monthEnd.getFullYear();
+                const fromMonth = new Date(monthStart).getMonth();
+                const fromYear = new Date(monthStart).getFullYear();
+                const toMonth = new Date(monthEnd).getMonth();
+                const toYear = new Date(monthEnd).getFullYear();
 
                 function stripTime(dateTimeStr) {
                     return dateTimeStr.split(" ")[0];

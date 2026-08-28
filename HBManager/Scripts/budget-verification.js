@@ -33,22 +33,28 @@
         const d = new Date(parseInt(match[1], 10));
         if (isNaN(d)) return '';
 
-        // Format as yyyy-MM-dd
+        // Format as yyyy-MM-dd HH:mm:ss
         const year = d.getFullYear();
         const month = String(d.getMonth() + 1).padStart(2, '0');
         const day = String(d.getDate()).padStart(2, '0');
+        const hours = String(d.getHours()).padStart(2, '0');
+        const minutes = String(d.getMinutes()).padStart(2, '0');
+        const seconds = String(d.getSeconds()).padStart(2, '0');
 
-        return `${year}-${month}-${day}`;
+        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
     }
 
     function formatDateForInput(dateStr) {
         if (!dateStr) return '';
-        const d = new Date(dateStr);
+        const match = /\/Date\((\d+)\)\//.exec(dateStr);
+        const d = match ? new Date(parseInt(match[1], 10)) : new Date(dateStr.replace(' ', 'T'));
         if (isNaN(d)) return '';
         const yyyy = d.getFullYear();
         const mm = String(d.getMonth() + 1).padStart(2, '0');
         const dd = String(d.getDate()).padStart(2, '0');
-        return `${yyyy}-${mm}-${dd}`;
+        const hours = String(d.getHours()).padStart(2, '0');
+        const minutes = String(d.getMinutes()).padStart(2, '0');
+        return `${yyyy}-${mm}-${dd}T${hours}:${minutes}`;
     }
 
     function loadData() {
@@ -238,10 +244,11 @@
         var amount = $tr.find('td').eq(1).text().replace(/,/g, '').trim();
         var details = $tr.find('td').eq(2).text().trim();
 
-        $tr.find('td').eq(0).html(`<input type="date" class="form-control form-control-sm edit-date" value="${formatDateForInput(date)}" />`);
+        $tr.find('td').eq(0).html(`<input type="datetime-local" class="form-control form-control-sm edit-date" value="${formatDateForInput(date)}" />`);
         $tr.find('td').eq(1).html(`<input type="number" step="0.01" class="form-control form-control-sm edit-amount" value="${amount}" />`);
         $tr.find('td').eq(2).html(`<input type="text" class="form-control form-control-sm edit-details" value="${details}" />`);
         $btn.removeClass('edit-in btn-primary').addClass('save-in btn-success btn-xs').html('<i class="fa fa-floppy-disk"></i>').attr('title', 'Save').css({ 'padding': '2px 8px', 'font-size': '11px' });
+        $tr.find('.delete-in').hide();
         $btn.after(`<button class="btn btn-secondary btn-xs cancel-edit" style="margin-left:5px;padding:2px 8px;font-size:11px;" title="Cancel"><i class="fa fa-xmark"></i></button>`);
     });
 
@@ -274,10 +281,11 @@
         var amount = $tr.find('td').eq(1).text().replace(/,/g, '').trim();
         var details = $tr.find('td').eq(2).text().trim();
 
-        $tr.find('td').eq(0).html(`<input type="date" class="form-control form-control-sm edit-date" value="${formatDateForInput(date)}" />`);
+        $tr.find('td').eq(0).html(`<input type="datetime-local" class="form-control form-control-sm edit-date" value="${formatDateForInput(date)}" />`);
         $tr.find('td').eq(1).html(`<input type="number" step="0.01" class="form-control form-control-sm edit-amount" value="${amount}" />`);
         $tr.find('td').eq(2).html(`<input type="text" class="form-control form-control-sm edit-details" value="${details}" />`);
         $btn.removeClass('edit-now btn-primary').addClass('save-now btn-success btn-xs').html('<i class="fa fa-floppy-disk"></i>').attr('title', 'Save').css({ 'padding': '2px 8px', 'font-size': '11px' });
+        $tr.find('.delete-now').hide();
         $btn.after(`<button class="btn btn-secondary btn-xs cancel-edit" style="margin-left:5px;padding:2px 8px;font-size:11px;" title="Cancel"><i class="fa fa-xmark"></i></button>`);
     });
 

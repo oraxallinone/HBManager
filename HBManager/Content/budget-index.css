@@ -46,20 +46,21 @@
         white-space: nowrap;
     }
 
-    .budget-waste-summary {
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-        gap: 10px;
-        min-height: 38px;
-        padding: 0 12px;
-        color: #fff;
-        background: linear-gradient(135deg, #1769a3, #159aa6);
-        border: 1px solid rgba(255, 255, 255, .75);
-        border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(24, 52, 79, .2);
-        white-space: nowrap;
-    }
+.budget-waste-summary {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    min-height: 34px;
+    padding: 0 12px;
+    color: #fff;
+    background: linear-gradient(135deg, #1769a3, #159aa6);
+    border: 1px solid rgba(255, 255, 255, .75);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(24, 52, 79, .2);
+    white-space: nowrap;
+    margin-top: -1.7%;
+}
 
     .budget-waste-summary-label {
         font-size: 12px;
@@ -583,6 +584,27 @@
 .waste-budget-cell {
     color: #b628ce;
     font-weight: 700;
+}
+
+#gridTableBudget tbody tr.dynamic-bg-tr,
+#gridTableBudget tbody tr.dynamic-bg-tr > td {
+    color: white !important;
+    background: #03a9f4 !important;
+}
+
+#gridTableBudget tbody tr.dynamic-bg-tr .div-bank,
+#gridTableBudget tbody tr.dynamic-bg-tr .div-g1-c6,
+#gridTableBudget tbody tr.dynamic-bg-tr .div-g1-c7,
+#gridTableBudget tbody tr.dynamic-bg-tr .div-g1-c8,
+#gridTableBudget tbody tr.dynamic-bg-tr .div-g1-c10,
+#gridTableBudget tbody tr.dynamic-bg-tr .div-g1-c11,
+#gridTableBudget tbody tr.dynamic-bg-tr .div-g1-c12,
+#gridTableBudget tbody tr.dynamic-bg-tr .div-g2-c2,
+#gridTableBudget tbody tr.dynamic-bg-tr .div-g2-c3,
+#gridTableBudget tbody tr.dynamic-bg-tr .div-g2-c4,
+#gridTableBudget tbody tr.dynamic-bg-tr .div-g3,
+#gridTableBudget tbody tr.dynamic-bg-tr .div-g4-c5 {
+    color: inherit;
 }
 
 .waste-tracker-modal {

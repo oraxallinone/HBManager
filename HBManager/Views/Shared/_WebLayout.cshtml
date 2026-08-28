@@ -151,7 +151,7 @@
         var dashActive = dashIs ? "active" : "";
         var dashDashboardActive = (curController == "Default" && curAction == "Dashboard") ? "active" : "";
         var dashBudgetVerificationActive = (curController == "Budget" && curAction == "BudgetVerification") ? "active" : "";
-        var dashBudgetMobileActive = (curController == "Budget" && curAction == "BudgeMobileIndex") ? "active" : "";
+        //var dashBudgetMobileActive = (curController == "Budget" && curAction == "BudgeMobileIndex") ? "active" : "";
         var dashBudgetGroupingActive = (curController == "BudgetGrouping" && curAction == "BudgetGroupingIndex") ? "active" : "";
         var dashBudgetIndexActive = (curController == "Budget" && curAction == "BudgetIndex") ? "active" : "";
         var dashImportByQueryActive = (curController == "Import" && curAction == "ImportInitiate") ? "active" : "";
@@ -276,11 +276,11 @@
                         <li class="nav-item @dashOpen">
                             <a href="#" class="nav-link @dashActive">
                                 <i class="nav-icon bi bi-speedometer"></i>
-                                <p style="color:red;"> Dashboard <i class="nav-arrow bi bi-chevron-right"></i> </p>
+                                <p style="color: #f1c454; font-family: Calibri, 'Candara', 'Segoe UI', Optima, Arial, sans-serif; font-size: 15px !important; font-weight: 600; "> Dashboard <i class="nav-arrow bi bi-chevron-right"></i> </p>
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item"> <a href="@Url.Action("BudgetVerification", "Budget")" class="nav-link @dashBudgetVerificationActive"> <i class="nav-icon bi bi-shield-check"></i> <p>Budget Verification</p> </a> </li>
-                                <li class="nav-item"> <a href="@Url.Action("BudgeMobileIndex", "Budget")" class="nav-link @dashBudgetMobileActive"> <i class="nav-icon bi bi-phone"></i> <p>Budget Mobile</p> </a> </li>
+                                @*<li class="nav-item"> <a href="@Url.Action("BudgeMobileIndex", "Budget")" class="nav-link @dashBudgetMobileActive"> <i class="nav-icon bi bi-phone"></i> <p>Budget Mobile</p> </a> </li>*@
                                 <li class="nav-item"> <a href="@Url.Action("Dashboard", "Default")" class="nav-link @dashDashboardActive"> <i class="nav-icon bi bi-house-door"></i> <p>Dashboard</p> </a> </li>
                                 <li class="nav-item"> <a href="@Url.Action("BudgetGroupingIndex", "BudgetGrouping")" class="nav-link @dashBudgetGroupingActive"> <i class="nav-icon bi bi-diagram-3"></i> <p>Grouping</p> </a> </li>
                                 <li class="nav-item"> <a href="@Url.Action("BudgetIndex", "Budget")" class="nav-link @dashBudgetIndexActive"> <i class="nav-icon bi bi-cash-coin"></i> <p>Final</p> </a> </li>
@@ -292,7 +292,7 @@
                         <li class="nav-item @featureOpen">
                             <a href="#" class="nav-link @featureActive">
                                 <i class="nav-icon bi bi-stars"></i>
-                                <p style="color:red;"> Feature <i class="nav-arrow bi bi-chevron-right"></i> </p>
+                                <p style="color: #a64468; font-family: Calibri, 'Candara', 'Segoe UI', Optima, Arial, sans-serif; font-size: 15px !important; font-weight: 600; "> Feature <i class="nav-arrow bi bi-chevron-right"></i> </p>
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item"> <a href="@Url.Action("BarChart", "Default")" class="nav-link @featureBarChartActive"> <i class="nav-icon bi bi-bar-chart-line"></i> <p>Bar Graph</p> </a> </li>
@@ -309,7 +309,7 @@
                         <li class="nav-item @investmentOpen">
                             <a href="#" class="nav-link @investmentActive">
                                 <i class="nav-icon bi bi-graph-up-arrow"></i>
-                                <p style="color:red;"> Investment <i class="nav-arrow bi bi-chevron-right"></i> </p>
+                                <p style="color: #ff7878; font-family: Calibri, 'Candara', 'Segoe UI', Optima, Arial, sans-serif; font-size: 15px !important; font-weight: 600; "> Investment <i class="nav-arrow bi bi-chevron-right"></i> </p>
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item"> <a href="@Url.Action("StockCandle", "Default")" class="nav-link @investmentStockCandleActive"> <i class="nav-icon bi bi-graph-up-arrow"></i> <p>NSE Stock</p> </a> </li>
@@ -325,7 +325,7 @@
                         <li class="nav-item @masterOpen">
                             <a href="#" class="nav-link @masterActive">
                                 <i class="nav-icon bi bi-box-seam-fill"></i>
-                                <p style="color:red;"> Master <i class="nav-arrow bi bi-chevron-right"></i> </p>
+                                <p style="color: #a6ad85; font-family: Calibri, 'Candara', 'Segoe UI', Optima, Arial, sans-serif; font-size: 15px !important; font-weight: 600; "> Master <i class="nav-arrow bi bi-chevron-right"></i> </p>
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item"> <a href="@Url.Action("SalaryIndex", "Salary")" class="nav-link @masterSalaryActive"> <i class="nav-icon bi bi-currency-dollar"></i> <p>Salary</p> </a> </li>

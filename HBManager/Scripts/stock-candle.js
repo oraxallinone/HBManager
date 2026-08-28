@@ -12,15 +12,15 @@
         return isoDate + ' (' + dayName + ')';
     }
 
-    function normalizeSymbol(raw) {
+    function normalizeSymbol(raw, exchange) {
         var value = (raw || '').trim();
         if (!value) {
             return '';
         }
 
         value = value.toUpperCase();
-        if (!value.endsWith('.NS')) {
-            value += '.NS';
+        if (!value.endsWith('.NS') && !value.endsWith('.BO')) {
+            value += exchange === 'BSE' ? '.BO' : '.NS';
         }
 
         return value;
@@ -88,7 +88,7 @@
         var chart = new ApexCharts(document.querySelector('#stockChartContainer'), {
             chart: {
                 type: 'candlestick',
-                height: 420,
+                height: 540,
                 background: '#f8f9fb',
                 toolbar: {
                     show: true
@@ -185,8 +185,13 @@
         });
 
         var rows = '';
-        Object.keys(monthlyGroups).forEach(function (monthKey) {
+        Object.keys(monthlyGroups).sort(function (firstKey, secondKey) {
+            return secondKey.localeCompare(firstKey);
+        }).forEach(function (monthKey) {
             var group = monthlyGroups[monthKey];
+            group.candles.sort(function (first, second) {
+                return new Date(second.date) - new Date(first.date);
+            });
             var monthHeaderRow = '<tr style="background:#e8f0f7; font-weight:bold; border-top:2px solid #1d78b4;"><td colspan="9" style="padding:8px; color:#1a3f5f;">' + group.monthLabel + '</td></tr>';
             rows += monthHeaderRow;
 
@@ -231,7 +236,7 @@
 
         candles.forEach(function (c) {
             var date = new Date(c.date + 'T00:00:00');
-            var monthKey = date.getFullYear() + '-' + (date.getMonth() + 1);
+            var monthKey = date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0');
             var monthLabel = date.toLocaleString('en-US', { month: 'short', year: 'numeric' });
 
             if (!monthlyMap[monthKey]) {
@@ -278,7 +283,7 @@
                 };
             })
             .sort(function (a, b) {
-                return new Date(a.monthKey + '-01T00:00:00') - new Date(b.monthKey + '-01T00:00:00');
+                return b.monthKey.localeCompare(a.monthKey);
             });
     }
 
@@ -289,7 +294,7 @@
         }
 
         var monthlySummary = buildMonthlySummary(candles);
-        var lastSixMonths = monthlySummary.slice(Math.max(0, monthlySummary.length - 6));
+        var lastSixMonths = monthlySummary.slice(0, 9);
         var lastSixCount = lastSixMonths.length;
 
         var lastSixAmountChange = lastSixMonths.reduce(function (sum, item) {
@@ -331,7 +336,7 @@
             '</table>' +
             '</div>' +
             '<div style="margin-top:14px; border-top:1px solid #dfe6ee; padding-top:12px;">' +
-            '<div style="font-size:16px; font-weight:600; color:#1a3f5f; margin-bottom:8px;">Last ' + lastSixCount + ' Month Summary</div>' +
+            '<div style="font-size:16px; font-weight:600; color:#1a3f5f; margin-bottom:8px;">Last 9 Month Summary</div>' +
             '<div class="row" style="margin:0;">' +
             '<div class="col-md-3" style="padding:6px 8px;"><div style="border:1px solid #dfe6ee; background:#f9fbfd; padding:8px 10px; border-radius:4px;"><div style="font-size:11px; color:#666;">Amount Change</div><div style="font-size:15px; font-weight:700; color:' + (lastSixAmountChange >= 0 ? '#1e7e34' : '#d32f2f') + ';">' + Number(lastSixAmountChange).toFixed(2) + '</div></div></div>' +
             '<div class="col-md-3" style="padding:6px 8px;"><div style="border:1px solid #dfe6ee; background:#f9fbfd; padding:8px 10px; border-radius:4px;"><div style="font-size:11px; color:#666;">% Change</div><div style="font-size:15px; font-weight:700; color:' + (lastSixPercentChange >= 0 ? '#1e7e34' : '#d32f2f') + ';">' + Number(lastSixPercentChange).toFixed(2) + '%</div></div></div>' +
@@ -746,7 +751,8 @@
     }
 
     function loadStockData(symbol) {
-        var normalized = normalizeSymbol(symbol);
+        var selectedExchange = $('#stockExchange').val() || 'NSE';
+        var normalized = normalizeSymbol(symbol, selectedExchange);
         if (!normalized) {
             $('#stockChartContainer').html('<div style="padding:20px;color:#c00;">Please enter a stock symbol.</div>');
             $('#stockTable tbody').html('<tr><td colspan="6" class="text-center text-muted">Please enter a stock symbol.</td></tr>');
@@ -758,7 +764,10 @@
         $.ajax({
             url: '/Default/GetNseStockCandles',
             type: 'POST',
-            data: { stockSymbol: normalized.replace('.NS', '') },
+            data: {
+                stockSymbol: normalized.replace('.NS', '').replace('.BO', ''),
+                stockExchange: selectedExchange
+            },
             dataType: 'json',
             success: function (response) {
                 if (!response || !response.success) {
@@ -782,13 +791,6 @@
                     $('#technicalDataContainer').html('<div style="color:#c00;">Error calculating technical data: ' + e.message + '</div>');
                 }
 
-                // Render fundamental data
-                try {
-                    renderFundamentalData(response.symbol);
-                } catch (e) {
-                    console.error('Error rendering fundamental data:', e);
-                    $('#fundamentalDataContainer').html('<div style="color:#c00;">Error loading fundamental data: ' + e.message + '</div>');
-                }
             },
             error: function (xhr) {
                 console.error(xhr.responseText || xhr.statusText);

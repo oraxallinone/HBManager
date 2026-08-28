@@ -17,6 +17,7 @@
                                 <div class="floating-label-group">
                                     <select class="form-control form-control-sm" id="ddlYear">
                                         <option value="0">--Year--</option>
+                                        <option value="2024">2024</option>
                                         <option value="2025">2025</option>
                                         <option value="2026">2026</option>
                                         <option value="2027">2027</option>
@@ -43,44 +44,9 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-1">
-                                @*<div class="floating-label-group">
-                                        <select class="form-control form-control-sm" id="searchDDlG11">
-                                            <option value="0">-- G1 --</option>
-                                            <option>2025</option>
-                                            <option>2026</option>
-                                        </select>
-                                    </div>*@
-                            </div>
+                            <div class="col-md-7">
 
-                            <div class="col-md-2">
-                                @*<div class="floating-label-group">
-                                        <select id="searchDDlG21" class="form-control form-control-sm">
-                                            <option value="0">-- G2 --</option>
-                                            <option>2025</option>
-                                            <option>2026</option>
-                                        </select>
-                                    </div>*@
                             </div>
-                            <div class="col-md-2">
-                                @*<div class="floating-label-group">
-                                        <select id="searchDDlG31" class="form-control form-control-sm">
-                                            <option value="0">-- G3 --</option>
-                                            <option>2025</option>
-                                            <option>2026</option>
-                                        </select>
-                                    </div>*@
-                            </div>
-                            <div class="col-md-2">
-                                @*<div class="floating-label-group">
-                                        <select id="searchDDlG41" class="form-control form-control-sm">
-                                            <option value="0">-- G4 --</option>
-                                            <option>2025</option>
-                                            <option>2026</option>
-                                        </select>
-                                    </div>*@
-                            </div>
-
                             <div class="col-md-2 budget-waste-summary">
                                 <span class="budget-waste-summary-label">Waste total</span>
                                 <strong id="tdWasteTotal">0</strong>
@@ -121,8 +87,8 @@
                     <div class="card-footer" style="text-align:right">
                         <div class="row">
                             <!-- Section 1 fixed for all-->
-                            <div class="col-md-6">
-                                <div class="row g-1" >
+                            <div class="col-md-12">
+                                <div class="row g-1">
 
                                     <div class="col-12">
                                         <div class="p-0 border rounded " style="color: white; font-weight: 900;background-color:#0761a5c7 !important">
@@ -161,7 +127,7 @@
                             </div>
 
                             <!-- Section 2 for ddl chagne idividual-->
-                            <div class="col-md-6 ">
+                            @*<div class="col-md-6 ">
                                 <div class="row g-1">
 
                                     <div class="col-12">
@@ -186,7 +152,7 @@
                                     </div>
                                 </div>
 
-                            </div>
+                            </div>*@
 
                         </div>
                     </div>
@@ -210,9 +176,12 @@
                 <input type="hidden" id="wasteTrackerId" />
                 <input type="hidden" id="wasteReferenceId" />
                 <dl class="row mb-3">
-                    <dt class="col-sm-4">Date and time</dt><dd class="col-sm-8" id="wasteBudgetDate"></dd>
-                    <dt class="col-sm-4">Amount</dt><dd class="col-sm-8" id="wasteBudgetAmount"></dd>
-                    <dt class="col-sm-4">Details</dt><dd class="col-sm-8" id="wasteBudgetDetails"></dd>
+                    <dt class="col-sm-4">Date and time</dt>
+                    <dd class="col-sm-8" id="wasteBudgetDate"></dd>
+                    <dt class="col-sm-4">Amount</dt>
+                    <dd class="col-sm-8" id="wasteBudgetAmount"></dd>
+                    <dt class="col-sm-4">Details</dt>
+                    <dd class="col-sm-8" id="wasteBudgetDetails"></dd>
                 </dl>
                 <label for="wasteAmount">Waste amount</label>
                 <input type="number" min="0" step="0.01" class="form-control" id="wasteAmount" />
@@ -228,5 +197,6 @@
     </div>
 </div>
 
+<script src="~/Scripts/year-month-filter.js?v=20260827"></script>
 <script src="~/Scripts/budget.js?v=2026082503"></script>
 

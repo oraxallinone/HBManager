@@ -188,16 +188,16 @@
                                             <table class="table m-1" id="tblMin" style="width: 99%;">
                                                 <thead>
                                                     <tr>
-                                                        <th style="width: 30%;">Date</th>
-                                                        <th style="width: 20%;">Amt</th>
-                                                        <th style="width: 35%;">Details</th>
+                                                        <th style="width: 24%;">Date</th>
+                                                        <th style="width: 13%;">Amt</th>
+                                                        <th style="width: 48%;">Details</th>
                                                         <th style="width: 15%;">Actions</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody></tbody>
                                                 <tfoot>
                                                     <tr>
-                                                        <td><input type="date" id="inDateAdd" class="form-control form-control-sm" /></td>
+                                                        <td><input type="datetime-local" id="inDateAdd" class="form-control form-control-sm" /></td>
                                                         <td><input type="number" step="0.01" id="inAmountAdd" class="form-control form-control-sm" /></td>
                                                         <td><input type="text" id="inDetailsAdd" class="form-control form-control-sm" /></td>
                                                         <td><button id="addInBtn" class="btn btn-sm btn-success" style="width: 100%; ">Add</button></td>
@@ -219,16 +219,16 @@
                                             <table class="table m-0" id="tblMnow">
                                                 <thead>
                                                     <tr>
-                                                        <th style="width: 30%;">Date</th>
-                                                        <th style="width: 20%;">Amt</th>
-                                                        <th style="width: 35%;">Details</th>
+                                                        <th style="width: 24%;">Date</th>
+                                                        <th style="width: 13%;">Amt</th>
+                                                        <th style="width: 48%;">Details</th>
                                                         <th style="width: 15%;">Actions</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody></tbody>
                                                 <tfoot>
                                                     <tr>
-                                                        <td><input type="date" id="nowDateAdd" class="form-control form-control-sm" /></td>
+                                                        <td><input type="datetime-local" id="nowDateAdd" class="form-control form-control-sm" /></td>
                                                         <td><input type="number" step="0.01" id="nowAmountAdd" class="form-control form-control-sm" /></td>
                                                         <td><input type="text" id="nowDetailsAdd" class="form-control form-control-sm" /></td>
                                                         <td><button id="addNowBtn" class="btn btn-sm btn-success" style="width: 100%; ">Add</button></td>
@@ -255,4 +255,5 @@
 
 
 
+<script src="~/Scripts/year-month-filter.js?v=20260827"></script>
 <script src="~/Scripts/budget-verification.js"></script>

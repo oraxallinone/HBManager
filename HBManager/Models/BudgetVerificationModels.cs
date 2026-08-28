@@ -13,6 +13,14 @@ namespace HBManager.Models
         public int MonthIn { get; set; }
     }
 
+    public class MoveBudgetToMonthInModel
+    {
+        public int BudgetId { get; set; }
+        public DateTime? DateIn { get; set; }
+        public decimal AmountIn { get; set; }
+        public string DetailsIn { get; set; }
+    }
+
     public class BudgetVerificationOutModel
     {
         public decimal AmountOut { get; set; }

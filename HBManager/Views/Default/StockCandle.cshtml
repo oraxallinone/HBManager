@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "NSE Stock Candle";
+    ViewBag.Title = "NSE/BSE Stock Candle";
     Layout = "~/Views/Shared/_WebLayout.cshtml";
 }
 
@@ -11,8 +11,15 @@
                     <div class="card-body">
                         <form id="stockForm" class="row g-3 align-items-end">
                             <div class="col-md-4">
-                                <label for="txtStockSymbol" class="form-label">NSE Stock Symbol</label>
+                                <label for="txtStockSymbol" class="form-label">NSE/BSE Stock Symbol</label>
                                 <input id="txtStockSymbol" type="text" class="form-control" value="RELIANCE" placeholder="Enter stock name or symbol, e.g. RELIANCE, INFY" required />
+                            </div>
+                            <div class="col-md-2">
+                                <label for="stockExchange" class="form-label">Exchange</label>
+                                <select id="stockExchange" class="form-select">
+                                    <option value="NSE">NSE</option>
+                                    <option value="BSE">BSE</option>
+                                </select>
                             </div>
                             <div class="col-md-2">
                                 <button type="submit" class="btn btn-primary w-100">Submit</button>
@@ -34,7 +41,7 @@
             <div class="col-md-12">
                 <div class="card card-primary card-outline">
                     <div class="card-body" style="padding: 12px;">
-                        <div id="stockChartContainer" style="height: 380px; width: 100%; overflow-x: auto;"></div>
+                        <div id="stockChartContainer" style="height: 560px; width: 100%; overflow-x: auto;"></div>
                     </div>
                 </div>
             </div>
@@ -47,20 +54,6 @@
                     </div>
                     <div class="card-body">
                         <div id="technicalDataContainer">
-                            <div class="text-center text-muted">No data loaded yet.</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Fundamental Data Section -->
-            <div class="col-md-12">
-                <div class="card card-success card-outline">
-                    <div class="card-header">
-                        <h3 class="card-title">Fundamental Data</h3>
-                    </div>
-                    <div class="card-body">
-                        <div id="fundamentalDataContainer">
                             <div class="text-center text-muted">No data loaded yet.</div>
                         </div>
                     </div>

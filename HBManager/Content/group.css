@@ -5,7 +5,210 @@
 .custom-tbl {
     font-size: 13px;
     font-family: 'Times New Roman';
-    width:100% !important;
+    width: 100% !important;
+    border-collapse: separate;
+    border-spacing: 0;
+    overflow: hidden;
+    border: 1px solid rgba(169, 143, 91, .3);
+    border-radius: 16px;
+    background: rgba(255, 255, 255, .72);
+    box-shadow: 0 18px 45px rgba(111, 91, 55, .14), inset 0 1px 0 rgba(255, 255, 255, .9);
+    backdrop-filter: blur(14px) saturate(110%);
+}
+
+#gridTableGroup thead tr:first-child th {
+    position: sticky;
+    top: 0;
+    z-index: 8;
+    height: 42px;
+    padding: 10px 8px;
+    color: #fffaf0;
+    background: linear-gradient(135deg, #176b73, #2a9d8f) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, .55);
+    text-align: center;
+    white-space: nowrap;
+    text-shadow: 0 1px 2px rgba(54, 39, 20, .35);
+}
+
+#gridTableGroup thead tr.filter-row th {
+    position: sticky;
+    top: 42px;
+    z-index: 7;
+    padding: 6px;
+    background: rgba(255, 250, 239, .96) !important;
+    border-bottom: 1px solid rgba(169, 143, 91, .25);
+}
+
+#gridTableGroup thead .column-search {
+    height: 30px;
+    border: 1px solid rgba(169, 143, 91, .32);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, .78);
+    color: #604b2d;
+}
+
+#gridTableGroup tbody tr {
+    background: rgba(255, 255, 255, .55);
+    transition: background-color .18s ease, box-shadow .18s ease;
+}
+
+#gridTableGroup tbody tr:nth-child(even) {
+    background: rgba(255, 248, 232, .68);
+}
+
+#gridTableGroup tbody tr:hover {
+    background: rgba(255, 238, 190, .82) !important;
+    box-shadow: inset 0 0 0 1px rgba(169, 143, 91, .2);
+}
+
+#gridTableGroup tbody td {
+    border-color: rgba(169, 143, 91, .18);
+    color: #473a28;
+    background-clip: padding-box;
+}
+
+#gridTableGroup tbody td:last-child {
+    white-space: nowrap;
+    text-align: center;
+}
+
+/* DataTables controls: premium ivory glass treatment. */
+.dataTables_wrapper {
+    padding: 18px 10px 12px;
+    color: #554532;
+    font-family: 'Segoe UI', Calibri, Arial, sans-serif;
+}
+
+.dataTables_wrapper .dataTables_length,
+.dataTables_wrapper .dataTables_filter {
+    display: inline-flex;
+    align-items: center;
+    min-height: 34px;
+    margin-bottom: 14px;
+    color: #6b563a;
+    font-size: 13px;
+}
+
+.dataTables_wrapper .dataTables_length { float: left; }
+.dataTables_wrapper .dataTables_filter { float: right; }
+
+.dataTables_wrapper .dataTables_filter label,
+.dataTables_wrapper .dataTables_length label {
+    display: inline-flex;
+    align-items: center;
+    margin: 0;
+    white-space: nowrap;
+}
+
+.dataTables_wrapper > .dataTables_info,
+.dataTables_wrapper > .dataTables_paginate {
+    display: inline-flex;
+    align-items: center;
+    vertical-align: middle;
+}
+
+.dataTables_wrapper > .dataTables_info {
+    float: left;
+    padding-top: 12px;
+}
+
+.dataTables_wrapper > .dataTables_paginate {
+    float: right;
+    padding-top: 8px;
+}
+
+.dataTables_wrapper::after {
+    display: block;
+    clear: both;
+    content: '';
+}
+
+.dataTables_wrapper .dataTables_length select,
+.dataTables_wrapper .dataTables_filter input {
+    min-height: 32px;
+    margin-left: 6px;
+    padding: 5px 10px;
+    border: 1px solid rgba(169, 143, 91, .38);
+    border-radius: 9px;
+    outline: none;
+    background: rgba(255, 253, 247, .86);
+    color: #4c3b25;
+    box-shadow: inset 0 1px 2px rgba(111, 91, 55, .08), 0 3px 10px rgba(111, 91, 55, .08);
+}
+
+.dataTables_wrapper .dataTables_filter input:focus,
+.dataTables_wrapper .dataTables_length select:focus {
+    border-color: #b99a63;
+    box-shadow: 0 0 0 3px rgba(185, 154, 99, .16);
+}
+
+.dataTables_wrapper .dataTables_info {
+    padding-top: 18px;
+    color: #786348;
+    font-size: 13px;
+}
+
+.dataTables_wrapper .dataTables_paginate {
+    padding-top: 12px;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+    min-width: 34px;
+    margin: 0 3px;
+    padding: 7px 10px;
+    border: 1px solid rgba(169, 143, 91, .26) !important;
+    border-radius: 8px !important;
+    background: rgba(255, 253, 247, .72) !important;
+    color: #765d37 !important;
+    box-shadow: 0 4px 10px rgba(111, 91, 55, .08);
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover,
+.dataTables_wrapper .dataTables_paginate .paginate_button.current {
+    border-color: #a88750 !important;
+    background: linear-gradient(135deg, #a88750, #c9ae78) !important;
+    color: #fffdf7 !important;
+}
+
+/* Group rows use translucent group-specific glass tints. */
+#gridTableGroup tbody tr[style*="background-color"] td {
+    background: rgba(255, 255, 255, .56) !important;
+}
+
+#gridTableGroup tbody tr.row-g1 td {
+    background: rgba(213, 221, 250, .72) !important;
+}
+
+#gridTableGroup tbody tr.row-g2 td {
+    background: rgba(249, 222, 244, .72) !important;
+}
+
+#gridTableGroup tbody tr.row-g3 td {
+    background: rgba(216, 242, 247, .72) !important;
+}
+
+#gridTableGroup tbody tr.row-g4 td {
+    background: rgba(230, 242, 207, .78) !important;
+}
+
+#gridTableGroup tbody tr.row-g1 td {
+    background: rgba(224, 236, 255, .78) !important;
+}
+
+#gridTableGroup tbody tr.row-g2 td {
+    background: rgba(255, 232, 242, .78) !important;
+}
+
+#gridTableGroup tbody tr.row-g3 td {
+    background: rgba(224, 247, 244, .8) !important;
+}
+
+#gridTableGroup tbody tr.row-g4 td {
+    background: rgba(240, 246, 218, .82) !important;
+}
+
+#gridTableGroup tbody tr td {
+    border-bottom: 1px solid rgba(169, 143, 91, .2);
 }
 
 
@@ -30,6 +233,7 @@
 }
 
 .row-g0 {
+    background: transparent;
 }
 
 
@@ -92,7 +296,7 @@
     .table-responsive {
         max-height: 62vh; /* same as current inline value; move here if preferred */
         overflow: auto;
-        background-color: orange;
+        background: transparent;
     }
 }
 
@@ -101,7 +305,7 @@
     .table-responsive {
         max-height: 62vh; /* same as current inline value; move here if preferred */
         overflow: auto;
-        background-color: green;
+        background: transparent;
     }
 }
 
@@ -110,7 +314,7 @@
     .table-responsive {
         max-height: 62vh; /* same as current inline value; move here if preferred */
         overflow: auto;
-        background-color: yellow;
+        background: transparent;
     }
 }
 
@@ -119,7 +323,7 @@
     .table-responsive {
         max-height: 62vh; /* same as current inline value; move here if preferred */
         overflow: auto;
-        background-color: blue;
+        background: transparent;
     }
 }
 
@@ -128,6 +332,116 @@
     .table-responsive {
         max-height: 70vh; /* same as current inline value; move here if preferred */
         overflow: auto;
-        flex-direction: column-reverse;
+        flex-direction: column;
     }
+}
+
+#gridTableGroup tbody td[style*="background-color"] {
+    background: rgba(255, 255, 255, .58) !important;
+}
+
+#gridTableGroup tbody tr:nth-child(even) td[style*="background-color"] {
+    background: rgba(255, 248, 232, .72) !important;
+}
+
+/* Reference palette: blush paper, cream glass, dusty blue and ink. */
+body:has(#gridTableGroup) {
+    background: #f8ebe7 !important;
+    color: #293d62;
+}
+
+body:has(#gridTableGroup) .app-main,
+body:has(#gridTableGroup) .app-content {
+    background: transparent;
+}
+
+body:has(#gridTableGroup) .card.card-outline {
+    border-top-color: #7189ad;
+    border-bottom-color: #d8c4bf;
+    background: rgba(255, 251, 247, .72);
+    box-shadow: 0 14px 34px rgba(102, 116, 146, .14);
+}
+
+body:has(#gridTableGroup) .card-body {
+    background: rgba(255, 251, 247, .42);
+}
+
+body:has(#gridTableGroup) .floating-label-group .form-control {
+    border-color: #8ca4c4;
+    background: rgba(255, 252, 249, .78);
+    color: #293d62;
+    box-shadow: inset 0 1px 2px rgba(71, 89, 121, .08);
+}
+
+body:has(#gridTableGroup) .floating-label-group label {
+    background: #f8ebe7;
+    color: #536887;
+}
+
+body:has(#gridTableGroup) .btn-info {
+    border-color: #5f789e;
+    background: #6683aa;
+    color: #fffdf9;
+}
+
+body:has(#gridTableGroup) .btn-warning {
+    border-color: #c9a36f;
+    background: #d8b887;
+    color: #3b3a43;
+}
+
+body:has(#gridTableGroup) .btn-outline-danger {
+    border-color: #b77d83;
+    color: #9d626c;
+    background: rgba(255, 251, 247, .58);
+}
+
+body:has(#gridTableGroup) .dataTables_wrapper {
+    color: #536887;
+}
+
+body:has(#gridTableGroup) .dataTables_wrapper .dataTables_length select,
+body:has(#gridTableGroup) .dataTables_wrapper .dataTables_filter input,
+body:has(#gridTableGroup) #gridTableGroup thead .column-search {
+    border-color: #c9b4ae;
+    background: rgba(255, 252, 249, .88);
+    color: #293d62;
+}
+
+body:has(#gridTableGroup) .dataTables_wrapper .dataTables_paginate .paginate_button {
+    border-color: #b5c0d1 !important;
+    background: rgba(255, 252, 249, .72) !important;
+    color: #536887 !important;
+}
+
+body:has(#gridTableGroup) .dataTables_wrapper .dataTables_paginate .paginate_button:hover,
+body:has(#gridTableGroup) .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+    border-color: #637fa8 !important;
+    background: #718bad !important;
+    color: #fffdf9 !important;
+}
+
+body:has(#gridTableGroup) #gridTableGroup thead tr:first-child th {
+    background: linear-gradient(135deg, #50698e, #7892b5) !important;
+    color: #fffaf4;
+}
+
+body:has(#gridTableGroup) #gridTableGroup thead tr.filter-row th {
+    background: rgba(255, 249, 243, .96) !important;
+}
+
+body:has(#gridTableGroup) #gridTableGroup tbody tr.row-g1 td {
+    background: rgba(220, 229, 244, .78) !important;
+}
+
+body:has(#gridTableGroup) #gridTableGroup tbody tr.row-g2 td {
+    background: rgba(248, 226, 228, .82) !important;
+}
+
+body:has(#gridTableGroup) #gridTableGroup tbody tr.row-g3 td {
+    background: rgba(221, 237, 238, .82) !important;
+}
+
+body:has(#gridTableGroup) #gridTableGroup tbody tr.row-g4 td {
+    background: rgba(246, 235, 210, .84) !important;
 }

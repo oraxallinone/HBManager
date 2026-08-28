@@ -27,6 +27,7 @@
     //var screenWidth = window.screen.width; console.log(screenWidth);
 
     $("#ddlYear").change(function () {
+        updateMonthOptions();
         if (!$('#checkForAll').is(':checked')) {
             GetAllBudgetFromToWithGroup();
         }
@@ -37,6 +38,23 @@
             GetAllBudgetFromToWithGroup();
         }
     });
+
+    function updateMonthOptions() {
+        var selectedYear = parseInt($('#ddlYear').val(), 10);
+        var selectedMonth = parseInt($('#ddlMonth').val(), 10) || 0;
+
+        $('#ddlMonth option').each(function () {
+            var month = parseInt($(this).val(), 10);
+            var shouldDisable = selectedYear === 2024 && month >= 1 && month <= 6;
+            $(this).prop('disabled', shouldDisable);
+        });
+
+        if (selectedYear === 2024 && selectedMonth >= 1 && selectedMonth <= 6) {
+            $('#ddlMonth').val('0');
+        }
+    }
+
+    updateMonthOptions();
 
     function getAllBudgetForGroupOnly() {
         var year = $("#ddlYear").val();
@@ -186,6 +204,39 @@
         $('body').append(modalHtml);
     }
 
+    if ($('#moveBudgetModal').length === 0) {
+        var moveBudgetModalHtml = `
+        <div id="moveBudgetModal" class="move-budget-modal" style="display:none;">
+            <div class="move-budget-dialog" role="dialog" aria-modal="true" aria-labelledby="moveBudgetTitle">
+                <div class="move-budget-heading">
+                    <div>
+                        <span class="move-budget-kicker">Budget transfer</span>
+                        <h2 id="moveBudgetTitle">Move to M IN</h2>
+                    </div>
+                    <button type="button" id="moveBudgetCloseBtn" class="move-budget-close" aria-label="Close">&times;</button>
+                </div>
+                <input type="hidden" id="moveBudgetId" />
+                <div class="move-budget-field">
+                    <label for="moveBudgetDate">Date and time</label>
+                    <input type="datetime-local" id="moveBudgetDate" class="form-control" />
+                </div>
+                <div class="move-budget-field">
+                    <label for="moveBudgetAmount">Amount</label>
+                    <input type="number" step="0.01" id="moveBudgetAmount" class="form-control" />
+                </div>
+                <div class="move-budget-field">
+                    <label for="moveBudgetDetails">Details</label>
+                    <input type="text" id="moveBudgetDetails" class="form-control" />
+                </div>
+                <div class="move-budget-actions">
+                    <button id="moveBudgetUpdateBtn" class="btn move-budget-update"><i class="fa-solid fa-arrow-right"></i> Update to zero</button>
+                    <button id="moveBudgetCancelBtn" class="btn move-budget-cancel">Cancel</button>
+                </div>
+            </div>
+        </div>`;
+        $('body').append(moveBudgetModalHtml);
+    }
+
     //with double click open popup
     // Inline edit for Details cell
     $(document).on('dblclick', '.doubleClick', function () {
@@ -239,6 +290,59 @@
             error: function () {
                 showMessageError();
                 $td.html($td.data('original-content'));
+            }
+        });
+    });
+
+    $(document).on('click', '.move-budget-to-month-in', function (e) {
+        e.preventDefault();
+        var $icon = $(this);
+        var budgetDate = $icon.data('date') || '';
+        $('#moveBudgetId').val($icon.data('id'));
+        $('#moveBudgetDate').val(budgetDate ? budgetDate.replace(' ', 'T').substring(0, 16) : '');
+        $('#moveBudgetAmount').val($icon.data('amount'));
+        $('#moveBudgetDetails').val($icon.data('details'));
+        $('#moveBudgetModal').fadeIn(100);
+    });
+
+    $(document).on('click', '#moveBudgetCancelBtn', function () {
+        $('#moveBudgetModal').fadeOut(100);
+    });
+
+    $(document).on('click', '#moveBudgetCloseBtn', function () {
+        $('#moveBudgetModal').fadeOut(100);
+    });
+
+    $(document).on('click', '#moveBudgetUpdateBtn', function () {
+        var model = {
+            BudgetId: parseInt($('#moveBudgetId').val(), 10),
+            DateIn: $('#moveBudgetDate').val() || null,
+            AmountIn: parseFloat($('#moveBudgetAmount').val()) || 0,
+            DetailsIn: $('#moveBudgetDetails').val()
+        };
+
+        if (!model.BudgetId || !model.DateIn || model.AmountIn < 0) {
+            alert('Please enter a valid date and amount.');
+            return;
+        }
+
+        $.ajax({
+            url: '/Budget/MoveBudgetToMonthIn',
+            type: 'POST',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(model),
+            dataType: 'json',
+            success: function (res) {
+                if (res && res.Success) {
+                    $('#moveBudgetModal').fadeOut(100);
+                    showMessage('Moved to M IN');
+                    GetAllBudgetFromToWithGroup();
+                } else {
+                    showMessageError();
+                }
+            },
+            error: function () {
+                showMessageError();
             }
         });
     });
@@ -857,7 +961,12 @@
             html += "" + IsSafeDiv + " </td>";
 
             // --- DETAILS COLUMN ---
-            html += "<td class='" + dayClass + " doubleClick' title=" + item.Id + " >" + (item.Details || "") + "</td>";
+            var details = item.Details || "";
+            var detailsAttribute = details.replace(/&/g, "&amp;").replace(/'/g, "&#39;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
+            var moveIcon = details.indexOf("<==") !== -1
+                ? " <a href='#' class='text-primary move-budget-to-month-in' data-id='" + item.Id + "' data-date='" + (item.SpendDateText || "") + "' data-amount='" + item.Amount + "' data-details='" + detailsAttribute + "' title='Move to M IN'><i class='fa-solid fa-arrow-right-arrow-left'></i></a>"
+                : "";
+            html += "<td class='" + dayClass + " doubleClick' title=" + item.Id + " >" + details + moveIcon + "</td>";
 
             // --- BANKNAME COLUMN ---
             html += `<td class='${dayClass}'>${item.BankName ? `<div class='div-bank'>${item.BankName}</div>` : ''}</td>`;

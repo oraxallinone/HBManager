@@ -7,12 +7,12 @@
     fnClearGroup();   // Reset form
     fnGetGroup();     // Load initial table
 
-    dmf();
-    function dmf() {
-        debugger
-        alert("Dimensions: " + $(window).width() + " × " + $(window).height());
+    //dmf();
+    //function dmf() {
+    //    debugger
+    //    alert("Dimensions: " + $(window).width() + " × " + $(window).height());
 
-    }
+    //}
 
 
     $("#btnSaveGroup").click(function () {
@@ -80,12 +80,11 @@
     }
 
     function assignClass(group) {
-        let _style = "";
-        if (group == 'G1') { _style = "style='background-color: #3f51b552'" }
-        else if (group == 'G2') { _style = "style='background-color: #ef08e840'" }
-        else if (group == 'G3') { _style = "style='background-color: #08a7ef61'" }
-        else if (group == 'G4') { _style = "style='background-color: #8bc34a94'" }
-        return _style;
+        if (group == 'G1') return "class='row-g1'";
+        if (group == 'G2') return "class='row-g2'";
+        if (group == 'G3') return "class='row-g3'";
+        if (group == 'G4') return "class='row-g4'";
+        return "class='row-g0'";
     }
 
     function fnAddGroup() {
@@ -240,10 +239,10 @@
 
         tbl = $('#gridTableGroup').DataTable({
             destroy: true,
-            pageLength: 50,
+            pageLength: 10,
             searching: true,
             ordering: false,
-            lengthMenu: [5, 10, 20, 50],
+            lengthMenu: [5, 10,20, 50],
             order: [],
             columnDefs: [
                 { targets: 'no-search', searchable: false },

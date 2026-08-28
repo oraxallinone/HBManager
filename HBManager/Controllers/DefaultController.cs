@@ -42,7 +42,7 @@ namespace HBManager.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> GetNseStockCandles(string stockSymbol)
+        public async Task<JsonResult> GetNseStockCandles(string stockSymbol, string stockExchange = "NSE")
         {
             if (string.IsNullOrWhiteSpace(stockSymbol))
             {
@@ -56,9 +56,11 @@ namespace HBManager.Controllers
             }
 
             normalizedSymbol = normalizedSymbol.ToUpperInvariant();
-            if (!normalizedSymbol.EndsWith(".NS", StringComparison.OrdinalIgnoreCase))
+            var exchangeSuffix = string.Equals(stockExchange, "BSE", StringComparison.OrdinalIgnoreCase) ? ".BO" : ".NS";
+            if (!normalizedSymbol.EndsWith(".NS", StringComparison.OrdinalIgnoreCase) &&
+                !normalizedSymbol.EndsWith(".BO", StringComparison.OrdinalIgnoreCase))
             {
-                normalizedSymbol += ".NS";
+                normalizedSymbol += exchangeSuffix;
             }
 
             try
@@ -145,7 +147,7 @@ namespace HBManager.Controllers
                         return Json(new
                         {
                             success = true,
-                            symbol = normalizedSymbol.Replace(".NS", ""),
+                            symbol = normalizedSymbol.Replace(".NS", "").Replace(".BO", ""),
                             candles = candles
                         }, JsonRequestBehavior.AllowGet);
                     }
@@ -405,17 +407,39 @@ namespace HBManager.Controllers
             {
                 using (var conn = new SqlConnection(connectionString))
                 {
+                    var savedStatuses = new Dictionary<int, string>();
+                    using (var statusCommand = new SqlCommand("SELECT slno, Status FROM dbo.StocksPurchasedTracker", conn))
+                    {
+                        await conn.OpenAsync();
+                        try
+                        {
+                            using (var statusReader = await statusCommand.ExecuteReaderAsync())
+                            {
+                                while (await statusReader.ReadAsync())
+                                {
+                                    var statusSlno = Convert.ToInt32(statusReader["slno"]);
+                                    savedStatuses[statusSlno] = statusReader["Status"] == DBNull.Value
+                                        ? "1"
+                                        : statusReader["Status"].ToString();
+                                }
+                            }
+                        }
+                        catch (SqlException)
+                        {
+                            // Older databases may not have the Status column yet.
+                        }
+                    }
+
                     using (var cmd = new SqlCommand("dbo.GetPurchaseStockTracker", conn))
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
                         cmd.Parameters.AddWithValue("@OnlyActive", 1);
 
-                        await conn.OpenAsync();
-
                         using (var reader = await cmd.ExecuteReaderAsync())
                         {
                             while (await reader.ReadAsync())
                             {
+                                var slno = reader["slno"] == DBNull.Value ? 0 : Convert.ToInt32(reader["slno"]);
                                 var stockName = reader["StockName"]?.ToString();
                                 var purchaseDate = reader["PurchaseDate"] == DBNull.Value ? DateTime.Today : Convert.ToDateTime(reader["PurchaseDate"]);
                                 var purchasePrice = reader["PurchasePrice"] == DBNull.Value ? 0m : Convert.ToDecimal(reader["PurchasePrice"]);
@@ -427,15 +451,45 @@ namespace HBManager.Controllers
                                     continue;
                                 }
 
+                                var status = savedStatuses.ContainsKey(slno) ? savedStatuses[slno] : "1";
+                                if (status == "4")
+                                {
+                                    const string placeholderValue = "--";
+                                    result.Add(new
+                                    {
+                                        slno = slno,
+                                        stockName = stockName,
+                                        exchange = GetExchangeLabel(exchange),
+                                        exchangeCode = exchange,
+                                        status = status,
+                                        purchaseDate = purchaseDate.ToString("yyyy-MM-dd"),
+                                        ageOfStock = Math.Max(0, (DateTime.Today - purchaseDate.Date).Days),
+                                        purchasePrice = purchasePrice,
+                                        quantity = quantity,
+                                        lastClosePrice = placeholderValue,
+                                        currentPrice = placeholderValue,
+                                        amountChange = placeholderValue,
+                                        percentChange = placeholderValue,
+                                        myChangeAmount = placeholderValue,
+                                        myChangePercent = placeholderValue,
+                                        increaseDays = placeholderValue,
+                                        decreaseDays = placeholderValue,
+                                        dailyChanges = new List<object>()
+                                    });
+                                    continue;
+                                }
+
                                 var stockData = await GetYahooStockSnapshotAsync(stockName, purchaseDate, purchasePrice, exchange);
                                 var myChangeAmount = quantity * (stockData.lastClosePrice - purchasePrice);
                                 var myChangePercent = purchasePrice == 0 || quantity == 0 ? 0m : (myChangeAmount / (purchasePrice * quantity)) * 100m;
 
                                 result.Add(new
                                 {
+                                    slno = slno,
                                     stockName = stockName,
                                     exchange = GetExchangeLabel(exchange),
                                     exchangeCode = exchange,
+                                    status = status,
                                     purchaseDate = purchaseDate.ToString("yyyy-MM-dd"),
                                     ageOfStock = stockData.ageOfStock,
                                     purchasePrice = purchasePrice,
@@ -460,6 +514,49 @@ namespace HBManager.Controllers
             catch (Exception ex)
             {
                 return Json(new { success = false, message = ex.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpPost]
+        public JsonResult UpdatePurchaseStockTracker(int slno, string nsebse, string status)
+        {
+            var allowedExchanges = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { "NSE", "BSE" };
+            var allowedStatuses = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+            {
+                "1", "2", "3", "4", "5"
+            };
+
+            var normalizedExchange = (nsebse ?? "").Trim().ToUpperInvariant();
+            var normalizedStatus = (status ?? "").Trim();
+            if (!allowedExchanges.Contains(normalizedExchange) || !allowedStatuses.Contains(normalizedStatus))
+            {
+                return Json(new { success = false, message = "Invalid exchange or status." });
+            }
+
+            try
+            {
+                using (var connection = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"]?.ConnectionString))
+                using (var command = new SqlCommand(@"
+                    UPDATE dbo.StocksPurchasedTracker
+                    SET nsebse = @nsebse, Status = @Status
+                    WHERE slno = @slno", connection))
+                {
+                    command.Parameters.Add("@nsebse", SqlDbType.VarChar, 10).Value = normalizedExchange.ToLowerInvariant();
+                    command.Parameters.Add("@Status", SqlDbType.VarChar, 20).Value = normalizedStatus;
+                    command.Parameters.Add("@slno", SqlDbType.Int).Value = slno;
+                    connection.Open();
+
+                    if (command.ExecuteNonQuery() == 0)
+                    {
+                        return Json(new { success = false, message = "Stock record was not found." });
+                    }
+                }
+
+                return Json(new { success = true, message = "Stock updated successfully." });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
             }
         }
 

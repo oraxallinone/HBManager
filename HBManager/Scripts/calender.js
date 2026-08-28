@@ -4,9 +4,10 @@
     $('#searchDDlG3').hide();
     $('#searchDDlG4').hide();
 
-    Get4Group();
-
     let spendingData = [];
+    let calendarRequest = null;
+
+    Get4Group();
 
     const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
@@ -144,23 +145,43 @@
                         return fallback;
                     }
 
-                    const datePart = value.split(' ')[0];
-                    const parts = datePart.split(/[-/]/).map(Number);
-                    let parsedDate;
-
-                    if (parts.length === 3 && parts[0] > 31) {
-                        parsedDate = new Date(parts[0], parts[1] - 1, parts[2]);
-                    } else if (parts.length === 3) {
-                        parsedDate = new Date(parts[2], parts[1] - 1, parts[0]);
+                    const serializedDate = String(value);
+                    const timestampMatch = serializedDate.match(/\/Date\((\d+)\)\//);
+                    if (timestampMatch) {
+                        const timestampDate = new Date(parseInt(timestampMatch[1], 10));
+                        return new Date(timestampDate.getFullYear(), timestampDate.getMonth(), timestampDate.getDate());
                     }
 
-                    return parsedDate && !isNaN(parsedDate.getTime()) ? parsedDate : fallback;
+                    let parsedDate = null;
+                    const isoMatch = serializedDate.match(/(\d{4})[-/](\d{1,2})[-/](\d{1,2})/);
+                    const usMatch = serializedDate.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+                    const dmyMatch = serializedDate.match(/(\d{1,2})-(\d{1,2})-(\d{4})/);
+
+                    if (isoMatch) {
+                        parsedDate = new Date(parseInt(isoMatch[1], 10), parseInt(isoMatch[2], 10) - 1, parseInt(isoMatch[3], 10));
+                    } else if (usMatch) {
+                        const firstPart = parseInt(usMatch[1], 10);
+                        const secondPart = parseInt(usMatch[2], 10);
+                        const dateMonth = firstPart > 12 ? secondPart : firstPart;
+                        const dateDay = firstPart > 12 ? firstPart : secondPart;
+                        parsedDate = new Date(parseInt(usMatch[3], 10), dateMonth - 1, dateDay);
+                    } else if (dmyMatch) {
+                        parsedDate = new Date(parseInt(dmyMatch[3], 10), parseInt(dmyMatch[2], 10) - 1, parseInt(dmyMatch[1], 10));
+                    }
+
+                    if (parsedDate && !isNaN(parsedDate.getTime())) {
+                        return parsedDate;
+                    }
+
+                    return fallback;
                 }
 
                 const monthStart = parseCalendarDate(calendarDate && calendarDate.fromDate,
                     new Date(selectedYear, selectedMonth - 1, 1));
                 const monthEnd = parseCalendarDate(calendarDate && calendarDate.toDate,
                     new Date(selectedYear, selectedMonth, 0));
+                monthStart.setHours(0, 0, 0, 0);
+                monthEnd.setHours(0, 0, 0, 0);
 
                 const fromMonth = monthStart.getMonth();
                 const fromYear = monthStart.getFullYear();
@@ -213,6 +234,7 @@
         for (let day = 1; day <= lastDate; day++) {
             const fullDate = `${year}-${(month + 1).toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
             const currentDate = new Date(year, month, day);
+            currentDate.setHours(0, 0, 0, 0);
             const isDisabled = currentDate < monthStart || currentDate > monthEnd;
 
             const spend = spendingData.find(s => s.date == fullDate);
@@ -230,7 +252,11 @@
     }
 
     function Get4Group() {
-        $.ajax({
+        if (calendarRequest) {
+            calendarRequest.abort();
+        }
+
+        calendarRequest = $.ajax({
             url: "/Budget/Get4Group",
             type: "GET",
             dataType: "json",

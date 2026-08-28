@@ -1,10 +1,20 @@
 ﻿.calendar-wrapper {
     display: flex;
+    justify-content: center;
+    align-items: flex-start;
     gap: 30px;
+    flex-wrap: wrap;
 }
 
 .calendar-container {
-    width: 500px;
+    width: min(500px, 100%);
+}
+
+.calendar-toolbar {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 12px;
 }
 
 .calendar-header {
@@ -61,4 +71,14 @@
 
 .wd-std {
     width: 150px;
+}
+
+@media (max-width: 1100px) {
+    .calendar-wrapper {
+        gap: 20px;
+    }
+
+    .calendar-container {
+        width: min(500px, 100%);
+    }
 }

@@ -10,7 +10,41 @@
 
     const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
+    const today = new Date();
+    $('#ddlYear').val(today.getFullYear());
+    $('#ddlMonth').val(today.getMonth() + 1);
+
+    if (!$('#ddlYear').val()) {
+        $('#ddlYear').append($('<option></option>').attr('value', today.getFullYear()).text(today.getFullYear()));
+        $('#ddlYear').val(today.getFullYear());
+    }
+
+    getList();
+
     $('#btnCalederSearch').click(function () {
+        getList();
+    });
+
+    $('#btnPreviousMonth, #btnNextMonth').on('click', function (event) {
+        event.preventDefault();
+        const change = this.id === 'btnNextMonth' ? 1 : -1;
+        const selectedYearValue = parseInt($('#ddlYear').val(), 10);
+        const selectedMonthValue = parseInt($('#ddlMonth').val(), 10);
+
+        if (isNaN(selectedYearValue) || isNaN(selectedMonthValue) || selectedMonthValue < 1) {
+            return;
+        }
+
+        const selectedDate = new Date(selectedYearValue, selectedMonthValue - 1 + change, 1);
+        const selectedYear = selectedDate.getFullYear();
+        const selectedMonth = selectedDate.getMonth() + 1;
+
+        if (!$('#ddlYear option[value="' + selectedYear + '"]').length) {
+            $('#ddlYear').append($('<option></option>').attr('value', selectedYear).text(selectedYear));
+        }
+
+        $('#ddlYear').val(selectedYear);
+        $('#ddlMonth').val(selectedMonth);
         getList();
     });
 
@@ -19,34 +53,15 @@
         const forYear = $('#ddlYear').val();
         const forMonth = $('#ddlMonth').val();
 
-        const gValues = [
-            $('#ddlUpdateG1').val(),
-            $('#ddlUpdateG2').val(),
-            $('#ddlUpdateG3').val(),
-            $('#ddlUpdateG4').val()
-        ];
-
         if (!forYear || forYear === "0" || !forMonth || forMonth === "0") {
-            // Year or Month not selected
             return;
         }
 
-        // At least one G must be selected (not "0", not empty)
-        const anyGSelected = gValues.some(v => v !== "0" && v !== "" && v !== null);
-
-        if (!anyGSelected) {
-            console.log("Select at least one value from G1, G2, G3, or G4.");
-            return;
-        }
-        else {
-            // Read all G values
+        if (this.id.indexOf('ddlUpdateG') === 0) {
             const gIDs = ['#ddlUpdateG1', '#ddlUpdateG2', '#ddlUpdateG3', '#ddlUpdateG4'];
-
-            // Find selected dropdown that changed
             const changedID = '#' + this.id;
             const changedValue = $(changedID).val();
 
-            // If changed value is NOT 0 → reset all others to 0
             if (changedValue !== "0") {
                 gIDs.forEach(id => {
                     if (id !== changedID) {
@@ -74,6 +89,16 @@
         let g3 = $('select#ddlUpdateG3 option:selected').val();
         let g4 = $('select#ddlUpdateG4 option:selected').val();
 
+            const hasGroupSelected = [g1, g2, g3, g4].some(value => value && value !== "0");
+            if (!hasGroupSelected) {
+                const selectedYear = parseInt(forYear, 10);
+                const selectedMonth = parseInt(forMonth, 10);
+                spendingData = [];
+                generateCalendar(selectedMonth - 2, selectedYear, 'prev-calendar', 'prev-calendar-title');
+                generateCalendar(selectedMonth - 1, selectedYear, 'curr-calendar', 'curr-calendar-title');
+                return;
+            }
+
         //if (forYear == 0 || forMonth == "-- select --") {
         //    return false;
         //}
@@ -91,7 +116,6 @@
         //    $("#tblExpensive").empty();
         //    return;
         //}
-
         let CalenderBudgetModelIn = {
             forYear: forYear,
             forMonth: forMonth,
@@ -100,7 +124,6 @@
             g3: g3,
             g4: g4
         }
-        
         $.ajax({
             type: "POST",
             url: '/Calender/GetDataForCalender',
@@ -108,24 +131,39 @@
             contentType: "application/json; charset=utf-8",
             data: JSON.stringify(CalenderBudgetModelIn),
             success: function (result) {
-                debugger
-                //Main calender function execute form here
-                //const today = new Date(result.calenderDate[0].toDate);//last day of this month
-                const today = result.calenderDate[0].toDate.split(' ')[0].split('-').reverse().join('-');
+                const calendarDate = result.calenderDate && result.calenderDate.length > 0
+                    ? result.calenderDate[0]
+                    : null;
+                const selectedYear = parseInt(forYear, 10);
+                const selectedMonth = parseInt(forMonth, 10);
 
-                //const monthStart = new Date(result.calenderDate[0].fromDate);
-                //const monthEnd = new Date(result.calenderDate[0].toDate);
-                const monthStart = result.calenderDate[0].fromDate.split(' ')[0].split('-').reverse().join('-');
-                const monthEnd = result.calenderDate[0].toDate.split(' ')[0].split('-').reverse().join('-');
+                function parseCalendarDate(value, fallback) {
+                    if (!value) {
+                        return fallback;
+                    }
 
-                //const fromMonth = monthStart.getMonth();
-                //const fromYear = monthStart.getFullYear();
-                //const toMonth = monthEnd.getMonth();
-                //const toYear = monthEnd.getFullYear();
-                const fromMonth = new Date(monthStart).getMonth();
-                const fromYear = new Date(monthStart).getFullYear();
-                const toMonth = new Date(monthEnd).getMonth();
-                const toYear = new Date(monthEnd).getFullYear();
+                    const datePart = value.split(' ')[0];
+                    const parts = datePart.split(/[-/]/).map(Number);
+                    let parsedDate;
+
+                    if (parts.length === 3 && parts[0] > 31) {
+                        parsedDate = new Date(parts[0], parts[1] - 1, parts[2]);
+                    } else if (parts.length === 3) {
+                        parsedDate = new Date(parts[2], parts[1] - 1, parts[0]);
+                    }
+
+                    return parsedDate && !isNaN(parsedDate.getTime()) ? parsedDate : fallback;
+                }
+
+                const monthStart = parseCalendarDate(calendarDate && calendarDate.fromDate,
+                    new Date(selectedYear, selectedMonth - 1, 1));
+                const monthEnd = parseCalendarDate(calendarDate && calendarDate.toDate,
+                    new Date(selectedYear, selectedMonth, 0));
+
+                const fromMonth = monthStart.getMonth();
+                const fromYear = monthStart.getFullYear();
+                const toMonth = monthEnd.getMonth();
+                const toYear = monthEnd.getFullYear();
 
                 function stripTime(dateTimeStr) {
                     return dateTimeStr.split(" ")[0];

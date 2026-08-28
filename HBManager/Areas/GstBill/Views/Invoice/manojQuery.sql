@@ -98,7 +98,7 @@ select * from dbo.tblWasteTracker
 
 select * from [dbo].[Budget]
 
-
+select * from [dbo].[SalaryMaster]
 
 
 select * from [dbo].[tblMonthIn]

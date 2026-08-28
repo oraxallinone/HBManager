@@ -69,6 +69,15 @@
     color: white;
 }
 
+.day.disabled {
+    background-color: #e5e5e5;
+    color: #999;
+}
+
+.day.disabled .spending {
+    color: #999;
+}
+
 .wd-std {
     width: 150px;
 }

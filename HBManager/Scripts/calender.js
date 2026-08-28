@@ -94,8 +94,10 @@
                 const selectedYear = parseInt(forYear, 10);
                 const selectedMonth = parseInt(forMonth, 10);
                 spendingData = [];
-                generateCalendar(selectedMonth - 2, selectedYear, 'prev-calendar', 'prev-calendar-title');
-                generateCalendar(selectedMonth - 1, selectedYear, 'curr-calendar', 'curr-calendar-title');
+                const monthStart = new Date(selectedYear, selectedMonth - 1, 1);
+                const monthEnd = new Date(selectedYear, selectedMonth, 0);
+                generateCalendar(selectedMonth - 2, selectedYear, 'prev-calendar', 'prev-calendar-title', monthStart, monthEnd);
+                generateCalendar(selectedMonth - 1, selectedYear, 'curr-calendar', 'curr-calendar-title', monthStart, monthEnd);
                 return;
             }
 
@@ -176,8 +178,8 @@
                     spendingData.push(tempObj);
                 });
 
-                generateCalendar(fromMonth, fromYear, 'prev-calendar', 'prev-calendar-title');
-                generateCalendar(toMonth, toYear, 'curr-calendar', 'curr-calendar-title');
+                generateCalendar(fromMonth, fromYear, 'prev-calendar', 'prev-calendar-title', monthStart, monthEnd);
+                generateCalendar(toMonth, toYear, 'curr-calendar', 'curr-calendar-title', monthStart, monthEnd);
             },
             error: function (xhr) {
                 alert('Error: ' + xhr.statusText);
@@ -185,7 +187,7 @@
         });
     }
 
-    function generateCalendar(month, year, calendarId, titleId) {
+    function generateCalendar(month, year, calendarId, titleId, monthStart, monthEnd) {
 
         const calendar = $(`#${calendarId}`);
         const title = $(`#${titleId}`);
@@ -210,13 +212,16 @@
         // Days with spending
         for (let day = 1; day <= lastDate; day++) {
             const fullDate = `${year}-${(month + 1).toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+            const currentDate = new Date(year, month, day);
+            const isDisabled = currentDate < monthStart || currentDate > monthEnd;
 
             const spend = spendingData.find(s => s.date == fullDate);
             const highlightClass = spend ? 'highlight' : '';
+            const disabledClass = isDisabled ? 'disabled' : '';
             const spendingHtml = spend ? `<div class='spending'>₹${spend.amount}</div>` : '';
 
             calendar.append(`
-                <div class='day ${highlightClass}'>
+                <div class='day ${highlightClass} ${disabledClass}'>
                     ${day}
                     ${spendingHtml}
                 </div>

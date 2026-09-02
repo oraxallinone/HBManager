@@ -33,15 +33,9 @@
         const d = new Date(parseInt(match[1], 10));
         if (isNaN(d)) return '';
 
-        // Format as yyyy-MM-dd HH:mm:ss
-        const year = d.getFullYear();
-        const month = String(d.getMonth() + 1).padStart(2, '0');
-        const day = String(d.getDate()).padStart(2, '0');
-        const hours = String(d.getHours()).padStart(2, '0');
-        const minutes = String(d.getMinutes()).padStart(2, '0');
-        const seconds = String(d.getSeconds()).padStart(2, '0');
-
-        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+        const datePart = d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+        const timePart = d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }).toLowerCase();
+        return `${datePart} ${timePart}`;
     }
 
     function formatDateForInput(dateStr) {
@@ -55,6 +49,43 @@
         const hours = String(d.getHours()).padStart(2, '0');
         const minutes = String(d.getMinutes()).padStart(2, '0');
         return `${yyyy}-${mm}-${dd}T${hours}:${minutes}`;
+    }
+
+    function getTimeEditorHtml(dateStr) {
+        var inputValue = formatDateForInput(dateStr);
+        var match = inputValue.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})$/);
+        if (!match) return '';
+
+        var hour24 = parseInt(match[4], 10);
+        var hour12 = String(hour24 % 12 || 12).padStart(2, '0');
+        var minute = match[5];
+        var amPm = hour24 >= 12 ? 'pm' : 'am';
+        var hours = '';
+        var minutes = '';
+        for (var hour = 1; hour <= 12; hour++) {
+            var hourText = String(hour).padStart(2, '0');
+            hours += `<option value="${hourText}" ${hourText === hour12 ? 'selected' : ''}>${hourText}</option>`;
+        }
+        for (var minuteValue = 0; minuteValue < 60; minuteValue++) {
+            var minuteText = String(minuteValue).padStart(2, '0');
+            minutes += `<option value="${minuteText}" ${minuteText === minute ? 'selected' : ''}>${minuteText}</option>`;
+        }
+
+        return `<div class="verification-date-editor">
+            <input type="date" class="form-control form-control-sm edit-date" value="${match[1]}-${match[2]}-${match[3]}" />
+            <select class="form-control form-control-sm edit-hour">${hours}</select>
+            <span>:</span>
+            <select class="form-control form-control-sm edit-minute">${minutes}</select>
+            <select class="form-control form-control-sm edit-ampm"><option ${amPm === 'am' ? 'selected' : ''}>am</option><option ${amPm === 'pm' ? 'selected' : ''}>pm</option></select>
+        </div>`;
+    }
+
+    function getEditedDate($row) {
+        var date = $row.find('.edit-date').val();
+        var hour = parseInt($row.find('.edit-hour').val(), 10);
+        var minute = $row.find('.edit-minute').val();
+        var hour24 = hour % 12 + ($row.find('.edit-ampm').val() === 'pm' ? 12 : 0);
+        return date ? `${date}T${String(hour24).padStart(2, '0')}:${minute}` : null;
     }
 
     function loadData() {
@@ -160,14 +191,14 @@
             // M IN
             var inRows = '';
             $.each(data.InList, function (i, item) {
-                inRows += `<tr data-id="${item.IdIn}"><td>${item.DateIn ? formatDateForDisplay(item.DateIn) : ''}</td><td>${item.AmountIn.toLocaleString()}</td><td>${item.DetailsIn || ''}</td><td><button class="btn btn-primary btn-xs edit-in new-edit-btn"  title="Edit"><i class="fa fa-pencil"></i></button> <button class="btn btn-danger btn-xs delete-in new-delete-btn" title="Delete"><i class="fa fa-trash"></i></button></td></tr>`;
+                inRows += `<tr data-id="${item.IdIn}" data-date="${item.DateIn || ''}"><td>${item.DateIn ? formatDateForDisplay(item.DateIn) : ''}</td><td>${item.AmountIn.toLocaleString()}</td><td>${item.DetailsIn || ''}</td><td><button class="btn btn-primary btn-xs edit-in new-edit-btn"  title="Edit"><i class="fa fa-pencil"></i></button> <button class="btn btn-danger btn-xs delete-in new-delete-btn" title="Delete"><i class="fa fa-trash"></i></button></td></tr>`;
             });
             $('#tblMin tbody').html(inRows);
 
             // M Now
             var nowRows = '';
             $.each(data.NowList, function (i, item) {
-                nowRows += `<tr data-id="${item.IdNow}"><td>${item.DateNow ? formatDateForDisplay(item.DateNow) : ''}</td><td>${item.AmountNow.toLocaleString()}</td><td>${item.DetailsNow || ''}</td><td><button class="btn btn-primary btn-xs edit-now new-edit-btn"  title="Edit"><i class="fa fa-pencil"></i></button> <button class="btn btn-danger btn-xs delete-now new-delete-btn" title="Delete"><i class="fa fa-trash"></i></button></td></tr>`;
+                nowRows += `<tr data-id="${item.IdNow}" data-date="${item.DateNow || ''}"><td>${item.DateNow ? formatDateForDisplay(item.DateNow) : ''}</td><td>${item.AmountNow.toLocaleString()}</td><td>${item.DetailsNow || ''}</td><td><button class="btn btn-primary btn-xs edit-now new-edit-btn"  title="Edit"><i class="fa fa-pencil"></i></button> <button class="btn btn-danger btn-xs delete-now new-delete-btn" title="Delete"><i class="fa fa-trash"></i></button></td></tr>`;
             });
             // Delete for M IN
             $('#tblMin').on('click', '.delete-in', function () {
@@ -236,72 +267,71 @@
         });
     });
 
-    // Edit / Save / Cancel for M IN (delegated)
+    function getModalDate(prefix) {
+        var date = $('#' + prefix + 'Date').val();
+        var hour = parseInt($('#' + prefix + 'Hour').val(), 10);
+        var minute = $('#' + prefix + 'Minute').val();
+        var hour24 = hour % 12 + ($('#' + prefix + 'AmPm').val() === 'pm' ? 12 : 0);
+        return date ? `${date}T${String(hour24).padStart(2, '0')}:${minute}` : null;
+    }
+
+    function populateEditModal(prefix, id, date, amount, details) {
+        var inputValue = formatDateForInput(date);
+        var match = inputValue.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})$/);
+        if (!match) return false;
+        var hour24 = parseInt(match[4], 10);
+        $('#' + prefix + 'Id').val(id);
+        $('#' + prefix + 'Date').val(`${match[1]}-${match[2]}-${match[3]}`);
+        $('#' + prefix + 'Hour').val(String(hour24 % 12 || 12).padStart(2, '0'));
+        $('#' + prefix + 'Minute').val(match[5]);
+        $('#' + prefix + 'AmPm').val(hour24 >= 12 ? 'pm' : 'am');
+        $('#' + prefix + 'Amount').val(amount);
+        $('#' + prefix + 'Details').val(details);
+        return true;
+    }
+
+    $('.modal-date-editor').each(function () {
+        var prefix = $(this).data('prefix');
+        for (var hour = 1; hour <= 12; hour++) {
+            var hourText = String(hour).padStart(2, '0');
+            $('#' + prefix + 'Hour').append($('<option>').val(hourText).text(hourText));
+        }
+        for (var minute = 0; minute < 60; minute++) {
+            var minuteText = String(minute).padStart(2, '0');
+            $('#' + prefix + 'Minute').append($('<option>').val(minuteText).text(minuteText));
+        }
+    });
+
     $('#tblMin').on('click', '.edit-in', function () {
-        var $btn = $(this);
-        var $tr = $btn.closest('tr');
-        var date = $tr.find('td').eq(0).text().trim();
-        var amount = $tr.find('td').eq(1).text().replace(/,/g, '').trim();
-        var details = $tr.find('td').eq(2).text().trim();
-
-        $tr.find('td').eq(0).html(`<input type="datetime-local" class="form-control form-control-sm edit-date" value="${formatDateForInput(date)}" />`);
-        $tr.find('td').eq(1).html(`<input type="number" step="0.01" class="form-control form-control-sm edit-amount" value="${amount}" />`);
-        $tr.find('td').eq(2).html(`<input type="text" class="form-control form-control-sm edit-details" value="${details}" />`);
-        $btn.removeClass('edit-in btn-primary').addClass('save-in btn-success btn-xs').html('<i class="fa fa-floppy-disk"></i>').attr('title', 'Save').css({ 'padding': '2px 8px', 'font-size': '11px' });
-        $tr.find('.delete-in').hide();
-        $btn.after(`<button class="btn btn-secondary btn-xs cancel-edit" style="margin-left:5px;padding:2px 8px;font-size:11px;" title="Cancel"><i class="fa fa-xmark"></i></button>`);
+        var $tr = $(this).closest('tr');
+        if (populateEditModal('editMin', $tr.data('id'), $tr.data('date'), $tr.find('td').eq(1).text().replace(/,/g, '').trim(), $tr.find('td').eq(2).text().trim())) {
+            bootstrap.Modal.getOrCreateInstance(document.getElementById('editMinModal')).show();
+        }
     });
 
-    $('#tblMin').on('click', '.cancel-edit', function () {
-        loadData();
-    });
-
-    $('#tblMin').on('click', '.save-in', function () {
-        var $btn = $(this);
-        var $tr = $btn.closest('tr');
-        var id = $tr.data('id');
-        var model = {
-            IdIn: id,
-            DateIn: $tr.find('.edit-date').val() || null,
-            AmountIn: parseFloat($tr.find('.edit-amount').val()) || 0,
-            DetailsIn: $tr.find('.edit-details').val(),
-            YearIn: parseInt($('#ddlYear').val()),
-            MonthIn: parseInt($('#ddlMonth').val())
-        };
-        $.post('/Budget/UpdateBudgetVerificationIn', model, function (resp) {
+    $('#saveMinModal').on('click', function () {
+        $.post('/Budget/UpdateBudgetVerificationIn', {
+            IdIn: $('#editMinId').val(), DateIn: getModalDate('editMin'), AmountIn: parseFloat($('#editMinAmount').val()) || 0,
+            DetailsIn: $('#editMinDetails').val(), YearIn: parseInt($('#ddlYear').val()), MonthIn: parseInt($('#ddlMonth').val())
+        }, function () {
+            bootstrap.Modal.getOrCreateInstance(document.getElementById('editMinModal')).hide();
             loadData();
         });
     });
 
-    // Edit / Save / Cancel for M Now (delegated)
     $('#tblMnow').on('click', '.edit-now', function () {
-        var $btn = $(this);
-        var $tr = $btn.closest('tr');
-        var date = $tr.find('td').eq(0).text().trim();
-        var amount = $tr.find('td').eq(1).text().replace(/,/g, '').trim();
-        var details = $tr.find('td').eq(2).text().trim();
-
-        $tr.find('td').eq(0).html(`<input type="datetime-local" class="form-control form-control-sm edit-date" value="${formatDateForInput(date)}" />`);
-        $tr.find('td').eq(1).html(`<input type="number" step="0.01" class="form-control form-control-sm edit-amount" value="${amount}" />`);
-        $tr.find('td').eq(2).html(`<input type="text" class="form-control form-control-sm edit-details" value="${details}" />`);
-        $btn.removeClass('edit-now btn-primary').addClass('save-now btn-success btn-xs').html('<i class="fa fa-floppy-disk"></i>').attr('title', 'Save').css({ 'padding': '2px 8px', 'font-size': '11px' });
-        $tr.find('.delete-now').hide();
-        $btn.after(`<button class="btn btn-secondary btn-xs cancel-edit" style="margin-left:5px;padding:2px 8px;font-size:11px;" title="Cancel"><i class="fa fa-xmark"></i></button>`);
+        var $tr = $(this).closest('tr');
+        if (populateEditModal('editNow', $tr.data('id'), $tr.data('date'), $tr.find('td').eq(1).text().replace(/,/g, '').trim(), $tr.find('td').eq(2).text().trim())) {
+            bootstrap.Modal.getOrCreateInstance(document.getElementById('editNowModal')).show();
+        }
     });
 
-    $('#tblMnow').on('click', '.save-now', function () {
-        var $btn = $(this);
-        var $tr = $btn.closest('tr');
-        var id = $tr.data('id');
-        var model = {
-            IdNow: id,
-            DateNow: $tr.find('.edit-date').val() || null,
-            AmountNow: parseFloat($tr.find('.edit-amount').val()) || 0,
-            DetailsNow: $tr.find('.edit-details').val(),
-            YearNow: parseInt($('#ddlYear').val()),
-            MonthNow: parseInt($('#ddlMonth').val())
-        };
-        $.post('/Budget/UpdateBudgetVerificationNow', model, function (resp) {
+    $('#saveNowModal').on('click', function () {
+        $.post('/Budget/UpdateBudgetVerificationNow', {
+            IdNow: $('#editNowId').val(), DateNow: getModalDate('editNow'), AmountNow: parseFloat($('#editNowAmount').val()) || 0,
+            DetailsNow: $('#editNowDetails').val(), YearNow: parseInt($('#ddlYear').val()), MonthNow: parseInt($('#ddlMonth').val())
+        }, function () {
+            bootstrap.Modal.getOrCreateInstance(document.getElementById('editNowModal')).hide();
             loadData();
         });
     });

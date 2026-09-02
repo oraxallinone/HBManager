@@ -71,6 +71,13 @@ namespace HBManager.Controllers
         }
 
         [HttpPost]
+        public JsonResult UpdateBankName(int id, string bankName)
+        {
+            var rowsAffected = _svc.UpdateBankName(id, bankName);
+            return Json(new { Success = rowsAffected > 0 });
+        }
+
+        [HttpPost]
         public JsonResult DeleteBudgetById(int id)
         {
             var ok = _svc.DeleteBudgetById(id);

@@ -1,5 +1,6 @@
 ﻿$(document).ready(function () {
     let crntMonthSalary = 0;
+    var categorySalary = { need: 0, save: 0, want: 0 };
 
     // global container for uncut group list (name requested)
     var GobalGroupMasterUncut = [];
@@ -180,6 +181,10 @@
                         $g4.append($('<option>').val(item.GroupId).text(item.GroupName));
                     });
                 }
+
+                if ($('#gridTableBudget tbody tr').length) {
+                    bindData();
+                }
             },
             error: function (xhr, status, err) {
                 console.error('bindGet4Group error:', err);
@@ -213,6 +218,7 @@
 
                 if (!res || !res.length) {
                     $("#gridTableBudget tbody").html('<tr><td colspan="12" style="text-align:center;">No records found</td></tr>');
+                    updateCategorySummary({ need: 0, save: 0, want: 0 });
                     $('#budgetLoader').hide();
                     return;
                 }
@@ -220,8 +226,13 @@
                 var html = "";
                 var idx = 1;
                 let crntSum = 0;
+                var categorySpending = { need: 0, save: 0, want: 0 };
                 $.each(res, function (i, item) {
                     crntSum = crntSum + parseFloat(item.Amount);
+                    var category = getBudgetCategory(item.G2);
+                    if (category) {
+                        categorySpending[category] += parseFloat(item.Amount) || 0;
+                    }
                     let crntSumFormat = Intl.NumberFormat('en-IN').format(crntSum);
                     let remainSalary = crntMonthSalary - crntSum;
 
@@ -230,7 +241,7 @@
                     html += "<tr class='no-css id-" + item.Id + "' id='" + item.Id + "'>";
 
                     //Date
-                    html += "<td class='bg-main-day-" + dayClassMain + "'>" + spendDate + "</td>";
+                    html += "<td class='bg-main-day-" + dayClassMain + " budget-date-cell' data-id='" + item.Id + "' data-spend-date='" + (item.SpendDateText || item.SpendDate || "") + "' title='Double-click to update date and time'>" + spendDate + "</td>";
 
 
                     //#1        
@@ -249,7 +260,7 @@
                     //Details
                     html += "<td class='" + getDayClass(dayClassMain) + "' style='padding-left: 15px;'>" + (item.Details || "") + "</td>";
 
-                    html += "<td class='" + getDayClass(dayClassMain) + "'>" + (item.BankName ? "<div class='div-bank'>" + escapeHtml(item.BankName) + "</div>" : "") + "</td>";
+                    html += "<td class='" + getDayClass(dayClassMain) + " bank-name-cell' data-id='" + item.Id + "'>" + (item.BankName ? "<div class='div-bank'>" + escapeHtml(item.BankName) + "</div>" : "<span class='bank-name-placeholder' title='Double-click to add bank'>-</span>") + "</td>";
 
                     html += "<td class='" + getDayClass(dayClassMain) + "'>" + (item.G1 ? "<div class='div-g1-c" + item.G1 + "' >" + escapeHtml(extractNameById(item.G1) || "") + "</div>" : "") + "</td>";//G1
 
@@ -273,6 +284,7 @@
                 //tdRemain= crntMonthSalary - crntSum
                 $('#tdSpending').html(Intl.NumberFormat('en-IN').format(crntSum))
                 $('#tdRemain').html(Intl.NumberFormat('en-IN').format(crntMonthSalary - crntSum))
+                updateCategorySummary(categorySpending);
                 loadWasteTracker();
             },
             error: function (xhr, status, err) {
@@ -340,9 +352,13 @@
             success: function (res) {
                 $('#tdSalary').html(Intl.NumberFormat('en-IN').format(res[0].SalaryAmount)).attr('title', res[0].SalaryAmount);//Intl.NumberFormat('en-IN').format(total)
 
-                $('#tdNeedSalary').html(Intl.NumberFormat('en-IN').format(res[0].Need50)).attr('title', res[0].Need50);
-                $('#tdSaveSalary').html(Intl.NumberFormat('en-IN').format(res[0].Save20)).attr('title', res[0].Save20);
-                $('#tdWantSalary').html(Intl.NumberFormat('en-IN').format(res[0].Want30)).attr('title', res[0].Want30);
+                categorySalary.need = parseFloat(res[0].Need50) || 0;
+                categorySalary.save = parseFloat(res[0].Save20) || 0;
+                categorySalary.want = parseFloat(res[0].Want30) || 0;
+
+                $('#tdNeedSalary').html(Intl.NumberFormat('en-IN').format(categorySalary.need)).attr('title', categorySalary.need);
+                $('#tdSaveSalary').html(Intl.NumberFormat('en-IN').format(categorySalary.save)).attr('title', categorySalary.save);
+                $('#tdWantSalary').html(Intl.NumberFormat('en-IN').format(categorySalary.want)).attr('title', categorySalary.want);
 
                 crntMonthSalary = res[0].SalaryAmount;
 
@@ -366,6 +382,27 @@
         }
 
         return "";
+    }
+
+    function getBudgetCategory(groupId) {
+        var groupName = extractNameById(groupId).toLowerCase();
+        if (groupName.indexOf('need') !== -1) return 'need';
+        if (groupName.indexOf('save') !== -1 || groupName.indexOf('saving') !== -1) return 'save';
+        if (groupName.indexOf('want') !== -1) return 'want';
+        return null;
+    }
+
+    function updateCategorySummary(categorySpending) {
+        var format = function (value) {
+            return Intl.NumberFormat('en-IN').format(value || 0);
+        };
+
+        $('#tdNeedSpending').text(format(categorySpending.need));
+        $('#tdNeedRemain').text(format(categorySalary.need - categorySpending.need));
+        $('#tdSaveSpending').text(format(categorySpending.save));
+        $('#tdSaveRemain').text(format(categorySalary.save - categorySpending.save));
+        $('#tdWantSpending').text(format(categorySpending.want));
+        $('#tdWantRemain').text(format(categorySalary.want - categorySpending.want));
     }
 
     function loadWasteTracker() {
@@ -412,6 +449,90 @@
         $('#btnSaveWaste').text(waste.Id ? 'Update' : 'Insert');
         $('#btnDeleteWaste').toggle(!!waste.Id);
         bootstrap.Modal.getOrCreateInstance(document.getElementById('wasteTrackerModal')).show();
+    });
+
+    $(document).on('dblclick', '.bank-name-placeholder', function () {
+        var $cell = $(this).closest('.bank-name-cell');
+        $('#bankNameBudgetId').val($cell.data('id'));
+        $('#bankNameInput').val($cell.find('.div-bank').text().trim());
+        bootstrap.Modal.getOrCreateInstance(document.getElementById('bankNameModal')).show();
+        $('#bankNameModal').one('shown.bs.modal', function () {
+            $('#bankNameInput').trigger('focus').trigger('select');
+        });
+    });
+
+    for (var minute = 0; minute < 60; minute++) {
+        $('#budgetMinuteInput').append($('<option>').val(minute).text(String(minute).padStart(2, '0')));
+    }
+
+    $(document).on('dblclick', '.budget-date-cell', function () {
+        var rawDate = String($(this).data('spend-date') || '');
+        var match = rawDate.match(/^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2})/);
+        if (!match) {
+            alert('This budget row does not have a valid date.');
+            return;
+        }
+
+        var hour24 = parseInt(match[4], 10);
+        $('#budgetDateId').val($(this).data('id'));
+        $('#budgetDateInput').val(match[1] + '-' + match[2] + '-' + match[3]);
+        $('#budgetHourInput').val(String(hour24 % 12 || 12).padStart(2, '0'));
+        $('#budgetMinuteInput').val(match[5]);
+        $('#budgetAmPmInput').val(hour24 >= 12 ? 'PM' : 'AM');
+        bootstrap.Modal.getOrCreateInstance(document.getElementById('budgetDateModal')).show();
+    });
+
+    $('#btnSaveBudgetDate').click(function () {
+        var id = parseInt($('#budgetDateId').val(), 10) || 0;
+        var date = $('#budgetDateInput').val();
+        var hour = parseInt($('#budgetHourInput').val(), 10);
+        var minute = parseInt($('#budgetMinuteInput').val(), 10);
+        var hour24 = hour % 12 + ($('#budgetAmPmInput').val() === 'PM' ? 12 : 0);
+        if (!id || !date) {
+            alert('Select a date.');
+            return;
+        }
+
+        $.ajax({
+            url: '/UpdateDatetime/UpdateBudgetDate',
+            type: 'POST',
+            data: { id: id, spendDate: date + ' ' + String(hour24).padStart(2, '0') + ':' + String(minute).padStart(2, '0') + ':00' },
+            dataType: 'json',
+            success: function (res) {
+                if (!res || !res.Success) {
+                    alert('Failed to update date and time.');
+                    return;
+                }
+                bootstrap.Modal.getOrCreateInstance(document.getElementById('budgetDateModal')).hide();
+                bindData();
+            },
+            error: function () { alert('Failed to update date and time.'); }
+        });
+    });
+
+    $('#btnSaveBankName').click(function () {
+        var id = parseInt($('#bankNameBudgetId').val(), 10) || 0;
+        var bankName = $('#bankNameInput').val().trim();
+        if (!id || !bankName) {
+            alert('Enter a bank name.');
+            return;
+        }
+
+        $.ajax({
+            url: '/Budget/UpdateBankName',
+            type: 'POST',
+            data: { id: id, bankName: bankName },
+            dataType: 'json',
+            success: function (res) {
+                if (!res || !res.Success) {
+                    alert('Failed to save bank name.');
+                    return;
+                }
+                bootstrap.Modal.getOrCreateInstance(document.getElementById('bankNameModal')).hide();
+                bindData();
+            },
+            error: function () { alert('Failed to save bank name.'); }
+        });
     });
 
     $(document).on('click', '#gridTableBudget tbody tr.no-css', function () {

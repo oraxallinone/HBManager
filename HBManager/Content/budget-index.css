@@ -345,6 +345,72 @@
     text-align: center;
 }
 
+.bank-name-cell {
+    text-align: center;
+    vertical-align: middle;
+    text-transform: uppercase;
+}
+
+.bank-name-placeholder {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 27px;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.budget-date-cell {
+    cursor: pointer;
+}
+
+.budget-date-cell:hover {
+    text-decoration: underline;
+}
+
+.budget-date-modal .modal-content {
+    color: #f4f8ff;
+    background: rgb(14 43 75 / 32%);
+    border: 1px solid rgba(255, 255, 255, .35);
+    border-radius: 12px;
+    box-shadow: 0 18px 50px rgba(4, 20, 35, .45);
+    backdrop-filter: blur(14px);
+}
+
+.budget-date-modal .modal-header,
+.budget-date-modal .modal-footer {
+    border-color: rgba(255, 255, 255, .2);
+}
+
+.budget-date-modal label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+}
+
+.budget-date-modal .form-control {
+    color: white;
+    background: rgb(255 255 255 / 22%);
+    border: 1px solid rgba(255, 255, 255, .7);
+}
+
+.budget-date-modal select.form-control,
+.budget-date-modal select.form-control option {
+    color: #172b3d;
+    background-color: #ffffff;
+}
+
+.budget-time-fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1.25fr;
+    gap: 10px;
+    margin-top: 14px;
+}
+
 
 
 

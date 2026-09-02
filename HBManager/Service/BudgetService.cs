@@ -149,6 +149,18 @@ namespace HBManager.Service
             }
         }
 
+        public int UpdateBankName(int id, string bankName)
+        {
+            using (var conn = new SqlConnection(_connString))
+            using (var cmd = new SqlCommand("UPDATE dbo.Budget SET BankName = @BankName WHERE Id = @Id", conn))
+            {
+                cmd.Parameters.AddWithValue("@Id", id);
+                cmd.Parameters.AddWithValue("@BankName", string.IsNullOrWhiteSpace(bankName) ? (object)DBNull.Value : bankName.Trim());
+                conn.Open();
+                return cmd.ExecuteNonQuery();
+            }
+        }
+
         public List<Budget> GetBudgetByFromToDate(int year, int month)
         {
             var list = new List<Budget>();

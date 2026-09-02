@@ -322,6 +322,8 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\stock-candle.js" />
     <Content Include="Scripts\stock-tech-data.js" />
+    <Content Include="Scripts\year-month-filter.js" />
+    <Content Include="theme\img\doctor-doom-holding-mjolnir-ti.jpg" />
     <Content Include="Upload\schemaHBManagerupto3march.sql" />
     <Content Include="Upload\sp_budget_verification.sql" />
     <Content Include="Upload\_____apr2026.sql" />

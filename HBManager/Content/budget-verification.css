@@ -243,6 +243,9 @@
 
 .card-header-in {
     color: #ffffff;
+    background: linear-gradient(110deg, #1a488e, #725e13 58%, #8810be) !important;
+    border-bottom: 3px solid #ffb0a3;
+    box-shadow: 0 4px 12px rgba(143, 29, 44, .25);
 }
 
 .card-header-in .card-title {
@@ -265,8 +268,10 @@
 
 
 .card-header-now {
-background: linear-gradient(135deg, #2c3e50, #4b6cb7);
+background: linear-gradient(110deg, #175787, #19468a94 58%, #800fb3bd) !important;
     color: #ffffff;
+    border-bottom: 3px solid #ffb0a3;
+    box-shadow: 0 4px 12px rgba(125, 31, 53, .25);
 }
 
 .card-header-now .card-title {
@@ -406,6 +411,31 @@ background: linear-gradient(135deg, #2c3e50, #4b6cb7);
 #tblMin .btn,
 #tblMnow .btn {
     font-size: 11px;
+}
+
+/* Red accent areas marked in the table layout */
+#tblMin tfoot,
+#tblMnow tfoot {
+    background: linear-gradient(180deg, #fff1ef, #ffe2df) !important;
+    border-top: 2px solid #e28a82;
+}
+
+#tblMin tfoot td,
+#tblMnow tfoot td {
+    background: transparent;
+}
+
+#tblMin tfoot .form-control,
+#tblMnow tfoot .form-control {
+    border-color: #d99a94;
+    background-color: #fffaf9;
+}
+
+#addInBtn,
+#addNowBtn {
+    border-color: #8f1d2c !important;
+    background: linear-gradient(135deg, #9e2638, #ce5360) !important;
+    box-shadow: 0 3px 8px rgba(143, 29, 44, .2);
 }
 
 

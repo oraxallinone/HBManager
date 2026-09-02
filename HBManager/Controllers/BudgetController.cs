@@ -4,6 +4,7 @@ using HBManager.Models;
 using HBManager.Service;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -36,7 +37,37 @@ namespace HBManager.Controllers
         public JsonResult GetBudgetVerificationData(int year, int month)
         {
             var data = _svc.GetBudgetVerificationData(year, month);
-            return Json(data, JsonRequestBehavior.AllowGet);
+            var response = new
+            {
+                data.TotalIn,
+                data.TotalOut,
+                data.TotalNow,
+                InList = data.InList.Select(item => new
+                {
+                    item.IdIn,
+                    DateIn = item.DateIn.HasValue
+                        ? item.DateIn.Value.ToString("yyyy-MM-dd h:mm tt", CultureInfo.InvariantCulture)
+                        : null,
+                    item.AmountIn,
+                    item.DetailsIn,
+                    item.YearIn,
+                    item.MonthIn
+                }).ToList(),
+                OutList = data.OutList,
+                NowList = data.NowList.Select(item => new
+                {
+                    item.IdNow,
+                    item.AmountNow,
+                    item.DetailsNow,
+                    DateNow = item.DateNow.HasValue
+                        ? item.DateNow.Value.ToString("yyyy-MM-dd h:mm tt", CultureInfo.InvariantCulture)
+                        : null,
+                    item.YearNow,
+                    item.MonthNow
+                }).ToList()
+            };
+
+            return Json(response, JsonRequestBehavior.AllowGet);
         }
 
 

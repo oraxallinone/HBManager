@@ -1,4 +1,4 @@
-﻿using HBManager.Models;
+using HBManager.Models;
 using System;
 using System.Collections.Generic;
 using System.Configuration;

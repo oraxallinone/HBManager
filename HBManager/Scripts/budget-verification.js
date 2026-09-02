@@ -26,28 +26,84 @@
     function formatDateForDisplay(dateStr) {
         if (!dateStr) return '';
 
-        // Extract milliseconds from /Date(1454178600000)/
         const match = /\/Date\((\d+)\)\//.exec(dateStr);
-        if (!match) return '';
+        if (match) {
+            const d = new Date(parseInt(match[1], 10));
+            if (isNaN(d)) return '';
 
-        const d = new Date(parseInt(match[1], 10));
-        if (isNaN(d)) return '';
+            return formatDatabaseDate(d);
+        }
 
-        const datePart = d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
-        const timePart = d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }).toLowerCase();
-        return `${datePart} ${timePart}`;
+        const valueMatch = /^(\d{4})-(\d{2})-(\d{2})[T ](\d{1,2}):(\d{2})\s*(am|pm)?/i.exec(dateStr);
+        const displayHours = valueMatch && valueMatch[6]
+            ? convertTo24Hour(+valueMatch[4], valueMatch[6])
+            : valueMatch && +valueMatch[4];
+        return valueMatch
+            ? formatDateParts(+valueMatch[1], +valueMatch[2], +valueMatch[3], displayHours, +valueMatch[5])
+            : '';
+    }
+
+    function formatDateParts(year, month, day, hours, minutes) {
+        const monthText = String(month).padStart(2, '0');
+        const dayText = String(day).padStart(2, '0');
+        const hourText = String(hours % 12 || 12);
+        const minuteText = String(minutes).padStart(2, '0');
+        const amPm = hours >= 12 ? 'pm' : 'am';
+        return `${year}-${monthText}-${dayText} ${hourText}:${minuteText} ${amPm}`;
+    }
+
+    function convertTo24Hour(hours, amPm) {
+        const normalizedHours = hours % 12;
+        return normalizedHours + (amPm.toLowerCase() === 'pm' ? 12 : 0);
+    }
+
+    function getDatabaseDateParts(date) {
+        const parts = new Intl.DateTimeFormat('en-CA', {
+            timeZone: 'Asia/Kolkata',
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            hourCycle: 'h23'
+        }).formatToParts(date).reduce(function (result, part) {
+            result[part.type] = part.value;
+            return result;
+        }, {});
+
+        return {
+            year: +parts.year,
+            month: +parts.month,
+            day: +parts.day,
+            hours: +parts.hour,
+            minutes: +parts.minute
+        };
+    }
+
+    function formatDatabaseDate(date) {
+        const parts = getDatabaseDateParts(date);
+        return formatDateParts(parts.year, parts.month, parts.day, parts.hours, parts.minutes);
     }
 
     function formatDateForInput(dateStr) {
         if (!dateStr) return '';
         const match = /\/Date\((\d+)\)\//.exec(dateStr);
-        const d = match ? new Date(parseInt(match[1], 10)) : new Date(dateStr.replace(' ', 'T'));
-        if (isNaN(d)) return '';
-        const yyyy = d.getFullYear();
-        const mm = String(d.getMonth() + 1).padStart(2, '0');
-        const dd = String(d.getDate()).padStart(2, '0');
-        const hours = String(d.getHours()).padStart(2, '0');
-        const minutes = String(d.getMinutes()).padStart(2, '0');
+        if (match) {
+            const d = new Date(parseInt(match[1], 10));
+            if (isNaN(d)) return '';
+            const parts = getDatabaseDateParts(d);
+            return `${parts.year}-${String(parts.month).padStart(2, '0')}-${String(parts.day).padStart(2, '0')}T${String(parts.hours).padStart(2, '0')}:${String(parts.minutes).padStart(2, '0')}`;
+        }
+
+        const valueMatch = /^(\d{4})-(\d{2})-(\d{2})[T ](\d{1,2}):(\d{2})\s*(am|pm)?/i.exec(dateStr);
+        if (!valueMatch) return '';
+        const yyyy = valueMatch[1];
+        const mm = valueMatch[2];
+        const dd = valueMatch[3];
+        const hours = valueMatch[6]
+            ? String(convertTo24Hour(+valueMatch[4], valueMatch[6])).padStart(2, '0')
+            : valueMatch[4].padStart(2, '0');
+        const minutes = valueMatch[5];
         return `${yyyy}-${mm}-${dd}T${hours}:${minutes}`;
     }
 

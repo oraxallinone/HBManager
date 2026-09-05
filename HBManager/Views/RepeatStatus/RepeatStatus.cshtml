@@ -1,0 +1,12 @@
+@{
+    ViewBag.Title = "Repeat Status";
+    Layout = "~/Views/Shared/_WebLayout.cshtml";
+}
+<link href="~/Content/repeat-status.css" rel="stylesheet" />
+<div class="app-content repeat-status-page"><div class="container-fluid">
+    <div class="repeat-status-grid-wrap"><table id="repeatStatusGrid" class="repeat-status-grid"><thead id="repeatStatusHead"></thead><tbody id="repeatStatusBody"><tr><td class="repeat-status-empty">Loading repeat status...</td></tr></tbody></table></div>
+    <div class="repeat-status-actions"><button type="button" id="reloadRepeatStatus" class="repeat-status-reload"><i class="bi bi-arrow-clockwise"></i> Reload Grid</button></div>
+
+</div></div>
+<script>$('.app-content-header').hide();</script>
+<script src="~/Scripts/repeat-status.js"></script>

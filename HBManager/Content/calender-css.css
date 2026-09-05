@@ -24,11 +24,11 @@
     box-shadow: 0 16px 36px rgba(22, 38, 43, 0.16);
 }
 
-.calendar-page .card-header {
-    padding: 18px 22px;
-    border-bottom: 1px solid rgba(145, 181, 181, 0.75);
-    background: var(--calendar-ink);
-}
+    .calendar-page .card-header {
+        padding: 18px 22px;
+        border-bottom: 1px solid rgba(145, 181, 181, 0.75);
+        background: #175787c9;
+    }
 
 .calendar-page .card-header table {
     width: 100%;
@@ -50,19 +50,19 @@
     box-shadow: 0 0 0 0.15rem rgba(201, 164, 92, 0.25);
 }
 
-.calendar-page .btn-success {
-    border-color: var(--calendar-gold);
-    background: var(--calendar-gold);
-    color: var(--calendar-ink);
-    font-weight: 700;
-}
+    .calendar-page .btn-success {
+        border-color: #5c8bc9;
+        background: #5cabc9;
+        color: var(--calendar-ink);
+        font-weight: 700;
+    }
 
-.calendar-page .btn-success:hover,
-.calendar-page .btn-success:focus {
-    border-color: #e0c37e;
-    background: #e0c37e;
-    color: var(--calendar-ink);
-}
+    .calendar-page .btn-success:hover,
+    .calendar-page .btn-success:focus {
+        border-color: #6d66e9;
+        background: #7eafe0;
+        color: var(--calendar-ink);
+    }
 
 .calendar-page .calendar-toolbar .btn {
     min-width: 38px;

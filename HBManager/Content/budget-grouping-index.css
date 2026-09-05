@@ -42,6 +42,13 @@
     width: 75px;
 }
 
+.bank-name-cell { text-align: center; vertical-align: middle; text-transform: uppercase; }
+.bank-name-placeholder { display: inline-flex; align-items: center; justify-content: center; width: 100%; height: 27px; cursor: pointer; font-weight: 700; }
+.budget-date-cell { cursor: pointer; }
+.budget-date-cell:hover { text-decoration: underline; }
+.budget-time-fields { display: flex; gap: 8px; }
+.budget-time-fields > div { flex: 1; }
+
 /* ------------------ move budget glass popup ------------------ */
 .move-budget-modal {
     position: fixed;

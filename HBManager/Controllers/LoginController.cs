@@ -24,7 +24,7 @@ namespace HBManager.Controllers
                 // Set session or authentication here as needed
                 if (result.UserType == 9)
                 {
-                    return Json(new { success = true, redirectUrl = Url.Action("Dashboard", "Default") });
+                    return Json(new { success = true, redirectUrl = Url.Action("BudgetVerification", "Budget") });
                 }
                 else if (result.UserType == 1 || result.UserType == 2)
                 {

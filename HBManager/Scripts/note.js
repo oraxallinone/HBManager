@@ -91,8 +91,8 @@
             accordionHtml += '        <button class="icon-btn btn-edit-note" title="Edit" data-id="' + note.noteId + '" data-name="' + note.noteName + '" data-date="' + note.dateOfNote + '" data-priority="' + note.notePriority + '"><i class="fa fa-pencil-alt"></i></button>';
             accordionHtml += '        <button class="icon-btn btn-delete-note" title="Delete" data-id="' + note.noteId + '"><i class="fa fa-trash"></i></button>';
             accordionHtml += '      </div>';
-            // Note text and priority
-            accordionHtml += '      <h3 class="note-title"> <span class="note-priority">Priority: ' + note.notePriority + '</span> <span class="note-date">(' + note.dateOfNote + ')</span>' + note.noteName + '</h3>';
+            // Keep the note text on the left and the date on the right.
+            accordionHtml += '      <h3 class="note-title"><span class="note-name">' + note.noteName + '</span><span class="note-date">' + note.dateOfNote + '</span><span class="note-priority">' + note.notePriority + '</span></h3>';
             accordionHtml += '    </div>';
             accordionHtml += '    <span class="accordion-toggle">▼</span>';
             accordionHtml += '  </div>';

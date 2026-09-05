@@ -155,6 +155,7 @@
         var dashBudgetGroupingActive = (curController == "BudgetGrouping" && curAction == "BudgetGroupingIndex") ? "active" : "";
         var dashBudgetIndexActive = (curController == "Budget" && curAction == "BudgetIndex") ? "active" : "";
         var dashImportByQueryActive = (curController == "Import" && curAction == "ImportInitiate") ? "active" : "";
+        var dashRepeatStatusActive = (curController == "RepeatStatus" && curAction == "RepeatStatus") ? "active" : "";
 
         // Feature tree check
         var featureIs = (curController == "Default" && curAction == "BarChart") ||
@@ -212,6 +213,8 @@
                 </ul>
 
                 <ul class="navbar-nav ms-auto">
+                    @if (curController != "RepeatStatus")
+                    {
                     <li style="margin-top: 9px;">
                         <input type="checkbox" id="checkForAll" style="vertical-align:middle; margin-right:4px;" />
                         <label for="checkForAll" style="margin-right:10px; font-weight:normal; vertical-align:middle;">All</label>
@@ -231,6 +234,7 @@
                             <option value="0">-- G4 --</option>
                         </select>
                     </li>
+                    }
 
                     <li class="nav-item">
                         <a class="nav-link" href="#" data-lte-toggle="fullscreen">
@@ -284,6 +288,7 @@
                                 <li class="nav-item"> <a href="@Url.Action("Dashboard", "Default")" class="nav-link @dashDashboardActive"> <i class="nav-icon bi bi-house-door"></i> <p>Dashboard</p> </a> </li>
                                 <li class="nav-item"> <a href="@Url.Action("BudgetGroupingIndex", "BudgetGrouping")" class="nav-link @dashBudgetGroupingActive"> <i class="nav-icon bi bi-diagram-3"></i> <p>Grouping</p> </a> </li>
                                 <li class="nav-item"> <a href="@Url.Action("BudgetIndex", "Budget")" class="nav-link @dashBudgetIndexActive"> <i class="nav-icon bi bi-cash-coin"></i> <p>Final</p> </a> </li>
+                                <li class="nav-item"> <a href="@Url.Action("RepeatStatus", "RepeatStatus")" class="nav-link @dashRepeatStatusActive"> <i class="nav-icon bi bi-arrow-repeat"></i> <p>Repeat Status</p> </a> </li>
                                 <li class="nav-item"> <a href="@Url.Action("ImportInitiate", "Import")" class="nav-link @dashImportByQueryActive"> <i class="nav-icon bi bi-database-fill-down"></i> <p>Import By Query</p> </a> </li>
                             </ul>
                         </li>
@@ -292,7 +297,7 @@
                         <li class="nav-item @featureOpen">
                             <a href="#" class="nav-link @featureActive">
                                 <i class="nav-icon bi bi-stars"></i>
-                                <p style="color: #a64468; font-family: Calibri, 'Candara', 'Segoe UI', Optima, Arial, sans-serif; font-size: 15px !important; font-weight: 600; "> Feature <i class="nav-arrow bi bi-chevron-right"></i> </p>
+                                <p style="color: #95f14d; font-family: Calibri, 'Candara', 'Segoe UI', Optima, Arial, sans-serif; font-size: 15px !important; font-weight: 600; "> Feature <i class="nav-arrow bi bi-chevron-right"></i> </p>
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item"> <a href="@Url.Action("BarChart", "Default")" class="nav-link @featureBarChartActive"> <i class="nav-icon bi bi-bar-chart-line"></i> <p>Bar Graph</p> </a> </li>
@@ -325,7 +330,7 @@
                         <li class="nav-item @masterOpen">
                             <a href="#" class="nav-link @masterActive">
                                 <i class="nav-icon bi bi-box-seam-fill"></i>
-                                <p style="color: #a6ad85; font-family: Calibri, 'Candara', 'Segoe UI', Optima, Arial, sans-serif; font-size: 15px !important; font-weight: 600; "> Master <i class="nav-arrow bi bi-chevron-right"></i> </p>
+                                <p style="color: #89ffff; font-family: Calibri, 'Candara', 'Segoe UI', Optima, Arial, sans-serif; font-size: 15px !important; font-weight: 600; "> Master <i class="nav-arrow bi bi-chevron-right"></i> </p>
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item"> <a href="@Url.Action("SalaryIndex", "Salary")" class="nav-link @masterSalaryActive"> <i class="nav-icon bi bi-currency-dollar"></i> <p>Salary</p> </a> </li>

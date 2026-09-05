@@ -950,7 +950,7 @@
             html += "</td>";
 
             // --- DATE COLUMN ---
-            html += "<td class='bg-main-day-" + dayClassMain + "'>" + spendDate + "</td>";
+            html += "<td class='bg-main-day-" + dayClassMain + " budget-date-cell' data-id='" + item.Id + "' data-spend-date='" + (item.SpendDateText || item.SpendDate || "") + "'>" + spendDate + "</td>";
 
             // --- AMOUNT COLUMN ---
             html += "<td class='amt-class " + g2save + " " + dayClass + "' style='text-align:right;'>" + amount + "</td>";
@@ -969,7 +969,7 @@
             html += "<td class='" + dayClass + " doubleClick' title=" + item.Id + " >" + details + moveIcon + "</td>";
 
             // --- BANKNAME COLUMN ---
-            html += `<td class='${dayClass}'>${item.BankName ? `<div class='div-bank'>${item.BankName}</div>` : ''}</td>`;
+            html += `<td class='${dayClass} bank-name-cell' data-id='${item.Id}'>${item.BankName ? `<div class='div-bank'>${item.BankName}</div>` : `<span class='bank-name-placeholder' title='Double-click to add bank'>-</span>`}</td>`;
 
             // --- G1 COLUMN ---
             const itmClass = parseInt(item.G1) > 56 ? '14' : item.G1;
@@ -1347,5 +1347,61 @@
         $('#spanTotalSpend').text(Intl.NumberFormat('en-IN').format(remainAmt));
 
     }
+
+    for (var minute = 0; minute < 60; minute++) {
+        $('#budgetMinuteInput').append($('<option>').val(String(minute).padStart(2, '0')).text(String(minute).padStart(2, '0')));
+    }
+
+    $(document).on('dblclick', '.budget-date-cell', function () {
+        var cell = $(this);
+        var rawDate = String(cell.data('spend-date') || '');
+        var match = rawDate.match(/^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2})/);
+        if (!match) {
+            alert('This budget row does not have a valid date.');
+            return;
+        }
+        var hour24 = parseInt(match[4], 10);
+        $('#budgetDateId').val(cell.data('id'));
+        $('#budgetDateInput').val(match[1] + '-' + match[2] + '-' + match[3]);
+        $('#budgetHourInput').val(String(hour24 % 12 || 12).padStart(2, '0'));
+        $('#budgetMinuteInput').val(match[5]);
+        $('#budgetAmPmInput').val(hour24 >= 12 ? 'PM' : 'AM');
+        bootstrap.Modal.getOrCreateInstance(document.getElementById('budgetDateModal')).show();
+    });
+
+    $(document).on('dblclick', '.bank-name-placeholder', function () {
+        var cell = $(this).closest('.bank-name-cell');
+        $('#bankNameBudgetId').val(cell.data('id'));
+        $('#bankNameInput').val(cell.find('.div-bank').text().trim());
+        bootstrap.Modal.getOrCreateInstance(document.getElementById('bankNameModal')).show();
+        $('#bankNameModal').one('shown.bs.modal', function () { $('#bankNameInput').trigger('focus').trigger('select'); });
+    });
+
+    $('#btnSaveBudgetDate').on('click', function () {
+        var id = parseInt($('#budgetDateId').val(), 10) || 0;
+        var date = $('#budgetDateInput').val();
+        var hour = parseInt($('#budgetHourInput').val(), 10);
+        var minute = parseInt($('#budgetMinuteInput').val(), 10);
+        var hour24 = hour % 12 + ($('#budgetAmPmInput').val() === 'PM' ? 12 : 0);
+        if (!id || !date) { alert('Select a date.'); return; }
+        $.ajax({ url: '/UpdateDatetime/UpdateBudgetDate', type: 'POST', data: { id: id, spendDate: date + ' ' + String(hour24).padStart(2, '0') + ':' + String(minute).padStart(2, '0') + ':00' }, dataType: 'json' })
+            .done(function (res) {
+                if (!res || !res.Success) { alert('Failed to update date and time.'); return; }
+                bootstrap.Modal.getOrCreateInstance(document.getElementById('budgetDateModal')).hide();
+                GetAllBudgetFromToWithGroup();
+            }).fail(function () { alert('Failed to update date and time.'); });
+    });
+
+    $('#btnSaveBankName').on('click', function () {
+        var id = parseInt($('#bankNameBudgetId').val(), 10) || 0;
+        var bankName = $('#bankNameInput').val().trim();
+        if (!id || !bankName) { alert('Enter a bank name.'); return; }
+        $.ajax({ url: '/Budget/UpdateBankName', type: 'POST', data: { id: id, bankName: bankName }, dataType: 'json' })
+            .done(function (res) {
+                if (!res || !res.Success) { alert('Failed to save bank name.'); return; }
+                bootstrap.Modal.getOrCreateInstance(document.getElementById('bankNameModal')).hide();
+                GetAllBudgetFromToWithGroup();
+            }).fail(function () { alert('Failed to save bank name.'); });
+    });
 
 });

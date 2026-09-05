@@ -21,31 +21,18 @@ namespace YourProjectNamespace.Controllers
         // GET: /Import/GetBudgetData
         // Fetches all records to populate the jQuery grid
         [HttpGet]
-        public JsonResult GetBudgetData(int year, int month)
+        public JsonResult GetBudgetData(int year, int month, string bankName = null)
         {
             var rows = new List<Dictionary<string, object>>();
-            // CASE statement handles converting BIT/NULL into "Transfered", "Skiped", or blank string if unassigned
-            string query = @"
-                SELECT TOP 350 
-                    Id, BankName, Year, Month, TransactionType, Amount, 
-                    LOWER(FORMAT(TransactionDate, 'yyyy-MM-dd hh:mm tt')) AS TransactionDate, 
-                    Details,
-                    CASE 
-                        WHEN IsTransfer = 1 THEN 'Transfered'
-                        WHEN IsTransfer = 0 THEN 'Skiped'
-                        ELSE ''
-                    END AS IsTransferStatus
-                FROM [dbo].[BudgetInitiate] 
-                      WHERE [Year] = @Year
-                      AND [Month] = @Month
-                ORDER BY [TransactionDate], Id DESC";
 
                 using (SqlConnection con = new SqlConnection(connectionString))
                 {
-                using (SqlCommand cmd = new SqlCommand(query, con))
+                using (SqlCommand cmd = new SqlCommand("dbo.GetBudgetInitiateBySalaryMonth", con))
                         {
+                    cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@Year", year);
                     cmd.Parameters.AddWithValue("@Month", month);
+                    cmd.Parameters.Add("@BankName", SqlDbType.VarChar, 150).Value = bankName ?? string.Empty;
                     con.Open();
                         using (SqlDataReader reader = cmd.ExecuteReader())
                         {
@@ -63,6 +50,40 @@ namespace YourProjectNamespace.Controllers
                 }
                 return Json(rows, JsonRequestBehavior.AllowGet);
             }
+
+        [HttpGet]
+        public JsonResult GetBankNames(int year, int month)
+        {
+            var bankNames = new List<string>();
+            const string query = @"
+                SELECT DISTINCT bi.[BankName]
+                                FROM [dbo].[BudgetInitiate] bi
+                                INNER JOIN [dbo].[SalaryMaster] sm
+                                        ON sm.YearName = @Year
+                                        AND sm.MonthName = @Month
+                                WHERE bi.TransactionDate >= CAST(sm.FromData AS DATE)
+                                    AND bi.TransactionDate < DATEADD(DAY, 1, CAST(sm.ToDate AS DATE))
+                                    AND NULLIF(LTRIM(RTRIM(bi.[BankName])), '') IS NOT NULL
+                                ORDER BY bi.[BankName]";
+
+            using (SqlConnection con = new SqlConnection(connectionString))
+            using (SqlCommand cmd = new SqlCommand(query, con))
+            {
+                cmd.Parameters.AddWithValue("@Year", year);
+                cmd.Parameters.AddWithValue("@Month", month);
+                con.Open();
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        bankNames.Add(reader.GetString(0).Trim());
+                    }
+                }
+            }
+
+            return Json(bankNames, JsonRequestBehavior.AllowGet);
+        }
 
 
         [HttpPost]
@@ -199,6 +220,40 @@ namespace YourProjectNamespace.Controllers
             catch (Exception ex)
             {
                 return Json(new { success = false, message = "Error reverting record: " + ex.Message });
+            }
+        }
+
+        [HttpPost]
+        public JsonResult UpdateDetails(int id, string details)
+        {
+            if (id <= 0)
+            {
+                return Json(new { success = false, message = "Invalid record id." });
+            }
+
+            try
+            {
+                using (SqlConnection con = new SqlConnection(connectionString))
+                using (SqlCommand cmd = new SqlCommand(@"
+                    UPDATE [dbo].[BudgetInitiate]
+                    SET [Details] = @Details
+                    WHERE [Id] = @Id", con))
+                {
+                    cmd.Parameters.Add("@Details", SqlDbType.NVarChar, -1).Value = (object)(details ?? string.Empty);
+                    cmd.Parameters.Add("@Id", SqlDbType.Int).Value = id;
+                    con.Open();
+
+                    if (cmd.ExecuteNonQuery() == 0)
+                    {
+                        return Json(new { success = false, message = "Record was not found." });
+                    }
+                }
+
+                return Json(new { success = true, message = "Details updated successfully." });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Error updating details: " + ex.Message });
             }
         }
 

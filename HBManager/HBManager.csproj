@@ -161,6 +161,7 @@
     <Compile Include="Controllers\BudgetController.cs" />
     <Compile Include="Controllers\BudgetGroupingController.cs" />
     <Compile Include="Controllers\BudgetOverviewController.cs" />
+    <Compile Include="Controllers\RepeatStatusController.cs" />
     <Compile Include="Controllers\CalenderController.cs" />
     <Compile Include="Controllers\DefaultController.cs" />
     <Compile Include="Controllers\GroupController.cs" />
@@ -193,6 +194,7 @@
     <Compile Include="Models\QueryViewModel.cs" />
     <Compile Include="Models\RowStatusItem.cs" />
     <Compile Include="Models\SalaryMaster.cs" />
+    <Compile Include="Models\RepeatStatusModels.cs" />
     <Compile Include="Models\UpdateDatetimeViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\BirthdayService.cs" />
@@ -205,6 +207,7 @@
     <Compile Include="Service\NoteService.cs" />
     <Compile Include="Service\SalaryService.cs" />
     <Compile Include="Service\UpdateDatetimeService.cs" />
+    <Compile Include="Service\RepeatStatusService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\GstBill\Models\Model1.Context.tt">
@@ -241,6 +244,9 @@
     <Content Include="Content\login.css" />
     <Content Include="Content\notes.css" />
     <Content Include="Content\report-index.css" />
+    <Content Include="Scripts\repeat-status.js" />
+    <Content Include="Views\RepeatStatus\RepeatStatus.cshtml" />
+    <Content Include="Content\repeat-status.css" />
     <Content Include="Content\salary.css" />
     <Content Include="Content\spinner.css" />
     <Content Include="Content\theme\assets\img\AdminLTEFullLogo.png" />
@@ -423,6 +429,7 @@
     <Content Include="Views\Budget\BudgetVerification.cshtml" />
     <Content Include="Views\Import\ExecuteQuery.cshtml" />
     <Content Include="Views\Import\ImportInitiate.cshtml" />
+    <Content Include="GetBudgetInitiateBySalaryMonth.sql" />
     <Content Include="Views\UpdateDatetime\Index.cshtml" />
     <Content Include="Views\Default\StockTechData.cshtml" />
     <Content Include="Views\Default\StockCandle.cshtml" />

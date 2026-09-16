@@ -1,0 +1,56 @@
+@model HBManager.Areas.GstBill.Models.CounterMaster
+@{
+    ViewBag.Title = "InvoiceCounterUpdate";
+    Layout = "~/Views/Shared/_GstLayout.cshtml";
+}
+
+<div class="content-wrapper">
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="card card-info card-outline">
+                        <div class="card-header">
+                            <h3 class="card-title">Invoice Number Settings</h3>
+                        </div>
+                        <div class="card-body">
+                            @if (ViewBag.ErrorMessage != null)
+                            {
+                                <div class="alert alert-danger">@ViewBag.ErrorMessage</div>
+                            }
+                            <div class="row">
+                                <div class="form-group col-md-4">
+                                    <label>Counter Name</label>
+                                    <input type="text" class="form-control form-control-sm" value="@Model.counterName" readonly="readonly" />
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>Current Counter Value</label>
+                                    <input type="text" class="form-control form-control-sm" value="@Model.counterValue" readonly="readonly" />
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>Next Invoice Number</label>
+                                    <input type="text" class="form-control form-control-sm" value="@ViewBag.NextInvoiceNo" readonly="readonly" />
+                                </div>
+                            </div>
+                            @using (Html.BeginForm("InvoiceCounterUpdate", "Invoice", FormMethod.Post, new { area = "GstBill" }))
+                            {
+                                <div class="form-group col-md-4 px-0">
+                                    <label for="counterValue">New Counter Value</label>
+                                    <input type="number" id="counterValue" name="counterValue" class="form-control form-control-sm" min="@(Model.counterValue + 1)" required="required" />
+                                    <small class="form-text text-muted">The value must be greater than @Model.counterValue.</small>
+                                </div>
+                                <div class="form-group col-md-4 px-0">
+                                    <label for="secretKey">Secret Key</label>
+                                    <input type="password" id="secretKey" name="secretKey" class="form-control form-control-sm" required="required" autocomplete="off" />
+                                </div>
+                                <button type="submit" class="btn btn-sm btn-info w104">Update</button>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<aside class="control-sidebar control-sidebar-dark"></aside>

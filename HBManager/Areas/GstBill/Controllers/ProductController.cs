@@ -136,6 +136,7 @@ namespace HBManager.Areas.GstBill.Controllers
                     ItemMaster itm2 = new ItemMaster();
                     itm2.ItemCode = itm.ItemCode;
                     itm2.ItemDetails = itm.ItemDetails;
+                    itm2.ItemPart = itm.ItemPart;
                     itm2.HSN = itm.HSN;
                     itm2.Rate = itm.Rate;
                     itm2.Gst = itm.Gst;
@@ -187,6 +188,7 @@ namespace HBManager.Areas.GstBill.Controllers
             {
                 ItemMaster itm2 = db.ItemMasters.Where(x => x.ItemId == itm.ItemId).FirstOrDefault();
                 itm2.ItemDetails = itm.ItemDetails;
+                itm2.ItemPart = itm.ItemPart;
                 itm2.HSN = itm.HSN;
                 itm2.Rate = itm.Rate;
                 itm2.Gst = itm.Gst;

@@ -33,6 +33,7 @@
                                         <tr class="fontMenuHeader textCenter">
                                             <td style="width:5% ;text-align: center;"> Sl No </td>
                                             <td style="width: 30%; text-align: left"><button type="button" class="item-sort" data-sort="ItemDetails">Item Name <i class="fa fa-sort"></i></button></td>
+                                            <td style="width: 10%; text-align: left"><button type="button" class="item-sort" data-sort="ItemPart">Item Part <i class="fa fa-sort"></i></button></td>
                                             <td style="width: 15%; text-align: left"><button type="button" class="item-sort" data-sort="ItemCode">Item Code <i class="fa fa-sort"></i></button></td>
                                             <td style="width:15% ;"><button type="button" class="item-sort" data-sort="HSN">HSN <i class="fa fa-sort"></i></button></td>
                                             <td style="width:10% ;"><button type="button" class="item-sort" data-sort="Rate">Rate <i class="fa fa-sort"></i></button></td>
@@ -65,6 +66,7 @@
                                         html += '<tr class="fontMenuBody" style="border: 1px solid #3574a4b0;background-color:' + bgModified + '">';
                                         html += '<td class="textCenter">' + (snNo - idx) + '</td>';
                                         html += '<td>' + itm.ItemDetails + '</td>';
+                                        html += '<td>' + (itm.ItemPart == null ? '' : itm.ItemPart) + '</td>';
                                         html += '<td>' + itm.ItemCode + '</td>';
                                         html += '<td class="textCenter">' + itm.HSN + '</td>';
                                         html += '<td class="textCenter">' + itm.Rate + '</td>';
@@ -94,7 +96,7 @@
                                 function applySearchAndSort() {
                                     var searchText = $('#itemSearchBox').val().toLowerCase().trim();
                                     filteredItems = items.filter(function (item) {
-                                        return [item.ItemDetails, item.ItemCode, item.HSN, item.Rate, item.Gst]
+                                        return [item.ItemDetails, item.ItemPart, item.ItemCode, item.HSN, item.Rate, item.Gst]
                                             .some(function (value) {
                                                 return String(value == null ? '' : value).toLowerCase().indexOf(searchText) !== -1;
                                             });

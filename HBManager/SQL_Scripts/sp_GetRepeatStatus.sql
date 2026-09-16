@@ -42,10 +42,10 @@ BEGIN
         INNER JOIN dbo.SalaryMaster sm
             ON b.SpendDate >= CAST(sm.FromData AS date)
            AND b.SpendDate < DATEADD(day, 1, CAST(sm.ToDate AS date))
-        LEFT JOIN dbo.GroupMaster gm1 ON b.[G1] = gm1.GroupId
-        LEFT JOIN dbo.GroupMaster gm2 ON b.[G2] = gm2.GroupId
-        LEFT JOIN dbo.GroupMaster gm3 ON b.[G3] = gm3.GroupId
-        INNER JOIN dbo.GroupMaster gm4 ON b.[G4] = gm4.GroupId
+        LEFT JOIN dbo.GroupMaster gm1 ON b.[G1] = gm1.GroupId AND gm1.IsActive = 1
+        LEFT JOIN dbo.GroupMaster gm2 ON b.[G2] = gm2.GroupId AND gm2.IsActive = 1
+        LEFT JOIN dbo.GroupMaster gm3 ON b.[G3] = gm3.GroupId AND gm3.IsActive = 1
+        INNER JOIN dbo.GroupMaster gm4 ON b.[G4] = gm4.GroupId AND gm4.IsActive = 1
         WHERE b.[G4] = 5
         GROUP BY
             sm.YearName, sm.MonthName, b.[G1], gm1.GroupName,

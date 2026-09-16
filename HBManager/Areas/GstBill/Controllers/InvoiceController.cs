@@ -10,6 +10,7 @@ namespace HBManager.Areas.GstBill.Controllers
     public class InvoiceController : Controller
     {
         cbtsplco_annapurnaEntities db = new cbtsplco_annapurnaEntities();
+        private const string InvoiceCounterUpdateKey = "monday";
 
         #region------------------------Create GST Invoice----------------
         public ActionResult GstInvoiceCreate(string draftNo)
@@ -132,6 +133,66 @@ namespace HBManager.Areas.GstBill.Controllers
             return View(billList);
         }
         #endregion-------------------------------------------------------
+
+        public ActionResult InvoiceCounterUpdate()
+        {
+            var counter = db.CounterMasters
+                .Where(x => x.counterName == "invoiceGst")
+                .FirstOrDefault();
+
+            if (counter == null)
+            {
+                return HttpNotFound("The invoice counter was not found.");
+            }
+
+            ViewBag.NextInvoiceNo = BillSupport.increamentInvoice(counter.counterValue);
+            return View(counter);
+        }
+
+        [HttpPost]
+        public ActionResult InvoiceCounterUpdate(int counterValue, string secretKey)
+        {
+            if (!string.Equals(secretKey, InvoiceCounterUpdateKey, StringComparison.Ordinal))
+            {
+                ViewBag.ErrorMessage = "Invalid secret key. The counter was not updated.";
+                return LoadInvoiceCounterUpdateView();
+            }
+
+            var counter = db.CounterMasters
+                .Where(x => x.counterName == "invoiceGst")
+                .FirstOrDefault();
+
+            if (counter == null)
+            {
+                return HttpNotFound("The invoice counter was not found.");
+            }
+
+            if (counterValue <= counter.counterValue)
+            {
+                ViewBag.ErrorMessage = "The new counter value must be greater than the current counter value.";
+                ViewBag.NextInvoiceNo = BillSupport.increamentInvoice(counter.counterValue);
+                return View(counter);
+            }
+
+            counter.counterValue = counterValue;
+            db.SaveChanges();
+            return RedirectToAction("InvoiceCounterUpdate");
+        }
+
+        private ActionResult LoadInvoiceCounterUpdateView()
+        {
+            var counter = db.CounterMasters
+                .Where(x => x.counterName == "invoiceGst")
+                .FirstOrDefault();
+
+            if (counter == null)
+            {
+                return HttpNotFound("The invoice counter was not found.");
+            }
+
+            ViewBag.NextInvoiceNo = BillSupport.increamentInvoice(counter.counterValue);
+            return View("InvoiceCounterUpdate", counter);
+        }
 
         #region------------------------GST invoice Print-----------------
         [HttpGet]
@@ -383,6 +444,37 @@ namespace HBManager.Areas.GstBill.Controllers
                                          IsActive = d.IsActive,
                                      }).ToList();
             return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult UpdateItemPart(int idT, string itemPart)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(itemPart))
+                {
+                    return Json(new { success = false, message = "Part should not be empty" });
+                }
+
+                var itemTransaction = db.ItemTransactions
+                    .Where(x => x.IdT == idT && x.IsActive == true)
+                    .FirstOrDefault();
+
+                if (itemTransaction == null)
+                {
+                    return Json(new { success = false, message = "Item transaction not found" });
+                }
+
+                itemTransaction.ItemmPart = itemPart.Trim();
+                itemTransaction.UpdatedDate = DateTime.Now;
+                db.SaveChanges();
+
+                return Json(new { success = true, itemPart = itemTransaction.ItemmPart });
+            }
+            catch (Exception)
+            {
+                return Json(new { success = false, message = "Part could not be updated" });
+            }
         }
 
         private void DeactiveOldDraft(string draftNo, out bool hasOldDraft, out string oldInvoiceNo)

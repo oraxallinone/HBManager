@@ -31,6 +31,16 @@
                                             @Html.ValidationMessageFor(m => m.ItemDetails, "", new { @class = "text-danger" })
                                         </div>
                                         <div class="form-group col-md-2">
+                                            <label for="exampleInputEmail1">Item Part</label>
+                                            @Html.TextBoxFor(m => m.ItemPart, new { placeholder = "Item Part", @class = "form-control form-control-sm", @readonly = "readonly" })
+                                            @Html.ValidationMessageFor(m => m.ItemPart, "", new { @class = "text-danger" })
+                                        </div>
+                                        <div class="form-group col-md-2">
+                                            <label for="exampleInputEmail1">Item Part</label>
+                                            @Html.TextBoxFor(m => m.ItemPart, new { placeholder = "Item Part", @class = "form-control form-control-sm", @readonly = "readonly" })
+                                            @Html.ValidationMessageFor(m => m.ItemPart, "", new { @class = "text-danger" })
+                                        </div>
+                                        <div class="form-group col-md-2">
                                             <label for="exampleInputEmail1">HSN/SAC</label>
                                             @Html.TextBoxFor(m => m.HSN, new { placeholder = "HSN/ SAC", @class = "form-control form-control-sm", @readonly = "readonly" })
                                             @Html.ValidationMessageFor(m => m.HSN, "", new { @class = "text-danger" })

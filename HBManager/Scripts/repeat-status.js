@@ -22,8 +22,7 @@ $(function () {
     function number(value) { return value === null || value === undefined || value === 0 ? '' : Number(value).toLocaleString('en-IN', { maximumFractionDigits: 2 }); }
     function formatMonthHeader(column) {
         var parts = column.split('-'), year = parts[0], month = parseInt(parts[1], 10);
-        var previousMonth = month === 1 ? 12 : month - 1;
-        return year.substring(2) + '/ ' + ('0' + month).slice(-2) + '/ ' + monthNames[previousMonth - 1];
+        return year.substring(2) + '/ ' + ('0' + month).slice(-2) + '/ ' + monthNames[month - 1];
     }
     $('#reloadRepeatStatus').on('click', loadRepeatStatus);
     $('#repeatStatusBody').on('click', 'tr', function () {

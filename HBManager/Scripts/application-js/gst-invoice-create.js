@@ -95,6 +95,47 @@
         swal("Item Removed", "", "success");
     });
 
+    $(document).on("dblclick", ".cItmPart", function () {
+        let partCell = $(this);
+        let transactionId = partCell.closest("tr").data("transaction-id");
+        if (!transactionId) { return false; }
+
+        $("#itemPartTransactionId").val(transactionId);
+        $("#itemPartValue").val(partCell.text().trim() == "NULL" ? "" : partCell.text().trim());
+        $("#itemPartModal").modal("show");
+    });
+
+    $(document).on("click", "#updateItemPart", function () {
+        let part = $("#itemPartValue").val().trim();
+        let transactionId = $("#itemPartTransactionId").val();
+        if (part == "") {
+            swal("", "Part should not be empty", "error");
+            return false;
+        }
+
+        $.ajax({
+            url: "/GstBill/Invoice/UpdateItemPart",
+            type: "POST",
+            dataType: "json",
+            data: { idT: transactionId, itemPart: part },
+            success: function (result) {
+                if (result.success) {
+                    $("#itemPartModal").modal("hide");
+                    $(".cItmPart").filter(function () {
+                        return $(this).closest("tr").data("transaction-id") == transactionId;
+                    }).text(result.itemPart);
+                    swal("Part updated", "", "success");
+                }
+                else {
+                    swal("", result.message, "error");
+                }
+            },
+            error: function () {
+                swal("", "Part could not be updated", "error");
+            }
+        });
+    });
+
     $('#reset').click(function () {
         location.reload();
     });
@@ -154,12 +195,12 @@
                     $("#txtInternalNote").val(result.IInternalNote || '');
                     let deleteImgPath = '/Content/img/delete.png'; // Use absolute path for static content
                     $.each(result.ItemTransactions, function (index, value) {
-                        bodyHtml = bodyHtml + " <tr class='fontMenuBody tableBorderitem cTableRow bg-bisq'>" +
+                        bodyHtml = bodyHtml + " <tr data-transaction-id='" + value.IdT + "' class='fontMenuBody tableBorderitem cTableRow bg-bisq'>" +
                                          "<td class='textCenter cItmCode'>" + value.ItemCodeT + "</td>" +
                                          "<td class='cItmName'>" + value.ItemDetails + " </td>" +
                                          "<td class='textCenter cItmHsn'>" + value.HSN + "</td>" +
                                          "<td class='textCenter cItmQty'>" + value.Quantity + "</td>" +
-                                         "<td class='textCenter cItmPart' style='text-transform:uppercase'>" + value.ItemmPart + "</td>" +
+                                         "<td class='textCenter cItmPart' style='text-transform:uppercase'>" + (value.ItemmPart || "NULL") + "</td>" +
                                          "<td class='textCenter cItmRate'>" + value.Rate + "</td>" +
                                          "<td class='textRight cItmValue'>" + value.Value + "</td>" +
                                          "<td class='textCenter'> <img style='height: 15px;cursor: pointer' class='btmItmDelete' src='" + deleteImgPath + "' /> </td>" +

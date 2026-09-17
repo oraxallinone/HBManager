@@ -1,7 +1,140 @@
-﻿$(document).ready(function () {
+﻿//ok
+$(document).ready(function () {
     var screenWidth = window.screen.width;
     console.log(screenWidth);
     $(".div-responsive").css("height", "69vh", "important");
+
+    $(document).on("dblclick", "#budgetGroupingHelpIcon", function () {
+        bootstrap.Modal.getOrCreateInstance(document.getElementById("budgetGroupingHelpModal")).show();
+    });
+
+    var groupMappingCache = [];
+
+    loadGroupMappings();
+
+    $('#budgetGroupingHelpModal').on('shown.bs.modal', function () {
+        loadGroupMappingOptions();
+        loadGroupMappings();
+    });
+
+    //ok
+    function loadGroupMappingOptions() {
+        ['g1', 'g2', 'g3', 'g4'].forEach(function (groupType, index) {
+            var selector = '#mappingG' + (index + 1);
+            $.getJSON('/Group/GetGroup', { groupType: groupType })
+                .done(function (items) {
+                    var select = $(selector).empty().append($('<option>').val('0').text('-- Select ' + groupType.toUpperCase() + ' --'));
+                    (items || []).forEach(function (item) {
+                        var status = item.IsActive ? '' : ' (Inactive)';
+                        select.append($('<option>').val(item.Id).text(item.GroupName + status));
+                    });
+                })
+                .fail(function () { alert('Could not load ' + groupType.toUpperCase() + ' group values.'); });
+        });
+    }
+
+    //ok
+    function loadGroupMappings() {
+        $.getJSON('/BudgetGrouping/GetGroupMappingConfigurations')
+            .done(function (items) {
+                groupMappingCache = items || [];
+                renderGroupMappings();
+            })
+            .fail(function () { alert('Could not load group mapping combinations.'); });
+    }
+
+    //ok
+    function applyGroupMapping($changedSelect) {
+        var changedGroup = 'g' + $changedSelect.attr('id').replace('ddlUpdateG', '').replace('Group', '').toLowerCase();
+        var selectedValue = parseInt($changedSelect.val(), 10) || 0;
+        if (!selectedValue || !groupMappingCache.length) return;
+
+        var idProperty = changedGroup.toUpperCase() + 'Id';
+        var matchingMapping = groupMappingCache.find(function (mapping) {
+            return String(mapping.MappingGroup).toLowerCase() === changedGroup &&
+                parseInt(mapping[idProperty], 10) === selectedValue;
+        });
+        if (!matchingMapping) return;
+
+        var suffix = $changedSelect.attr('id').indexOf('Group') !== -1 ? 'Group' : '';
+        ['G1', 'G2', 'G3', 'G4'].forEach(function (groupName) {
+            if (groupName.toLowerCase() === changedGroup) return;
+            $('#ddlUpdate' + groupName + suffix).val(matchingMapping[groupName + 'Id']);
+        });
+    }
+
+    $(document).on('change', '#ddlUpdateG1, #ddlUpdateG2, #ddlUpdateG3, #ddlUpdateG4, #ddlUpdateG1Group, #ddlUpdateG2Group, #ddlUpdateG3Group, #ddlUpdateG4Group', function () {
+        applyGroupMapping($(this));
+    });
+
+    //ok
+    function renderGroupMappings() {
+        var body = $('#groupMappingTable tbody').empty();
+        $('#groupMappingCount').text(groupMappingCache.length + (groupMappingCache.length === 1 ? ' saved' : ' saved'));
+        if (!groupMappingCache.length) {
+            body.append('<tr><td colspan="6" class="text-center group-mapping-empty">No combinations saved yet.</td></tr>');
+            return;
+        }
+        groupMappingCache.forEach(function (item) {
+            var row = $('<tr>');
+            row.append($('<td>').html('<span class="group-mapping-badge">' + item.MappingGroup + '</span>'));
+            row.append($('<td>').text(item.G1Name || '--'));
+            row.append($('<td>').text(item.G2Name || '--'));
+            row.append($('<td>').text(item.G3Name || '--'));
+            row.append($('<td>').text(item.G4Name || '--'));
+            var actions = $('<td class="text-end">');
+            actions.append($('<button type="button" class="btn btn-sm btn-outline-primary me-1" title="Edit"><i class="bi bi-pencil"></i></button>').on('click', function () { editGroupMapping(item); }));
+            actions.append($('<button type="button" class="btn btn-sm btn-outline-danger" title="Delete"><i class="bi bi-trash3"></i></button>').on('click', function () { deleteGroupMapping(item.Id); }));
+            row.append(actions);
+            body.append(row);
+        });
+    }
+
+    //ok
+    function editGroupMapping(item) {
+        $('#groupMappingId').val(item.Id);
+        $('#mappingGroup').val(item.MappingGroup);
+        $('#mappingG1').val(item.G1Id);
+        $('#mappingG2').val(item.G2Id);
+        $('#mappingG3').val(item.G3Id);
+        $('#mappingG4').val(item.G4Id);
+        $('#btnSaveGroupMapping').html('<i class="bi bi-check2-circle"></i> Update combination');
+    }
+
+    //ok
+    function resetGroupMapping() {
+        $('#groupMappingId').val('0');
+        $('#mappingGroup').val('0');
+        $('.mapping-group-select').val('0');
+        $('#btnSaveGroupMapping').html('<i class="bi bi-check2-circle"></i> Save combination');
+    }
+
+    $('#btnResetGroupMapping').on('click', resetGroupMapping);
+    $('#btnSaveGroupMapping').on('click', function () {
+        var data = {
+            Id: parseInt($('#groupMappingId').val(), 10) || 0,
+            MappingGroup: $('#mappingGroup').val(),
+            G1Id: parseInt($('#mappingG1').val(), 10) || 0,
+            G2Id: parseInt($('#mappingG2').val(), 10) || 0,
+            G3Id: parseInt($('#mappingG3').val(), 10) || 0,
+            G4Id: parseInt($('#mappingG4').val(), 10) || 0
+        };
+        if (data.MappingGroup === '0') { alert('Select a mapping group.'); return; }
+        $.post('/BudgetGrouping/SaveGroupMappingConfiguration', data, function (res) {
+            if (!res || !res.Success) { alert(res && res.Message ? res.Message : 'Could not save the combination.'); return; }
+            resetGroupMapping();
+            loadGroupMappings();
+        }, 'json').fail(function () { alert('Could not save the combination.'); });
+    });
+
+    //ok
+    function deleteGroupMapping(id) {
+        if (!window.confirm('Delete this group mapping combination?')) return;
+        $.post('/BudgetGrouping/DeleteGroupMappingConfiguration', { id: id }, function (res) {
+            if (!res || !res.Success) { alert('Could not delete the combination.'); return; }
+            loadGroupMappings();
+        }, 'json').fail(function () { alert('Could not delete the combination.'); });
+    }
 
     $("#lnkMaximize").click(function () {
         $(".div-responsive").css("height", "74vh", "important");
@@ -13,10 +146,12 @@
 
     var selectedBudgetIds = [];  // Global array to store selected IDs
 
+    //ok
     function hideSaveButton() {
         $("#btnSaveBudget").hide();
     }
 
+    //ok
     function showSaveButton() {
         $("#btnSaveBudget").show();
     }
@@ -39,6 +174,7 @@
         }
     });
 
+    //ok
     function updateMonthOptions() {
         var selectedYear = parseInt($('#ddlYear').val(), 10);
         var selectedMonth = parseInt($('#ddlMonth').val(), 10) || 0;
@@ -56,6 +192,7 @@
 
     updateMonthOptions();
 
+    //ok
     function getAllBudgetForGroupOnly() {
         var year = $("#ddlYear").val();
         var month = $("#ddlMonth").val();
@@ -403,6 +540,7 @@
 
 
 
+    //ok
     function validateBudget() {
         var year = $("#ddlYear").val();
         var month = $("#ddlMonth").val();
@@ -443,6 +581,7 @@
         return true;
     }
 
+    //ok
     function InsertBudget() {
         globalSave = 1
         let obj = {
@@ -478,6 +617,7 @@
         });
     }
 
+    //ok
     function fnClearAmtDetails() {
         //$("#ddlYear").val("0");
         //$("#ddlMonth").val("0");
@@ -492,6 +632,7 @@
     }
 
     //new
+    //ok
     function showMessage(msgv) {
 
         // Create message box
@@ -522,6 +663,7 @@
         }, 1000);
     }
 
+    //ok
     function showMessageError() {
 
         // Create message box
@@ -553,7 +695,7 @@
     }
 
     $(document).on('click', '.class-btnViewBudget', function () {
-        debugger
+        
         // Show the update button when any checkbox is clicked
         $("#btnUpdateBudgetGroupSingle").show();
         hideSaveButton();
@@ -599,6 +741,7 @@
         UpdateBudgetGroupSingle();
     });
 
+    //ok
     function UpdateBudgetGroupSingle() {
         var id = parseInt($("#hidenBudgetID").val()) || 0;
         if (id === 0) {
@@ -738,6 +881,7 @@
     });
 
     // ... rest of existing functions ...
+    //ok
     function bindBudgetDetails(data) {
         if (data) {
             $("#ddlYear").val(data.Year);
@@ -757,6 +901,7 @@
         }
     }
 
+    //ok
     function ToInputDateFormat(dotNetDate) {
         // Extract the ticks from /Date(1763317800000)/
         var timestamp = parseInt(dotNetDate.replace(/[^0-9]/g, ""));
@@ -772,6 +917,7 @@
         return `${yyyy}-${mm}-${dd}`;
     }
 
+    //ok
     function UpdateBudgetGroups() {
         var g1 = $("#ddlUpdateG1Group").val();
         var g2 = $("#ddlUpdateG2Group").val();
@@ -821,6 +967,7 @@
         });
     }
 
+    //ok
     function Get4Group() {
         $.ajax({
             url: "/Budget/Get4Group",
@@ -878,6 +1025,7 @@
     }
 
     //execute on page load
+    //ok
     function GetAllBudgetFromToWithGroup() {
         var year = $("#ddlYear").val();
         var month = $("#ddlMonth").val();
@@ -914,6 +1062,7 @@
         });
     }
 
+    //ok
     function extractNameById(groupId) {
         if (!groupId) return "";
 
@@ -922,6 +1071,7 @@
     }
 
     //binding all rows to table
+    //ok
     function bindBudgetTable(data) {
         var html = "";
         var i = 1;
@@ -1016,6 +1166,7 @@
     }
 
     //31 Oct 2025 (Fri)
+    //ok
     function ToDateAndDay(jsonDate) {
         if (!jsonDate) return "";
 
@@ -1133,6 +1284,7 @@
     //    return `${day} ${monthName} ${year} (${dayName})`;
     //}
 
+    //ok
     function DeleteBudgetById(id) {
         if (!confirm("Are you sure you want to delete this record?")) return;
 
@@ -1155,6 +1307,7 @@
         });
     }
 
+    //ok
     function GetBudgetById(id) {
         $.ajax({
             url: "/Budget/GetBudgetById",
@@ -1186,6 +1339,7 @@
         });
     }
 
+    //not
     function formatDate(val) {
         if (!val) return "";
         var d = new Date(val);
@@ -1195,6 +1349,7 @@
         return (d.getDate()) + ' ' + months[d.getMonth()] + ' ' + days[d.getDay()];
     }
 
+    //ok
     function formatDateForInput(val) {
 
         if (!val) return "";
@@ -1206,12 +1361,14 @@
         return yyyy + '-' + mm + '-' + dd;
     }
 
+    //not
     function formatAmount(val) {
         if (!val) return "0.00";
         return parseFloat(val).toFixed(2);
     }
 
     //date to small day sun
+    //ok
     function ToDayExtraction(dateString) {
         if (!dateString) return "";
 
@@ -1226,6 +1383,7 @@
     }
 
     //convert day to class bg-day-sun
+    //ok
     function getDayClass(dayName) {
         switch (dayName) {
             case 'sun': return "bg-day-sun";
@@ -1239,6 +1397,7 @@
         }
     }
 
+    //ok
     function GetGroupMasterUncut() {
         $.ajax({
             url: '/Budget/GetGroupMasterUncut',
@@ -1255,6 +1414,7 @@
         });
     }
 
+    //not
     function GetGroupMasterNameById(id) {
         if (!GobalGroupMasterUncut || !GobalGroupMasterUncut.length) return '';
         var gid = parseInt(id, 10);
@@ -1264,6 +1424,7 @@
     }
 
     //set current month & year
+    //ok
     function setThisYearMonth() {
         const today = new Date();
         const year = today.getFullYear();
@@ -1276,6 +1437,7 @@
     }
 
     var globalSave = 1;
+    //ok
     function selectToLast() {
         if (globalSave == 1) {
             var tbody = $("#gridTableBudget tbody");
@@ -1308,6 +1470,7 @@
         }
     }
 
+    //ok
     function getTotalSum() {
         var total = 0;
 
@@ -1327,6 +1490,7 @@
     }
 
     var globalTotal = 0;
+    //ok
     function getTotalSaveSum() {
         var totalSave = 0;
 

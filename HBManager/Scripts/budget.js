@@ -541,7 +541,7 @@
     });
 
     $('#btnSaveWaste').click(function () {
-        debugger
+        
         var wasteAmount = parseFloat($('#wasteAmount').val());
         var reason = $('#wasteReason').val().trim();
         if (isNaN(wasteAmount) || wasteAmount < 0 || !reason) {
@@ -557,7 +557,7 @@
             data: JSON.stringify(payload),
             dataType: 'json',
             success: function () {
-                debugger
+                
                 bootstrap.Modal.getOrCreateInstance(document.getElementById('wasteTrackerModal')).hide();
                 bindData();
             },

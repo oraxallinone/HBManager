@@ -183,6 +183,51 @@
     </div></div>
 </div>
 
+<div class="modal fade" id="budgetGroupingHelpModal" tabindex="-1" role="dialog" aria-labelledby="budgetGroupingHelpTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-content group-mapping-modal">
+            <div class="modal-header group-mapping-header">
+                <div>
+                    <span class="group-mapping-eyebrow">Budget grouping</span>
+                    <h5 class="modal-title" id="budgetGroupingHelpTitle">Group mapping configuration</h5>
+                    <p>Save reusable combinations for the four group levels.</p>
+                </div>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="groupMappingId" value="0" />
+                <div class="group-mapping-form">
+                    <div class="group-mapping-field group-mapping-primary">
+                        <label for="mappingGroup">Mapping for group</label>
+                        <select id="mappingGroup" class="form-select">
+                            <option value="0">-- Select group --</option>
+                            <option value="g1">G1</option>
+                            <option value="g2">G2</option>
+                            <option value="g3">G3</option>
+                            <option value="g4">G4</option>
+                        </select>
+                    </div>
+                    <div class="group-mapping-field"><label for="mappingG1">G1 value</label><select id="mappingG1" class="form-select mapping-group-select"><option value="0">-- Select G1 --</option></select></div>
+                    <div class="group-mapping-field"><label for="mappingG2">G2 value</label><select id="mappingG2" class="form-select mapping-group-select"><option value="0">-- Select G2 --</option></select></div>
+                    <div class="group-mapping-field"><label for="mappingG3">G3 value</label><select id="mappingG3" class="form-select mapping-group-select"><option value="0">-- Select G3 --</option></select></div>
+                    <div class="group-mapping-field"><label for="mappingG4">G4 value</label><select id="mappingG4" class="form-select mapping-group-select"><option value="0">-- Select G4 --</option></select></div>
+                </div>
+                <div class="group-mapping-actions">
+                    <button type="button" class="btn btn-primary" id="btnSaveGroupMapping"><i class="bi bi-check2-circle"></i> Save combination</button>
+                    <button type="button" class="btn btn-outline-secondary" id="btnResetGroupMapping"><i class="bi bi-arrow-counterclockwise"></i> Clear</button>
+                </div>
+                <div class="group-mapping-list-heading"><span>Saved combinations</span><span id="groupMappingCount">0 saved</span></div>
+                <div class="table-responsive group-mapping-table-wrap">
+                    <table class="table align-middle" id="groupMappingTable">
+                        <thead><tr><th>Mapping</th><th>G1</th><th>G2</th><th>G3</th><th>G4</th><th class="text-end">Actions</th></tr></thead>
+                        <tbody><tr><td colspan="6" class="text-center group-mapping-empty">No combinations saved yet.</td></tr></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="~/Scripts/year-month-filter.js?v=20260827"></script>
-<script src="~/Scripts/budgetGrouping.js?v=2026082503"></script>
+<script src="~/Scripts/budgetGrouping.js?v=20260917"></script>
 

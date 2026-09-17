@@ -9,7 +9,7 @@
 
     //dmf();
     //function dmf() {
-    //    debugger
+    //    
     //    alert("Dimensions: " + $(window).width() + " × " + $(window).height());
 
     //}

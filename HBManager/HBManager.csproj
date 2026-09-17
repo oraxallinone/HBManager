@@ -190,6 +190,7 @@
     <Compile Include="Models\Group4Result.cs" />
     <Compile Include="Models\GroupBudgetOverviewModel.cs" />
     <Compile Include="Models\GroupMaster.cs" />
+    <Compile Include="Models\GroupMappingConfiguration.cs" />
     <Compile Include="Models\GstType.cs" />
     <Compile Include="Models\QueryViewModel.cs" />
     <Compile Include="Models\RowStatusItem.cs" />
@@ -203,6 +204,7 @@
     <Compile Include="Service\DashboardService.cs" />
     <Compile Include="Service\GraphService.cs" />
     <Compile Include="Service\GroupService.cs" />
+    <Compile Include="Service\GroupMappingService.cs" />
     <Compile Include="Service\LoginService.cs" />
     <Compile Include="Service\NoteService.cs" />
     <Compile Include="Service\SalaryService.cs" />

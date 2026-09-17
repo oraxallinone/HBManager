@@ -42,6 +42,12 @@ namespace HBManager.Service
                     }
                 }
             }
+
+            if (!string.IsNullOrWhiteSpace(groupType))
+            {
+                list.RemoveAll(item => !string.Equals(item.GroupType, groupType, StringComparison.OrdinalIgnoreCase));
+            }
+
             return list;
         }
 

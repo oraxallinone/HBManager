@@ -218,6 +218,12 @@
                     <li style="margin-top: 9px;">
                         <input type="checkbox" id="checkForAll" style="vertical-align:middle; margin-right:4px;" />
                         <label for="checkForAll" style="margin-right:10px; font-weight:normal; vertical-align:middle;">All</label>
+                        @if (curController == "BudgetGrouping" && curAction == "BudgetGroupingIndex")
+                        {
+                            <button type="button" id="budgetGroupingHelpIcon" class="btn btn-link p-0" title="Open grouping help" aria-label="Open grouping help" style="vertical-align:middle; margin-right:10px;">
+                                <i class="bi bi-info-circle" aria-hidden="true"></i>
+                            </button>
+                        }
                         <select id="searchDDlG1" class="ddl-master">
                             <option value="0">-- G1 --</option>
                         </select>

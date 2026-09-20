@@ -249,6 +249,8 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <script src="~/Scripts/year-month-filter.js?v=20260827"></script>
     <script type="text/javascript">
+        var selectedRowId = null;
+
         $(document).ready(function () {
             var currentDate = new Date();
             var currentYear = currentDate.getFullYear();      // Returns the 4-digit year (e.g., 2026)
@@ -316,6 +318,11 @@
             // NEW MOVE BUTTON INTERACTION: Captures selected radio arrays and dispatches to server endpoint
             $("#btnMove").click(function () {
                 var selectedItems = [];
+                var selectedRow = $('#auditGrid tbody tr.row-selected');
+
+                if (selectedRow.length > 0) {
+                    selectedRowId = selectedRow.data('id');
+                }
 
                 // Select only the inputs that the user checked
                 $('#auditGrid tbody input[type="radio"]:checked').each(function () {
@@ -341,7 +348,7 @@
                     data: JSON.stringify({ items: selectedItems }),
                     success: function (response) {
                         if (response.success) {
-                            alert(response.message);
+                            //alert(response.message);
                             loadBankNames(); // Refresh bank options and grid after status change
                         } else {
                             alert("Error processing updates: " + response.message);
@@ -437,6 +444,7 @@
             $(document).on('click', '#auditGrid tbody tr', function () {
                 $('#auditGrid tbody tr').removeClass('row-selected');
                 $(this).addClass('row-selected');
+                selectedRowId = $(this).data('id');
             });
 
             // Open the full details value for editing on double-click.
@@ -475,12 +483,20 @@
                     }
                 });
             });
+
+            $('#detailsModal').on('keydown', function (event) {
+                if (event.which === 13 && !$(event.target).is('button, input, select')) {
+                    event.preventDefault();
+                    $('#btnSaveDetails').click();
+                }
+            });
         });
 
         function loadBankNames() {
             var year = $("#ddlYear").val();
             var month = $("#ddlMonth").val();
             var bankSelect = $("#ddlbyBank");
+            var selectedBank = bankSelect.val() || "";
 
             bankSelect.empty().append("<option value=''>--Bank--</option>");
 
@@ -501,6 +517,13 @@
                             text: bankName
                         }));
                     });
+
+                    if (selectedBank && bankSelect.find("option").filter(function () {
+                        return this.value === selectedBank;
+                    }).length > 0) {
+                        bankSelect.val(selectedBank);
+                    }
+
                     loadGridData();
                 },
                 error: function () {
@@ -541,7 +564,7 @@
                         var shortDetails = obj.Details && obj.Details.length > 25 ? obj.Details.substring(0, 25) + "..." : (obj.Details || "");
                         var highlightClass = obj.TransactionType === "Credit" ? "success" : "";
 
-                        htmlBuffer += "<tr class='" + highlightClass + "'>";
+                        htmlBuffer += "<tr class='" + highlightClass + "' data-id='" + obj.Id + "'>";
                         htmlBuffer += "<td>" + obj.Id + "</td>";
                         htmlBuffer += "<td>" + (obj.BankName || '') + "</td>";
                                 htmlBuffer += "<td>" + obj.Year + "/" + obj.Month + "</td>";
@@ -577,6 +600,12 @@
                     });
 
                     $("#auditGrid tbody").append(htmlBuffer);
+
+                    if (selectedRowId !== null) {
+                        $('#auditGrid tbody tr').filter(function () {
+                            return $(this).data('id') == selectedRowId;
+                        }).addClass('row-selected');
+                    }
                 }
             });
         }

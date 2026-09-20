@@ -115,7 +115,7 @@
             if (ItemPart == "") { swal("", "Item Part should not be empty", "error"); return false; }
             if (HSN == "") { swal("", "HSN should not be empty", "error"); return false; }
             if (Rate == "") { swal("", "Rate should not be empty", "error"); return false; }
-            if (Gst == 0) { swal("", "Choose a Item GST value", "error"); return false; }
+            if (Gst == -1) { swal("", "Choose a Item GST value", "error"); return false; }
             isPost = true
 
             if (isPost == true) {

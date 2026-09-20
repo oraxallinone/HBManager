@@ -137,7 +137,7 @@
                                                     {
                                                     <td class="textCenter">-- Not Defined --</td> }
                                                     <td class=""> @Convert.ToDateTime(itm.IDate).ToString("dd-MM-yyyy")</td>
-                                                    <td class="textCenter">@itm.TotalValue</td>
+                                                    <td class="textCenter">@itm.TotalValue.ToString("0.00")</td>
                                                     @*<td class="textCenter">@itm.TotalTotal</td>*@
                                                     <td class="textCenter">
                                                         @Html.ActionLink("Print", "GstInvoicePrint", "Invoice", new { INo = @itm.INo }, null)

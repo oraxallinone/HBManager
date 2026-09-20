@@ -118,16 +118,7 @@ namespace HBManager.Areas.GstBill.Controllers
                 var itemTransactions = db.ItemTransactions
                     .Where(x => x.InvoiceNoT == bill.INo && x.IsActive == true)
                     .ToList();
-
-                decimal partATotal = itemTransactions
-                    .Where(x => x.ItemmPart != null && x.ItemmPart.ToLower() == "a")
-                    .Sum(x => x.Value);
-                decimal partBTotal = itemTransactions
-                    .Where(x => x.ItemmPart != null && x.ItemmPart.ToLower() == "b")
-                    .Sum(x => x.Value);
-                decimal partAGst = Math.Round(partATotal * 0.05m, 2);
-
-                bill.TotalValue = Math.Round(partATotal + partAGst + partBTotal, 0);
+                bill.TotalValue = CalculateInvoiceGrandTotal(itemTransactions);
             }
 
             return View(billList);
@@ -318,7 +309,7 @@ namespace HBManager.Areas.GstBill.Controllers
                 inv.IInternalNote = model.IInternalNote;
                 inv.IDate = model.IDate;
                 inv.ICustId = model.ICustId;
-                inv.TotalValue = model.TotalValue;
+                inv.TotalValue = CalculateInvoiceGrandTotal(model.ItemTransList);
                 inv.CreatedDate = DateTime.Now;
                 inv.IsActive = true;
                 db.InvoiceDetails.Add(inv);
@@ -354,12 +345,15 @@ namespace HBManager.Areas.GstBill.Controllers
                 }
 
 
-                if (model.IinvoiceStatus == "invoice" && hasOldDraft == false)
+                if (model.IinvoiceStatus == "invoice")
                 {
                     int newDbCounter = Convert.ToInt32(model.INo.Remove(0, 2));
                     CounterMaster cnt = db.CounterMasters.Where(x => x.counterName == "invoiceGst").FirstOrDefault();
-                    cnt.counterValue = newDbCounter;
-                    db.SaveChanges();
+                    if (cnt != null && cnt.counterValue < newDbCounter)
+                    {
+                        cnt.counterValue = newDbCounter;
+                        db.SaveChanges();
+                    }
                 }
 
                 ReturnResult result = new ReturnResult
@@ -375,6 +369,32 @@ namespace HBManager.Areas.GstBill.Controllers
                 return Json("0"); throw;
             }
             finally { }
+        }
+
+        private static decimal CalculateInvoiceGrandTotal(IEnumerable<ItemTransaction> itemTransactions)
+        {
+            decimal partATotal = itemTransactions
+                .Where(x => x.ItemmPart != null && x.ItemmPart.Equals("a", StringComparison.OrdinalIgnoreCase))
+                .Sum(x => x.Value);
+            decimal partBTotal = itemTransactions
+                .Where(x => x.ItemmPart != null && x.ItemmPart.Equals("b", StringComparison.OrdinalIgnoreCase))
+                .Sum(x => x.Value);
+            decimal partAGst = Math.Round(partATotal * 0.05m, 2);
+
+            return Math.Round(partATotal + partAGst + partBTotal, 0);
+        }
+
+        private static decimal CalculateInvoiceGrandTotal(IEnumerable<InvoiceGstItemTransactionViewModel> itemTransactions)
+        {
+            decimal partATotal = itemTransactions
+                .Where(x => x.itm_Part != null && x.itm_Part.Equals("a", StringComparison.OrdinalIgnoreCase))
+                .Sum(x => x.itm_Value);
+            decimal partBTotal = itemTransactions
+                .Where(x => x.itm_Part != null && x.itm_Part.Equals("b", StringComparison.OrdinalIgnoreCase))
+                .Sum(x => x.itm_Value);
+            decimal partAGst = Math.Round(partATotal * 0.05m, 2);
+
+            return Math.Round(partATotal + partAGst + partBTotal, 0);
         }
 
         [HttpPost]

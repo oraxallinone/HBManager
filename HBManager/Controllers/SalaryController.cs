@@ -12,6 +12,7 @@ namespace HBManager.Controllers
     {
         private readonly SalaryService _svc = new SalaryService();
 
+        [HttpGet]
         public ActionResult SalaryIndex()
         {
             return View();
@@ -25,6 +26,7 @@ namespace HBManager.Controllers
         }
 
         [HttpPost]
+        [HBManager.Security.ValidateAntiForgeryTokenAttribute]
         public JsonResult InsertSalary(SalaryMaster model)
         {
             var id = _svc.InsertSalaryMaster(model);
@@ -32,6 +34,7 @@ namespace HBManager.Controllers
         }
 
         [HttpPost]
+        [HBManager.Security.ValidateAntiForgeryTokenAttribute]
         public JsonResult UpdateSalaryById(SalaryMaster model)
         {
             var ok = _svc.UpdateSalaryMasterById(model);
@@ -39,6 +42,7 @@ namespace HBManager.Controllers
         }
 
         [HttpPost]
+        [HBManager.Security.ValidateAntiForgeryTokenAttribute]
         public JsonResult DeleteSalaryById(int id)
         {
             var ok = _svc.DeleteSalaryMasterById(id);

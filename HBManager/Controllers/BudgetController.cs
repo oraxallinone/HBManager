@@ -16,11 +16,13 @@ namespace HBManager.Controllers
         private readonly BudgetService _svc = new BudgetService();
 
         // Mobile-friendly budget index view
-        public ActionResult BudgeMobileIndex()
+        [HttpGet]
+        public ActionResult BudgetMobileIndex()
         {
             return View();
         }
 
+        [HttpGet]
         public ActionResult BudgetIndex()
         {
             Response.Cache.SetCacheability(HttpCacheability.NoCache);
@@ -28,6 +30,7 @@ namespace HBManager.Controllers
             return View();
         }
 
+        [HttpGet]
         public ActionResult BudgetVerification()
         {
             return View();
@@ -80,14 +83,29 @@ namespace HBManager.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetAllBudgetFromToWithGroup(int year, int month, int g1, int g2, int g3, int g4, bool isAll, string searchText)
+        public ActionResult GetAllBudgetFromToWithGroup(BudgetFilterRequest request)
         {
-            var list = _svc.GetBudgetByFromToDateWithGroup(year, month, g1, g2, g3, g4, isAll, searchText);
+            if (request == null || !ModelState.IsValid)
+            {
+                return new HttpStatusCodeResult(400, "Invalid budget filter.");
+            }
+
+            var groupIds = request.GroupIds ?? new List<int>();
+            var list = _svc.GetBudgetByFromToDateWithGroup(
+                request.Year.Value,
+                request.Month.Value,
+                groupIds.ElementAtOrDefault(0),
+                groupIds.ElementAtOrDefault(1),
+                groupIds.ElementAtOrDefault(2),
+                groupIds.ElementAtOrDefault(3),
+                request.IsAll,
+                request.SearchText);
             list.ForEach(item => item.SpendDateText = item.SpendDate.HasValue ? item.SpendDate.Value.ToString("yyyy-MM-dd HH:mm:ss.fff") : null);
             return Json(list, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
+        [HBManager.Security.ValidateAntiForgeryTokenAttribute]
         public JsonResult InsertBudget(Budget model)
         {
             var rowIffected = _svc.InsertBudget(model);
@@ -95,6 +113,7 @@ namespace HBManager.Controllers
         }
 
         [HttpPost]
+        [HBManager.Security.ValidateAntiForgeryTokenAttribute]
         public JsonResult UpdateBudgetById(Budget model)
         {
             var rowIffected = _svc.UpdateBudgetById(model);
@@ -102,6 +121,7 @@ namespace HBManager.Controllers
         }
 
         [HttpPost]
+        [HBManager.Security.ValidateAntiForgeryTokenAttribute]
         public JsonResult UpdateBankName(int id, string bankName)
         {
             var rowsAffected = _svc.UpdateBankName(id, bankName);
@@ -109,6 +129,7 @@ namespace HBManager.Controllers
         }
 
         [HttpPost]
+        [HBManager.Security.ValidateAntiForgeryTokenAttribute]
         public JsonResult DeleteBudgetById(int id)
         {
             var ok = _svc.DeleteBudgetById(id);
@@ -116,6 +137,7 @@ namespace HBManager.Controllers
         }
 
         [HttpPost]
+        [HBManager.Security.ValidateAntiForgeryTokenAttribute]
         public JsonResult MoveBudgetToMonthIn(MoveBudgetToMonthInModel model)
         {
             var rows = _svc.MoveBudgetToMonthIn(model);
@@ -129,18 +151,21 @@ namespace HBManager.Controllers
         }
 
         [HttpPost]
+        [HBManager.Security.ValidateAntiForgeryTokenAttribute]
         public JsonResult InsertWasteTracker(WasteTracker model)
         {
             return Json(new { Id = _svc.InsertWasteTracker(model) });
         }
 
         [HttpPost]
+        [HBManager.Security.ValidateAntiForgeryTokenAttribute]
         public JsonResult UpdateWasteTracker(WasteTracker model)
         {
             return Json(new { Rows = _svc.UpdateWasteTracker(model) });
         }
 
         [HttpPost]
+        [HBManager.Security.ValidateAntiForgeryTokenAttribute]
         public JsonResult DeleteWasteTracker(int id)
         {
             return Json(new { Rows = _svc.DeleteWasteTracker(id) });
@@ -161,6 +186,7 @@ namespace HBManager.Controllers
         }
 
         [HttpPost]
+        [HBManager.Security.ValidateAntiForgeryTokenAttribute]
         public JsonResult UpdateBudgetGroups(List<int> budgetIds, int? g1, int? g2, int? g3, int? g4)
         {
             // Convert null to 0 if default option was selected, or keep null if value was selected
@@ -181,6 +207,7 @@ namespace HBManager.Controllers
         }
 
         [HttpPost]
+        [HBManager.Security.ValidateAntiForgeryTokenAttribute]
         public JsonResult InsertBudgetVerificationIn(BudgetVerificationInModel model)
         {
             var id = _svc.InsertBudgetVerificationIn(model);
@@ -188,6 +215,7 @@ namespace HBManager.Controllers
         }
 
         [HttpPost]
+        [HBManager.Security.ValidateAntiForgeryTokenAttribute]
         public JsonResult UpdateBudgetVerificationIn(BudgetVerificationInModel model)
         {
             var rows = _svc.UpdateBudgetVerificationIn(model);
@@ -195,6 +223,7 @@ namespace HBManager.Controllers
         }
 
         [HttpPost]
+        [HBManager.Security.ValidateAntiForgeryTokenAttribute]
         public JsonResult InsertBudgetVerificationNow(BudgetVerificationNowModel model)
         {
             var id = _svc.InsertBudgetVerificationNow(model);
@@ -202,6 +231,7 @@ namespace HBManager.Controllers
         }
 
         [HttpPost]
+        [HBManager.Security.ValidateAntiForgeryTokenAttribute]
         public JsonResult UpdateBudgetVerificationNow(BudgetVerificationNowModel model)
         {
             var rows = _svc.UpdateBudgetVerificationNow(model);
@@ -209,6 +239,7 @@ namespace HBManager.Controllers
         }
 
         [HttpPost]
+        [HBManager.Security.ValidateAntiForgeryTokenAttribute]
         public JsonResult DeleteBudgetVerificationIn(int idIn)
         {
             var rows = _svc.DeleteBudgetVerificationIn(idIn);
@@ -216,12 +247,14 @@ namespace HBManager.Controllers
         }
 
         [HttpPost]
+        [HBManager.Security.ValidateAntiForgeryTokenAttribute]
         public JsonResult DeleteBudgetVerificationNow(int idNow)
         {
             var rows = _svc.DeleteBudgetVerificationNow(idNow);
             return Json(new { Rows = rows });
         }
         [HttpPost]
+        [HBManager.Security.ValidateAntiForgeryTokenAttribute]
         public JsonResult UpdateText(int id, string details)
         {
             var ok = _svc.UpdateText(id, details);
@@ -229,6 +262,7 @@ namespace HBManager.Controllers
         }
 
         [HttpPost]
+        [HBManager.Security.ValidateAntiForgeryTokenAttribute]
         public JsonResult UpdateBudgetVerificationById(Budget model)
         {
             var rowIffected = _svc.UpdateBudgetVerificationById(model);

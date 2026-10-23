@@ -1,0 +1,56 @@
+﻿
+    $(document).ready(function () {
+
+        $("#itemSubmit").click(function (e) {
+            e.preventDefault();
+            var ItemCode = $("#ItemCode").val();
+            var ItemDetails = $("#ItemDetails").val();
+            var ItemPart = $("#ItemPart").val();
+            var HSN = $("#HSN").val();
+            var Rate = $("#Rate").val();
+            var Gst = $("#Gst").val();
+            var isPost = false;
+
+            if (ItemCode == "") { swal("", "Item Code should not be empty", "error"); return false; }
+            if (ItemDetails == "") { swal("", "Item Details should not be empty", "error"); return false; }
+            if (ItemPart == "") { swal("", "Item Part should not be empty", "error"); return false; }
+            if (HSN == "") { swal("", "HSN should not be empty", "error"); return false; }
+            if (Rate == "") { swal("", "Rate should not be empty", "error"); return false; }
+            if (Gst == "" || Gst == -1) { swal("", "Gst should not be empty", "error"); return false; }
+
+            isPost = true
+
+            if (isPost == true) {
+                $("#signupform").submit();
+            }
+        });
+
+        $('[id^=Rate]').keypress(validateNumber);
+        $('[id^=Gst]').keypress(validateNumber);
+
+        function validateNumber(event) {
+            var key = window.event ? event.keyCode : event.which;
+            if (event.keyCode === 8 || event.keyCode === 46) {
+                return true;
+            } else if (key < 48 || key > 57) {
+                return false;
+            } else {
+                return true;
+            }
+        };
+
+        $('#Gst').change(function () {
+
+            var gst = $('#Gst').val();
+            if (gst != 0) {
+                var tempGst = parseInt(gst);
+                $('#Cgst').val(tempGst / 2);
+                $('#Sgst').val(tempGst / 2);
+            }
+            else {
+                $('#Cgst').val('');
+                $('#Sgst').val('');
+            }
+        });
+
+    });

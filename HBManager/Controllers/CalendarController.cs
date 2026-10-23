@@ -1,4 +1,5 @@
 ﻿using HBManager.Models;
+using HBManager.Service;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -9,23 +10,21 @@ using System.Web.Mvc;
 
 namespace HBManager.Controllers
 {
-    public class CalenderController : Controller
+    public class CalendarController : Controller
     {
-        public ActionResult CalenderIndex()
+        [HttpGet]
+        public ActionResult Index()
         {
             return View();
         }
 
-        #region --------------------- calender ---------------------------
-        [HttpPost]
-        public ActionResult GetDataForCalender(CalenderBudgetModelIn data)
+        #region --------------------- calendar ---------------------------
+        [HttpGet]
+        public ActionResult GetDataForCalendar(CalendarBudgetModelIn data)
         {
-            IEnumerable<CalenderDateViewModel> LCalenderDate = Enumerable.Empty<CalenderDateViewModel>();
-            IEnumerable<CalenderDataViewModel> LCalenderData = Enumerable.Empty<CalenderDataViewModel>();
-
-
-            string connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ToString();
-            using (SqlConnection con = new SqlConnection(connectionString))
+            IEnumerable<CalendarDateViewModel> calendarDates = Enumerable.Empty<CalendarDateViewModel>();
+            IEnumerable<CalendarDataViewModel> calendarData = Enumerable.Empty<CalendarDataViewModel>();
+            using (SqlConnection con = SqlConnectionFactory.CreateConnection())
             {
                 using (SqlCommand cmd = new SqlCommand("sp_getExpensiveByCalender", con))
                 {
@@ -47,30 +46,30 @@ namespace HBManager.Controllers
 
                     if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
                     {
-                        LCalenderDate = ConvertDataTableToCalenderDate(ds.Tables[0]);
+                        calendarDates = ConvertDataTableToCalendarDate(ds.Tables[0]);
                     }
 
                     if (ds != null && ds.Tables.Count > 1 && ds.Tables[1].Rows.Count > 0)
                     {
-                        LCalenderData = ConvertDataTableToListCalender(ds.Tables[1]);
+                        calendarData = ConvertDataTableToListCalendar(ds.Tables[1]);
                     }
                 }
             }
-            var result = new { calenderData = LCalenderData, calenderDate = LCalenderDate };
+            var result = new { calendarData, calendarDate = calendarDates };
             return Json(result, JsonRequestBehavior.AllowGet);
         }
-        private IEnumerable<CalenderDateViewModel> ConvertDataTableToCalenderDate(DataTable dataTable)
+        private IEnumerable<CalendarDateViewModel> ConvertDataTableToCalendarDate(DataTable dataTable)
         {
-            return dataTable.AsEnumerable().Select(row => new CalenderDateViewModel
+            return dataTable.AsEnumerable().Select(row => new CalendarDateViewModel
             {
                 fromDate = row["FromData"].ToString(),
                 toDate = row["ToDate"].ToString()
             }).ToList();
         }
 
-        private IEnumerable<CalenderDataViewModel> ConvertDataTableToListCalender(DataTable dataTable)
+        private IEnumerable<CalendarDataViewModel> ConvertDataTableToListCalendar(DataTable dataTable)
         {
-            return dataTable.AsEnumerable().Select(row => new CalenderDataViewModel
+            return dataTable.AsEnumerable().Select(row => new CalendarDataViewModel
             {
                 spending = Convert.ToDecimal(row["spending"]),
                 date = Convert.ToDateTime(row["date"]).ToString("yyyy-MM-dd")

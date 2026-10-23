@@ -9,17 +9,15 @@ namespace HBManager.Service
 {
     public class GroupService
     {
-        private readonly string _connString;
 
         public GroupService()
         {
-            _connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
         }
 
         public List<GroupMaster> GetGroupMasterByGroupname(string groupType)
         {
             var list = new List<GroupMaster>();
-            using (var conn = new SqlConnection(_connString))
+            using (var conn = SqlConnectionFactory.CreateConnection())
             using (var cmd = new SqlCommand("sp_GetGroupMasterByGroupname", conn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -53,7 +51,7 @@ namespace HBManager.Service
 
         public int InsertGroupMaster(GroupMaster model)
         {
-            using (var conn = new SqlConnection(_connString))
+            using (var conn = SqlConnectionFactory.CreateConnection())
             using (var cmd = new SqlCommand("sp_InsertGroupMaster", conn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -70,7 +68,7 @@ namespace HBManager.Service
 
         public int UpdateGroupMasterByID(GroupMaster model)
         {
-            using (var conn = new SqlConnection(_connString))
+            using (var conn = SqlConnectionFactory.CreateConnection())
             using (var cmd = new SqlCommand("sp_UpdateGroupMasterByID", conn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -88,7 +86,7 @@ namespace HBManager.Service
 
         public int DeleteGroupMasterByID(int id)
         {
-            using (var conn = new SqlConnection(_connString))
+            using (var conn = SqlConnectionFactory.CreateConnection())
             using (var cmd = new SqlCommand("sp_DeleteGroupMasterByID", conn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -103,7 +101,7 @@ namespace HBManager.Service
         {
             GroupMaster item = null;
 
-            using (var conn = new SqlConnection(_connString))
+            using (var conn = SqlConnectionFactory.CreateConnection())
             using (var cmd = new SqlCommand("sp_GetGroupMasterByID", conn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;

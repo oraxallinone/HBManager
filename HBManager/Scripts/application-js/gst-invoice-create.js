@@ -440,8 +440,8 @@
     function getDetailsByItemName() {
         let itemName = $('#itemSearch').val();
         $.ajax({
-            type: "POST",
-            url: '/GstBill/Invoice/GetItmByName',
+            type: "GET",
+            url: '/GstBill/Invoice/GetItemByName',
             data: { itemname: itemName },
             dataType: "json",
             success: function (data) {
@@ -465,8 +465,8 @@
     $('#itemSearch').on('select2:select', function (e) {
         var itemname = e.params.data.text;
         $.ajax({
-            type: "POST",
-            url: '/GstBill/Invoice/GetItmByName',
+            type: "GET",
+            url: '/GstBill/Invoice/GetItemByName',
             data: { itemname: itemname },
             dataType: "json",
             success: function (data) {

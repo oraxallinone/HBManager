@@ -9,16 +9,14 @@ namespace HBManager.Service
 {
     public class BirthdayService
     {
-        private readonly string _connString;
 
         public BirthdayService()
         {
-            _connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
         }
 
         public int AddBirthday(string name, DateTime dob, bool isActive = true)
         {
-            using (var con = new SqlConnection(_connString))
+            using (var con = SqlConnectionFactory.CreateConnection())
             using (var cmd = new SqlCommand("sp_birthdayTracker", con))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -37,7 +35,7 @@ namespace HBManager.Service
         public List<BirthdayModel> GetAllBirthdays()
         {
             var list = new List<BirthdayModel>();
-            using (var con = new SqlConnection(_connString))
+            using (var con = SqlConnectionFactory.CreateConnection())
             using (var cmd = new SqlCommand("sp_getAllBirthdays", con))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -62,7 +60,7 @@ namespace HBManager.Service
         public List<BirthdayModel> GetBirthdaysByMonth(int year, int month)
         {
             var list = new List<BirthdayModel>();
-            using (var con = new SqlConnection(_connString))
+            using (var con = SqlConnectionFactory.CreateConnection())
             using (var cmd = new SqlCommand("sp_getBirthdaysByMonth", con))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -88,7 +86,7 @@ namespace HBManager.Service
 
         public bool UpdateBirthday(int id, string name, DateTime dob, bool isActive)
         {
-            using (var con = new SqlConnection(_connString))
+            using (var con = SqlConnectionFactory.CreateConnection())
             using (var cmd = new SqlCommand("UPDATE dbo.tblBirthday SET Name = @Name, DateOfBirth = @DateOfBirth, IsActive = @IsActive WHERE Id = @Id", con))
             {
                 cmd.Parameters.AddWithValue("@Id", id);
@@ -102,7 +100,7 @@ namespace HBManager.Service
 
         public bool DeleteBirthday(int id)
         {
-            using (var con = new SqlConnection(_connString))
+            using (var con = SqlConnectionFactory.CreateConnection())
             using (var cmd = new SqlCommand("DELETE FROM dbo.tblBirthday WHERE Id = @Id", con))
             {
                 cmd.Parameters.AddWithValue("@Id", id);

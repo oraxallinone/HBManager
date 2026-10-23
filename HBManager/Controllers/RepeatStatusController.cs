@@ -9,6 +9,7 @@ namespace HBManager.Controllers
     {
         private readonly RepeatStatusService _service = new RepeatStatusService();
 
+        [HttpGet]
         public ActionResult RepeatStatus()
         {
             return View();
@@ -26,6 +27,7 @@ namespace HBManager.Controllers
         }
 
         [HttpPost]
+        [HBManager.Security.ValidateAntiForgeryTokenAttribute]
         public JsonResult SetRepeatStatus(int year, int month, int? g1, int? g2, int? g3, int? g4, bool completed)
         {
             _service.SetRepeatStatus(year, month, g1, g2, g3, g4, completed);

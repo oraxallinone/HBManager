@@ -42,7 +42,7 @@
         // First, load heading stats (SP)
         $.ajax({
             url: "/Default/GetCurrentMonthSalaryDetails",
-            type: "POST",
+            type: "GET",
             data: { year: year, month: month },
             dataType: "json",
             success: function (hdr) {

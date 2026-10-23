@@ -9,17 +9,15 @@ namespace HBManager.Service
 {
     public class BudgetOverviewService
     {
-        private readonly string _connString;
 
         public BudgetOverviewService()
         {
-            _connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
         }
 
         public List<GroupBudgetOverviewModel> GetSumAsGroupService(int year, int month)
         {
             var list = new List<GroupBudgetOverviewModel>();
-            using (var conn = new SqlConnection(_connString))
+            using (var conn = SqlConnectionFactory.CreateConnection())
             using (var cmd = new SqlCommand("sp_GetSumAsGroup", conn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;

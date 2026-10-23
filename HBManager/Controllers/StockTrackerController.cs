@@ -1,4 +1,5 @@
 ﻿using System;
+using HBManager.Service;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -14,7 +15,6 @@ namespace HBManager.Controllers
 {
     public class StockTrackerController : Controller
     {
-        private readonly string connectionString = ConfigurationManager.ConnectionStrings["ConnectionString"]?.ConnectionString;
 
         [HttpGet]
         public ActionResult AddToWatchlist()
@@ -43,7 +43,7 @@ namespace HBManager.Controllers
 
             try
             {
-                using (var connection = new SqlConnection(connectionString))
+                using (var connection = SqlConnectionFactory.CreateConnection())
                 using (var command = new SqlCommand(@"
                     SELECT slno, StockName, PurchaseDate, PurchasePrice, PurchaseQty, IsSale, nsebse
                     FROM dbo.StocksPurchasedTracker
@@ -78,23 +78,26 @@ namespace HBManager.Controllers
         }
 
         [HttpPost]
+        [HBManager.Security.ValidateAntiForgeryTokenAttribute]
         public JsonResult AddPurchaseStockDetail(string stockName, DateTime purchaseDate, decimal purchasePrice, decimal purchaseQty, bool isSale, string nsebse)
         {
             return SavePurchaseStockDetail(null, stockName, purchaseDate, purchasePrice, purchaseQty, isSale, nsebse);
         }
 
         [HttpPost]
+        [HBManager.Security.ValidateAntiForgeryTokenAttribute]
         public JsonResult UpdatePurchaseStockDetail(int slno, string stockName, DateTime purchaseDate, decimal purchasePrice, decimal purchaseQty, bool isSale, string nsebse)
         {
             return SavePurchaseStockDetail(slno, stockName, purchaseDate, purchasePrice, purchaseQty, isSale, nsebse);
         }
 
         [HttpPost]
+        [HBManager.Security.ValidateAntiForgeryTokenAttribute]
         public JsonResult DeletePurchaseStockDetail(int slno)
         {
             try
             {
-                using (var connection = new SqlConnection(connectionString))
+                using (var connection = SqlConnectionFactory.CreateConnection())
                 using (var command = new SqlCommand("DELETE FROM dbo.StocksPurchasedTracker WHERE slno = @slno", connection))
                 {
                     command.Parameters.Add("@slno", SqlDbType.Int).Value = slno;
@@ -123,7 +126,7 @@ namespace HBManager.Controllers
 
             try
             {
-                using (var connection = new SqlConnection(connectionString))
+                using (var connection = SqlConnectionFactory.CreateConnection())
                 using (var command = new SqlCommand(connection.ToString()))
                 {
                     command.Connection = connection;
@@ -283,7 +286,7 @@ namespace HBManager.Controllers
             {
                 var stocks = new List<ActiveStockPrice>();
 
-                using (var connection = new SqlConnection(connectionString))
+                using (var connection = SqlConnectionFactory.CreateConnection())
                 using (var command = new SqlCommand(@"
                     SELECT id, stockName, stockExchange, priority
                     FROM tblStockAnalysis
@@ -642,7 +645,7 @@ namespace HBManager.Controllers
             {
                 var stocks = new List<object>();
 
-                using (var connection = new SqlConnection(connectionString))
+                using (var connection = SqlConnectionFactory.CreateConnection())
                 using (var command = new SqlCommand(@"
                     SELECT id, stockName, stockExchange, isActive, addedDate, priority
                     FROM tblStockAnalysis
@@ -685,6 +688,7 @@ namespace HBManager.Controllers
         }
 
         [HttpPost]
+        [HBManager.Security.ValidateAntiForgeryTokenAttribute]
         public JsonResult AddStock(
             string stockName,
             string stockExchange,
@@ -718,7 +722,7 @@ namespace HBManager.Controllers
                     priority = 5;
                 }
 
-                using (var connection = new SqlConnection(connectionString))
+                using (var connection = SqlConnectionFactory.CreateConnection())
                 {
                     connection.Open();
 
@@ -788,6 +792,7 @@ namespace HBManager.Controllers
         }
 
         [HttpPost]
+        [HBManager.Security.ValidateAntiForgeryTokenAttribute]
         public JsonResult UpdateStock(
             int id,
             string stockName,
@@ -809,7 +814,7 @@ namespace HBManager.Controllers
                     });
                 }
 
-                using (var connection = new SqlConnection(connectionString))
+                using (var connection = SqlConnectionFactory.CreateConnection())
                 {
                     connection.Open();
 
@@ -876,11 +881,12 @@ namespace HBManager.Controllers
         }
 
         [HttpPost]
+        [HBManager.Security.ValidateAntiForgeryTokenAttribute]
         public JsonResult DeleteStock(int id)
         {
             try
             {
-                using (var connection = new SqlConnection(connectionString))
+                using (var connection = SqlConnectionFactory.CreateConnection())
                 using (var command = new SqlCommand(
                     "DELETE FROM tblStockAnalysis WHERE id = @id",
                     connection))

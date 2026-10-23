@@ -13,6 +13,7 @@ namespace HBManager.Controllers
         private readonly GroupService _svc = new GroupService();
 
         #region ---------------------- group ---------------------------
+        [HttpGet]
         public ActionResult GroupIndex()
         {
             return View();
@@ -27,6 +28,7 @@ namespace HBManager.Controllers
         }
 
         [HttpPost]
+        [HBManager.Security.ValidateAntiForgeryTokenAttribute]
         public JsonResult AddGroup(GroupMaster model)
         {
             var newId = _svc.InsertGroupMaster(model);
@@ -34,6 +36,7 @@ namespace HBManager.Controllers
         }
 
         [HttpPost]
+        [HBManager.Security.ValidateAntiForgeryTokenAttribute]
         public JsonResult UpdateGroup(GroupMaster model)
         {
             var result = _svc.UpdateGroupMasterByID(model);
@@ -41,6 +44,7 @@ namespace HBManager.Controllers
         }
 
         [HttpPost]
+        [HBManager.Security.ValidateAntiForgeryTokenAttribute]
         public JsonResult DeleteGroup(int id)
         {
             var result = _svc.DeleteGroupMasterByID(id);

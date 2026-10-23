@@ -9,12 +9,14 @@ namespace HBManager.Controllers
 {
     public class LoginController : Controller
     {
+        [HttpGet]
         public ActionResult LoginIndex()
         {
             return View();
         }
 
         [HttpPost]
+        [HBManager.Security.ValidateAntiForgeryTokenAttribute]
         public JsonResult CheckLogin(string email, string password, bool rememberMe)
         {
             var loginService = new LoginService();
@@ -34,6 +36,8 @@ namespace HBManager.Controllers
             return Json(new { success = false, message = "Invalid credentials or inactive user." });
         }
 
+        [HttpPost]
+        [HBManager.Security.ValidateAntiForgeryTokenAttribute]
         public ActionResult Logout()
         {
             // Clear Session

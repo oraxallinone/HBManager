@@ -12,6 +12,7 @@ namespace HBManager.Areas.GstBill.Controllers
         cbtsplco_annapurnaEntities db = new cbtsplco_annapurnaEntities();
 
         #region------------------------Dashboard-------------------------
+        [HttpGet]
         public ActionResult Index()
         {
             return View();
@@ -19,12 +20,14 @@ namespace HBManager.Areas.GstBill.Controllers
         #endregion-------------------------------------------------------
 
         #region------------------------Customer--------------------------
+        [HttpGet]
         public ActionResult CustomerAdd()
         {
             return View();
         }
 
         [HttpPost]
+        [HBManager.Security.ValidateAntiForgeryTokenAttribute]
         public ActionResult CustomerAdd(CustomerMaster cust)
         {
             var checkDuplicate = duplicateCheckCust(cust.custName);
@@ -40,12 +43,14 @@ namespace HBManager.Areas.GstBill.Controllers
             return View();
         }
 
+        [HttpGet]
         public ActionResult CustomerList()
         {
             var custList = db.CustomerMasters.OrderBy(x => new { x.isActive, x.custName }).ToList().OrderByDescending(x => x.custId);
             return View(custList);
         }
 
+        [HttpGet]
         public ActionResult CustomerView(int id)
         {
             var cust = db.CustomerMasters.Where(x => x.custId == id).FirstOrDefault();
@@ -58,6 +63,7 @@ namespace HBManager.Areas.GstBill.Controllers
             return View(cust);
         }
 
+        [HttpGet]
         public ActionResult CustomerEdit(int id)
         {
             var cust = db.CustomerMasters.Where(x => x.custId == id).FirstOrDefault();
@@ -65,6 +71,7 @@ namespace HBManager.Areas.GstBill.Controllers
         }
 
         [HttpPost]
+        [HBManager.Security.ValidateAntiForgeryTokenAttribute]
         public ActionResult CustomerEdit(CustomerMaster cust)
         {
             try
@@ -90,7 +97,7 @@ namespace HBManager.Areas.GstBill.Controllers
             return isThere;
         }
 
-        [HttpPost]
+        [HttpGet]
         public ActionResult GetCustomers()
         {
             var custList = (from ss in db.CustomerMasters
@@ -106,19 +113,20 @@ namespace HBManager.Areas.GstBill.Controllers
                                 custName = ss.custName,
                                 gstIn = ss.gstIn
                             }).ToList();
-            return Json(custList);
+            return Json(custList, JsonRequestBehavior.AllowGet);
         }
         #endregion-------------------------------------------------------
 
         #region------------------------Item------------------------------
+        [HttpGet]
         public ActionResult ItemAdd()
         {
             ItemMaster obj = new ItemMaster();
-            obj.ItemCode = getNewItemNo();
+            obj.ItemCode = GetNewItemNo();
             return View(obj);
         }
 
-        public string getNewItemNo()
+        private string GetNewItemNo()
         {
             int dbCount = db.CounterMasters.Where(x => x.counterName == "item").FirstOrDefault().counterValue;
             string newNo = BillSupport.increamentItem(dbCount);
@@ -126,6 +134,7 @@ namespace HBManager.Areas.GstBill.Controllers
         }
 
         [HttpPost]
+        [HBManager.Security.ValidateAntiForgeryTokenAttribute]
         public ActionResult ItemAdd(ItemMaster itm)
         {
             try
@@ -158,12 +167,14 @@ namespace HBManager.Areas.GstBill.Controllers
             catch (Exception) { return View(); }
         }
 
+        [HttpGet]
         public ActionResult ItemList()
         {
             var itemList = db.ItemMasters.OrderByDescending(x => x.ItemId).ToList();
             return View(itemList);
         }
 
+        [HttpGet]
         public ActionResult ItemEdit(int? id)
         {
             if (id != 0 || id != null)
@@ -182,6 +193,7 @@ namespace HBManager.Areas.GstBill.Controllers
         }
 
         [HttpPost]
+        [HBManager.Security.ValidateAntiForgeryTokenAttribute]
         public ActionResult ItemEdit(ItemMaster itm)
         {
             try
@@ -200,6 +212,7 @@ namespace HBManager.Areas.GstBill.Controllers
             catch (Exception) { return View(); }
         }
 
+        [HttpGet]
         public ActionResult ItemView(int? id)
         {
             if (id != 0 || id != null)

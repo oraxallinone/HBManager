@@ -119,7 +119,7 @@
         //    $("#tblExpensive").empty();
         //    return;
         //}
-        let CalenderBudgetModelIn = {
+        let calendarBudgetModel = {
             forYear: forYear,
             forMonth: forMonth,
             g1: g1,
@@ -128,14 +128,13 @@
             g4: g4
         }
         $.ajax({
-            type: "POST",
-            url: '/Calender/GetDataForCalender',
+            type: "GET",
+            url: '/Calendar/GetDataForCalendar',
             dataType: "json",
-            contentType: "application/json; charset=utf-8",
-            data: JSON.stringify(CalenderBudgetModelIn),
+            data: calendarBudgetModel,
             success: function (result) {
-                const calendarDate = result.calenderDate && result.calenderDate.length > 0
-                    ? result.calenderDate[0]
+                const calendarDate = result.calendarDate && result.calendarDate.length > 0
+                    ? result.calendarDate[0]
                     : null;
                 const selectedYear = parseInt(forYear, 10);
                 const selectedMonth = parseInt(forMonth, 10);
@@ -194,7 +193,7 @@
 
                 //monthMaster
                 spendingData = [];
-                $.each(result.calenderData, function (index, data) {
+                $.each(result.calendarData, function (index, data) {
                     let tempObj = { date: stripTime(data.date), amount: data.spending };
                     spendingData.push(tempObj);
                 });

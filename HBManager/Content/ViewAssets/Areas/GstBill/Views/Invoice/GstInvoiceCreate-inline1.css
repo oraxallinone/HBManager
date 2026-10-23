@@ -1,0 +1,28 @@
+﻿
+    .autocomplete-item:hover {
+        background-color: yellow;
+    }
+
+    #iMinus {
+        font-size: 2rem !important;
+        line-height: 0.7;
+        vertical-align: middle;
+    }
+
+    #iPlus {
+        font-size: 2rem !important;
+        line-height: 0.7;
+        vertical-align: middle;
+    }
+
+    .card-footer {
+        display: flex;
+    }
+
+   
+
+    #txtInternalNote {
+        height: 28px;
+        padding: 2px 6px;
+        font-size: 13px;
+    }

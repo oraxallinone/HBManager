@@ -9,12 +9,10 @@ namespace HBManager.Service
 {
     public class RepeatStatusService
     {
-        private readonly string _connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
-
         public RepeatStatusResult GetRepeatStatus()
         {
             var result = new RepeatStatusResult { Columns = new List<string>(), Rows = new List<RepeatStatusRow>() };
-            using (var conn = new SqlConnection(_connString))
+            using (var conn = SqlConnectionFactory.CreateConnection())
             using (var cmd = new SqlCommand("sp_GetRepeatStatus", conn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -74,7 +72,7 @@ namespace HBManager.Service
 
         public void SetRepeatStatus(int year, int month, int? g1, int? g2, int? g3, int? g4, bool completed)
         {
-            using (var conn = new SqlConnection(_connString))
+            using (var conn = SqlConnectionFactory.CreateConnection())
             using (var cmd = new SqlCommand("sp_SetRepeatStatus", conn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;

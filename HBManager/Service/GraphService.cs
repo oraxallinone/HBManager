@@ -9,18 +9,16 @@ namespace HBManager.Service
 {
     public class GraphService
     {
-        private readonly string _connString;
 
         public GraphService()
         {
-            _connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
         }
 
         public List<BarGraphData> GetBarGraphByGroupService(int? g1, int? g2, int? g3, int? g4)
         {
             var list = new List<BarGraphData>();
 
-            using (var conn = new SqlConnection(_connString))
+            using (var conn = SqlConnectionFactory.CreateConnection())
             using (var cmd = new SqlCommand("sp_bargraphByGroup", conn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;

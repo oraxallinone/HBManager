@@ -10,7 +10,6 @@ namespace HBManager.Service
 {
     public class NoteService
     {
-        private string _connectionString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
 
         // Get all notes
         public DataTable GetNotes()
@@ -18,7 +17,7 @@ namespace HBManager.Service
             DataTable dt = new DataTable();
             try
             {
-                using (SqlConnection conn = new SqlConnection(_connectionString))
+                using (SqlConnection conn = SqlConnectionFactory.CreateConnection())
                 {
                     using (SqlCommand cmd = new SqlCommand("sp_getNotes", conn))
                     {
@@ -40,7 +39,7 @@ namespace HBManager.Service
         {
             try
             {
-                using (SqlConnection conn = new SqlConnection(_connectionString))
+                using (SqlConnection conn = SqlConnectionFactory.CreateConnection())
                 {
                     using (SqlCommand cmd = new SqlCommand("sp_addNote", conn))
                     {
@@ -75,7 +74,7 @@ namespace HBManager.Service
         {
             try
             {
-                using (SqlConnection conn = new SqlConnection(_connectionString))
+                using (SqlConnection conn = SqlConnectionFactory.CreateConnection())
                 {
                     using (SqlCommand cmd = new SqlCommand("sp_updateNote", conn))
                     {
@@ -102,7 +101,7 @@ namespace HBManager.Service
         {
             try
             {
-                using (SqlConnection conn = new SqlConnection(_connectionString))
+                using (SqlConnection conn = SqlConnectionFactory.CreateConnection())
                 {
                     using (SqlCommand cmd = new SqlCommand("sp_deleteNote", conn))
                     {
@@ -127,7 +126,7 @@ namespace HBManager.Service
             DataTable dt = new DataTable();
             try
             {
-                using (SqlConnection conn = new SqlConnection(_connectionString))
+                using (SqlConnection conn = SqlConnectionFactory.CreateConnection())
                 {
                     using (SqlCommand cmd = new SqlCommand("sp_getSubNotes", conn))
                     {
@@ -150,7 +149,7 @@ namespace HBManager.Service
         {
             try
             {
-                using (SqlConnection conn = new SqlConnection(_connectionString))
+                using (SqlConnection conn = SqlConnectionFactory.CreateConnection())
                 {
                     using (SqlCommand cmd = new SqlCommand("sp_addSubNote", conn))
                     {
@@ -176,7 +175,7 @@ namespace HBManager.Service
         {
             try
             {
-                using (SqlConnection conn = new SqlConnection(_connectionString))
+                using (SqlConnection conn = SqlConnectionFactory.CreateConnection())
                 {
                     using (SqlCommand cmd = new SqlCommand("sp_updateSubNote", conn))
                     {
@@ -202,7 +201,7 @@ namespace HBManager.Service
         {
             try
             {
-                using (SqlConnection conn = new SqlConnection(_connectionString))
+                using (SqlConnection conn = SqlConnectionFactory.CreateConnection())
                 {
                     using (SqlCommand cmd = new SqlCommand("sp_deleteSubNote", conn))
                     {

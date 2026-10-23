@@ -211,7 +211,15 @@
         $.ajax({
             url: '/Budget/GetAllBudgetFromToWithGroup',//GetAllBudgetFromToWithGroup||GetAllBudgetFromTo
             type: 'GET',
-            data: { year: year, month: month, g1: g1, g2: g2, g3: g3, g4: g4, isAll: isAll },
+            data: {
+                year: year,
+                month: month,
+                "groupIds[0]": g1,
+                "groupIds[1]": g2,
+                "groupIds[2]": g3,
+                "groupIds[3]": g4,
+                isAll: isAll
+            },
             dataType: 'json',
             success: function (res) {
                 $("#gridTableBudget tbody").empty();

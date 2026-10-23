@@ -1,3 +1,4 @@
+@*|| repeat-status.css || RepeatStatus-inline1.js, repeat-status.js ||*@
 @{
     ViewBag.Title = "Repeat Status";
     Layout = "~/Views/Shared/_WebLayout.cshtml";
@@ -8,5 +9,5 @@
     <div class="repeat-status-actions"><button type="button" id="reloadRepeatStatus" class="repeat-status-reload"><i class="bi bi-arrow-clockwise"></i> Reload Grid</button></div>
 
 </div></div>
-<script>$('.app-content-header').hide();</script>
+<script src="@Url.Content("~/Scripts/ViewAssets/Views/RepeatStatus/RepeatStatus-inline1.js")"></script>
 <script src="~/Scripts/repeat-status.js?v=20260908"></script>

@@ -1,4 +1,4 @@
-﻿@*|| group.css || group.js ||*@
+﻿@*|| group.css, GroupIndex-inline1.css || group.js ||*@
 @{
     ViewBag.Title = "GroupIndex";
     Layout = "~/Views/Shared/_WebLayout.cshtml";
@@ -54,25 +54,7 @@
                         </div>
 
 
-                        <style>
-                            .table-responsive {
-                                max-height: 70vh;
-                                overflow: auto;
-                            }
-
-                                .table-responsive #gridTableGroup thead th {
-                                    position: sticky;
-                                    top: 0;
-                                    z-index: 5;
-                                    background: #ffffff;
-                                }
-
-                            /* ensure consistent column widths */
-                            #gridTableGroup {
-                                width: 100%;
-                                table-layout: fixed;
-                            }
-                        </style>
+                        <link rel="stylesheet" href="@Url.Content("~/Content/ViewAssets/Views/Group/GroupIndex-inline1.css")" />
 
                         <div class="table-responsive">
                             <table id="gridTableGroup" class="table table-hover  custom-tbl">

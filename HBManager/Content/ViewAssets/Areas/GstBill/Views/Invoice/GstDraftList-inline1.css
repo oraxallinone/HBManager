@@ -1,0 +1,67 @@
+﻿
+    .search-report-panel .floating-label-group label,
+    .search-report-panel .floating-label-group .form-control,
+    .search-report-panel .btn {
+        font-size: 10px !important;
+    }
+
+    .search-report-panel .card-body {
+        padding: 12px 18px 4px;
+    }
+
+    .search-report-panel .form-group {
+        margin-bottom: 8px;
+    }
+
+    .search-report-panel .floating-label-group {
+        margin-bottom: 10px;
+    }
+
+    .search-actions {
+        gap: 6px;
+        padding-bottom: 10px;
+    }
+
+    .floating-label-group {
+        position: relative;
+        margin-bottom: 25px;
+    }
+
+    .floating-label-group .form-control {
+        padding: 5px 12px;
+        height: auto;
+        border: 1px solid #276ea5;
+        border-radius: 4px;
+        background: transparent;
+    }
+
+    .floating-label-group label {
+        position: absolute;
+        border-radius: 4px;
+        top: 6px;
+        left: 12px;
+        color: #656889;
+        font-size: 14px;
+        pointer-events: none;
+        transition: all 0.2s ease;
+        background-color: #f0f0f0;
+        padding: 0 4px;
+    }
+
+    .floating-label-group input:focus + label,
+    .floating-label-group input:not(:placeholder-shown) + label,
+    .floating-label-group select + label {
+        top: -10px;
+        left: 8px;
+        font-size: 12px;
+        color: #333;
+    }
+
+    #draftPagination .pagination {
+        justify-content: center;
+        margin-top: 12px;
+    }
+
+    #draftPagination .page-link {
+        cursor: pointer;
+    }

@@ -11,6 +11,7 @@ namespace HBManager.Controllers
     {
         private readonly BirthdayService _birthdayService = new BirthdayService();
 
+        [HttpGet]
         public ActionResult Index()
         {
             ViewBag.Title = "Birthdays";
@@ -19,6 +20,7 @@ namespace HBManager.Controllers
 
 
         [HttpPost]
+        [HBManager.Security.ValidateAntiForgeryTokenAttribute]
         public JsonResult AddBirthday(string name, string dateOfBirth, bool isActive = true)
         {
             try
@@ -39,6 +41,7 @@ namespace HBManager.Controllers
             }
         }
 
+        [HttpGet]
         public JsonResult GetAll()
         {
             try
@@ -52,6 +55,7 @@ namespace HBManager.Controllers
             }
         }
 
+        [HttpGet]
         public JsonResult GetByMonth(int year, int month)
         {
             try
@@ -66,6 +70,7 @@ namespace HBManager.Controllers
         }
 
         [HttpPost]
+        [HBManager.Security.ValidateAntiForgeryTokenAttribute]
         public JsonResult UpdateBirthday(int id, string name, string dateOfBirth, bool isActive = true)
         {
             try
@@ -85,6 +90,7 @@ namespace HBManager.Controllers
         }
 
         [HttpPost]
+        [HBManager.Security.ValidateAntiForgeryTokenAttribute]
         public JsonResult DeleteBirthday(int id)
         {
             try
@@ -99,11 +105,13 @@ namespace HBManager.Controllers
             }
         }
 
+        [HttpGet]
         public ActionResult BirthdayIndex()
         {
             ViewBag.Title = "BirthdayIndex";
             return View();
         }
+        [HttpGet]
         public ActionResult ShowBirthday()
         {
             ViewBag.Title = "ShowBirthday";

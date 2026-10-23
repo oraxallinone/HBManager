@@ -1,4 +1,5 @@
-﻿@model HBManager.Models.QueryViewModel
+﻿@*|| ExecuteQuery-inline1.js ||*@
+@model HBManager.Models.QueryViewModel
 @{
     Layout = null;
     ViewBag.Title = "Execute Budget Query";
@@ -35,7 +36,7 @@
 
             <button type="submit" class="btn btn-primary">Execute Query</button>
 
-            <button type="button" class="btn btn-secondary" style="margin-left: 10px;" onclick="clearForm()">Clear</button>
+            <button id="clearQueryFormButton" type="button" class="btn btn-secondary" style="margin-left: 10px;">Clear</button>
         }
         <br />
         @if (Model != null && !string.IsNullOrEmpty(Model.Message))
@@ -50,20 +51,6 @@
         }
     </div>
 
-    <script type="text/javascript">
-        function clearForm() {
-            // Clears the textarea value
-            var textarea = document.getElementById("SqlQueryTextArea");
-            if (textarea) {
-                textarea.value = "";
-            }
-
-            // Hides the success/error message alert box if it's visible
-            var msgAlert = document.getElementById("messageAlert");
-            if (msgAlert) {
-                msgAlert.style.display = "none";
-            }
-        }
-    </script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/ViewAssets/Views/Import/ExecuteQuery-inline1.js")"></script>
 </body>
 </html>

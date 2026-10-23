@@ -1,4 +1,5 @@
-﻿@model HBManager.Areas.GstBill.Models.CustomerMaster
+﻿@*|| jquery-3.6.0.min.js, CustomerAdd-inline2.js ||*@
+@model HBManager.Areas.GstBill.Models.CustomerMaster
 @{
     ViewBag.Title = "CustomerAdd";
     Layout = "~/Views/Shared/_GstLayout.cshtml";
@@ -6,6 +7,7 @@
 
 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "customerAddForm" }))
 {
+    @Html.AntiForgeryToken()
     <div class="content-wrapper">
 
         <section class="content">
@@ -76,27 +78,4 @@
 <aside class="control-sidebar control-sidebar-dark"></aside>
 
 <script src="~/Scripts/jquery-3.6.0.min.js"></script>
-<script type="text/javascript">
-    $(document).ready(function () {
-
-        $("#CustomerSubmit").click(function (e) {
-            e.preventDefault();
-            var custName = $("#custName").val();
-            var addr1 = $("#addr1").val();
-            var addr2 = $("#addr2").val();
-            var gstIn = $("#gstIn").val();
-            var gstType = $("#gstType").val();
-            var isPost = false;
-            if (custName == "") { swal("", "Customer Name should not be empty", "error"); return false; }
-            if (addr1 == "") { swal("", "Address 1 should not be empty", "error"); return false; }
-            if (addr2 == "") { swal("", "Address 2 should not be empty", "error"); return false; }
-            if (gstIn == "") { swal("", "GstIn should not be empty", "error"); return false; }
-            if (gstType == "" || gstType == 0) { swal("", "Gst Type should not be empty", "error"); return false; }
-            isPost = true
-            if (isPost == true) {
-                $("#customerAddForm").submit();
-            }
-        });
-    });
-</script>
-
+<script type="text/javascript" src="@Url.Content("~/Scripts/ViewAssets/Areas/GstBill/Views/Product/CustomerAdd-inline2.js")"></script>

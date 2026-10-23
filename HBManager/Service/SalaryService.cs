@@ -9,16 +9,14 @@ namespace HBManager.Service
 {
     public class SalaryService
     {
-        private readonly string _connString;
 
         public SalaryService()
         {
-            _connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
         }
 
         public int InsertSalaryMaster(SalaryMaster model)
         {
-            using (var conn = new SqlConnection(_connString))
+            using (var conn = SqlConnectionFactory.CreateConnection())
             using (var cmd = new SqlCommand("sp_InsertSalaryMaster", conn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -41,7 +39,7 @@ namespace HBManager.Service
 
         public int UpdateSalaryMasterById(SalaryMaster model)
         {
-            using (var conn = new SqlConnection(_connString))
+            using (var conn = SqlConnectionFactory.CreateConnection())
             using (var cmd = new SqlCommand("sp_UpdateSalaryMasterById", conn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -66,7 +64,7 @@ namespace HBManager.Service
         public List<SalaryMaster> GetAllSalaryMaster()
         {
             var list = new List<SalaryMaster>();
-            using (var conn = new SqlConnection(_connString))
+            using (var conn = SqlConnectionFactory.CreateConnection())
             using (var cmd = new SqlCommand("sp_GetAllSalaryMaster", conn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -84,7 +82,7 @@ namespace HBManager.Service
 
         public SalaryMaster GetSalaryMasterById(int id)
         {
-            using (var conn = new SqlConnection(_connString))
+            using (var conn = SqlConnectionFactory.CreateConnection())
             using (var cmd = new SqlCommand("sp_GetSalaryById", conn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -101,7 +99,7 @@ namespace HBManager.Service
 
         public int DeleteSalaryMasterById(int id)
         {
-            using (var conn = new SqlConnection(_connString))
+            using (var conn = SqlConnectionFactory.CreateConnection())
             using (var cmd = new SqlCommand("sp_DeleteSalaryById", conn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -168,7 +166,7 @@ namespace HBManager.Service
         public List<SalaryMaster> GetSalaryByMonthYearService(int monthName, int yearName)
         {
             var list = new List<SalaryMaster>();
-            using (var conn = new SqlConnection(_connString))
+            using (var conn = SqlConnectionFactory.CreateConnection())
             using (var cmd = new SqlCommand("sp_GetSalaryByMonthyear", conn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;

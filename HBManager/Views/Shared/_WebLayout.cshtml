@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@*|| fontsource.css, overlayscrollbars.min.css, bootstrap-icons.min.css, adminlte.css, fontawesome.css, spinner.css, _WebLayout-inline1.css || fontawesome.js, jquery-3.6.0.min.js, _WebLayout-inline3.js, jquery.dataTables.min.js, _WebLayout-inline5.js, overlayscrollbars.browser.es6.min.js, popper.min.js, bootstrap.min.js, adminlte.js, SidebarWrapper.js, _WebLayout-inline11.js ||*@
+<!DOCTYPE html>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -17,127 +18,15 @@
     <link href="~/Content/spinner.css" rel="stylesheet" />
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="@Url.Content("~/Scripts/ViewAssets/Views/Shared/_WebLayout-inline3.js")"></script>
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 
-    <style>
-        .app-main {
-            padding-bottom: 0;
-        }
+    <link rel="stylesheet" href="@Url.Content("~/Content/ViewAssets/Views/Shared/_WebLayout-inline1.css")" />
 
-        body {
-            font-size: 15px;
-            font-family: 'Times New Roman';
-        }
-
-        .floating-label-group {
-            position: relative;
-            margin-bottom: 25px;
-        }
-
-            .floating-label-group .form-control {
-                padding: 5px 12px;
-                height: auto;
-                border: 1px solid #276ea5;
-                border-radius: 4px;
-                background: transparent;
-            }
-
-            .floating-label-group label {
-                position: absolute;
-                border-radius: 4px;
-                top: 6px;
-                left: 12px;
-                color: #656889;
-                font-size: 14px;
-                pointer-events: none;
-                transition: all 0.2s ease;
-                background-color: #f0f0f0;
-                padding: 0 4px;
-            }
-
-            .floating-label-group input:focus + label,
-            .floating-label-group input:not(:placeholder-shown) + label,
-            .floating-label-group textarea:focus + label,
-            .floating-label-group textarea:not(:placeholder-shown) + label {
-                top: -10px;
-                left: 8px;
-                font-size: 12px;
-                color: #333;
-            }
-
-            .floating-label-group input[type="file"] + label {
-                top: -10px;
-                left: 8px;
-                font-size: 12px;
-                color: #333;
-            }
-
-        .ddl-master {
-            width: 170px;
-            color: #c02222;
-            height: 25px;
-            box-shadow: rgb(50 50 93 / 26%) 0px 2px 5px -1px, rgb(0 0 0 / 57%) 0px 2px 3px -1px;
-            text-align: center;
-            justify-content: center;
-            align-items: center;
-            border-radius: 4px;
-            border: 0px;
-        }
-
-        @@media (min-width: 992px) {
-            body.sidebar-mini.sidebar-collapse .app-sidebar {
-                min-width: 3rem;
-                max-width: 3rem;
-            }
-
-            body.sidebar-mini.sidebar-collapse .sidebar-menu .nav-link {
-                justify-content: center;
-                padding-left: 0;
-                padding-right: 0;
-                width: 100%;
-            }
-
-            body.sidebar-mini.sidebar-collapse .sidebar-menu .nav-link .nav-icon {
-                margin-left: 0;
-                margin-right: 0;
-            }
-
-            body.sidebar-mini.sidebar-collapse .app-sidebar:hover {
-                min-width: var(--lte-sidebar-width);
-                max-width: var(--lte-sidebar-width);
-            }
-
-            body.sidebar-mini.sidebar-collapse .app-sidebar:hover .sidebar-menu .nav-link {
-                justify-content: flex-start;
-                padding-left: 0.5rem;
-                padding-right: 0.5rem;
-                width: auto;
-            }
-
-            body.sidebar-mini.sidebar-collapse .app-sidebar:hover .sidebar-menu .nav-link .nav-icon {
-                margin-right: 0.5rem;
-            }
-        }
-    </style>
-
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $(document).ajaxStart(function () {
-                showLoader();
-            });
-            $(document).ajaxStop(function () {
-                hideLoader();
-            });
-            function showLoader() {
-                $("#loadingSpinner").fadeIn(200);
-            }
-            function hideLoader() {
-                $("#loadingSpinner").fadeOut(200);
-            }
-        });
-    </script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/ViewAssets/Views/Shared/_WebLayout-inline5.js")"></script>
 </head>
 <body class="layout-fixed sidebar-expand-lg sidebar-mini sidebar-collapse bg-body-tertiary">
+    @Html.AntiForgeryToken()
     @{
         var curController = ViewContext.RouteData.Values["controller"] != null ? ViewContext.RouteData.Values["controller"].ToString() : "";
         var curAction = ViewContext.RouteData.Values["action"] != null ? ViewContext.RouteData.Values["action"].ToString() : "";
@@ -151,7 +40,7 @@
         var dashActive = dashIs ? "active" : "";
         var dashDashboardActive = (curController == "Default" && curAction == "Dashboard") ? "active" : "";
         var dashBudgetVerificationActive = (curController == "Budget" && curAction == "BudgetVerification") ? "active" : "";
-        //var dashBudgetMobileActive = (curController == "Budget" && curAction == "BudgeMobileIndex") ? "active" : "";
+        //var dashBudgetMobileActive = (curController == "Budget" && curAction == "BudgetMobileIndex") ? "active" : "";
         var dashBudgetGroupingActive = (curController == "BudgetGrouping" && curAction == "BudgetGroupingIndex") ? "active" : "";
         var dashBudgetIndexActive = (curController == "Budget" && curAction == "BudgetIndex") ? "active" : "";
         var dashImportByQueryActive = (curController == "Import" && curAction == "ImportInitiate") ? "active" : "";
@@ -159,7 +48,7 @@
 
         // Feature tree check
         var featureIs = (curController == "Default" && curAction == "BarChart") ||
-                        curController == "Calender" ||
+                        curController == "Calendar" ||
                         curController == "BudgetOverview" ||
                         curController == "Upload" ||
                         curController == "Birthday" ||
@@ -167,10 +56,10 @@
         var featureOpen = featureIs ? "menu-open" : "";
         var featureActive = featureIs ? "active" : "";
         var featureBarChartActive = (curController == "Default" && curAction == "BarChart") ? "active" : "";
-        var featureStockCandleActive = (curController == "Default" && curAction == "StockCandle") ? "active" : "";
-        var featureStockTechDataActive = (curController == "Default" && curAction == "StockTechData") ? "active" : "";
-        var featurePurchaseStockActive = (curController == "Default" && curAction == "PurchaseStockTracker") ? "active" : "";
-        var featureCalenderActive = (curController == "Calender" && curAction == "CalenderIndex") ? "active" : "";
+        var featureStockCandleActive = (curController == "StockMarket" && curAction == "StockCandle") ? "active" : "";
+        var featureStockTechDataActive = (curController == "StockMarket" && curAction == "StockTechData") ? "active" : "";
+        var featurePurchaseStockActive = (curController == "StockMarket" && curAction == "PurchaseStockTracker") ? "active" : "";
+        var featureCalendarActive = (curController == "Calendar" && curAction == "Index") ? "active" : "";
         var featureGroupBudgetActive = (curController == "BudgetOverview" && curAction == "GroupBudgetOverview") ? "active" : "";
         var featureUploadFilesActive = (curController == "Upload" && curAction == "Index") ? "active" : "";
         var featureBirthdayAddActive = (curController == "Birthday" && curAction == "BirthdayIndex") ? "active" : "";
@@ -178,15 +67,15 @@
         var featureNotesActive = (curController == "Notes" && curAction == "NoteIndex") ? "active" : "";
 
         // Investment tree check
-        var investmentIs = (curController == "Default" &&
+        var investmentIs = (curController == "StockMarket" &&
                    (curAction == "StockCandle" || curAction == "StockTechData" || curAction == "PurchaseStockTracker")) ||
                            (curController == "StockTracker" &&
                            (curAction == "AddToWatchlist" || curAction == "Watchlist" || curAction == "PurchaseStockTrackerAdd"));
         var investmentOpen = investmentIs ? "menu-open" : "";
         var investmentActive = investmentIs ? "active" : "";
-        var investmentStockCandleActive = (curController == "Default" && curAction == "StockCandle") ? "active" : "";
-        var investmentStockTechDataActive = (curController == "Default" && curAction == "StockTechData") ? "active" : "";
-        var investmentPurchaseStockActive = (curController == "Default" && curAction == "PurchaseStockTracker") ? "active" : "";
+        var investmentStockCandleActive = (curController == "StockMarket" && curAction == "StockCandle") ? "active" : "";
+        var investmentStockTechDataActive = (curController == "StockMarket" && curAction == "StockTechData") ? "active" : "";
+        var investmentPurchaseStockActive = (curController == "StockMarket" && curAction == "PurchaseStockTracker") ? "active" : "";
         var investmentAddedStocksActive = (curController == "StockTracker" && curAction == "AddToWatchlist") ? "active" : "";
         var investmentStockPricesActive = (curController == "StockTracker" && curAction == "Watchlist") ? "active" : "";
         var investmentPurchaseDetailsActive = (curController == "StockTracker" && curAction == "PurchaseStockTrackerAdd") ? "active" : "";
@@ -260,7 +149,9 @@
                             </li>
 
                             <li class="user-footer">
-                                <input id="btnLogout" type="button" class="btn btn-default btn-flat float-end" value="Sign out" />
+                                <input id="btnLogout" type="button" class="btn btn-default btn-flat float-end" value="Sign out"
+                                       data-logout-url="@Url.Action("Logout", "Login")"
+                                       data-login-url="@Url.Action("LoginIndex", "Login")" />
                             </li>
                         </ul>
                     </li>
@@ -290,7 +181,7 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item"> <a href="@Url.Action("BudgetVerification", "Budget")" class="nav-link @dashBudgetVerificationActive"> <i class="nav-icon bi bi-shield-check"></i> <p>Budget Verification</p> </a> </li>
-                                @*<li class="nav-item"> <a href="@Url.Action("BudgeMobileIndex", "Budget")" class="nav-link @dashBudgetMobileActive"> <i class="nav-icon bi bi-phone"></i> <p>Budget Mobile</p> </a> </li>*@
+                                @*<li class="nav-item"> <a href="@Url.Action("BudgetMobileIndex", "Budget")" class="nav-link @dashBudgetMobileActive"> <i class="nav-icon bi bi-phone"></i> <p>Budget Mobile</p> </a> </li>*@
                                 <li class="nav-item"> <a href="@Url.Action("Dashboard", "Default")" class="nav-link @dashDashboardActive"> <i class="nav-icon bi bi-house-door"></i> <p>Dashboard</p> </a> </li>
                                 <li class="nav-item"> <a href="@Url.Action("BudgetGroupingIndex", "BudgetGrouping")" class="nav-link @dashBudgetGroupingActive"> <i class="nav-icon bi bi-diagram-3"></i> <p>Grouping</p> </a> </li>
                                 <li class="nav-item"> <a href="@Url.Action("BudgetIndex", "Budget")" class="nav-link @dashBudgetIndexActive"> <i class="nav-icon bi bi-cash-coin"></i> <p>Final</p> </a> </li>
@@ -307,7 +198,7 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item"> <a href="@Url.Action("BarChart", "Default")" class="nav-link @featureBarChartActive"> <i class="nav-icon bi bi-bar-chart-line"></i> <p>Bar Graph</p> </a> </li>
-                                <li class="nav-item"> <a href="@Url.Action("CalenderIndex", "Calender")" class="nav-link @featureCalenderActive"> <i class="nav-icon bi bi-calendar3"></i> <p>Calender</p> </a> </li>
+                                <li class="nav-item"> <a href="@Url.Action("Index", "Calendar")" class="nav-link @featureCalendarActive"> <i class="nav-icon bi bi-calendar3"></i> <p>Calendar</p> </a> </li>
                                 <li class="nav-item"> <a href="@Url.Action("GroupBudgetOverview", "BudgetOverview")" class="nav-link @featureGroupBudgetActive"> <i class="nav-icon bi bi-people"></i> <p>Group Sum</p> </a> </li>
                                 <li class="nav-item"> <a href="@Url.Action("Index", "Upload")" class="nav-link @featureUploadFilesActive"> <i class="nav-icon bi bi-upload"></i> <p>File Upload</p> </a> </li>
                                 <li class="nav-item"> <a href="@Url.Action("BirthdayIndex", "Birthday")" class="nav-link @featureBirthdayAddActive"> <i class="nav-icon bi bi-gift"></i> <p>Birthday Add</p> </a> </li>
@@ -323,9 +214,9 @@
                                 <p style="color: #ff7878; font-family: Calibri, 'Candara', 'Segoe UI', Optima, Arial, sans-serif; font-size: 15px !important; font-weight: 600; "> Investment <i class="nav-arrow bi bi-chevron-right"></i> </p>
                             </a>
                             <ul class="nav nav-treeview">
-                                <li class="nav-item"> <a href="@Url.Action("StockCandle", "Default")" class="nav-link @investmentStockCandleActive"> <i class="nav-icon bi bi-graph-up-arrow"></i> <p>NSE Stock</p> </a> </li>
-                                <li class="nav-item"> <a href="@Url.Action("StockTechData", "Default")" class="nav-link @investmentStockTechDataActive"> <i class="nav-icon bi bi-cpu"></i> <p>Stock Tech Data</p> </a> </li>
-                                <li class="nav-item"> <a href="@Url.Action("PurchaseStockTracker", "Default")" class="nav-link @investmentPurchaseStockActive"> <i class="nav-icon bi bi-cart-check"></i> <p>Purchase Stock Tracker</p> </a> </li>
+                                <li class="nav-item"> <a href="@Url.Action("StockCandle", "StockMarket")" class="nav-link @investmentStockCandleActive"> <i class="nav-icon bi bi-graph-up-arrow"></i> <p>NSE Stock</p> </a> </li>
+                                <li class="nav-item"> <a href="@Url.Action("StockTechData", "StockMarket")" class="nav-link @investmentStockTechDataActive"> <i class="nav-icon bi bi-cpu"></i> <p>Stock Tech Data</p> </a> </li>
+                                <li class="nav-item"> <a href="@Url.Action("PurchaseStockTracker", "StockMarket")" class="nav-link @investmentPurchaseStockActive"> <i class="nav-icon bi bi-cart-check"></i> <p>Purchase Stock Tracker</p> </a> </li>
                                 <li class="nav-item"> <a href="@Url.Action("AddToWatchlist", "StockTracker")" class="nav-link @investmentAddedStocksActive"> <i class="nav-icon bi bi-plus-circle"></i> <p>Add To Watchlist</p> </a> </li>
                                 <li class="nav-item"> <a href="@Url.Action("Watchlist", "StockTracker")" class="nav-link @investmentStockPricesActive"> <i class="nav-icon bi bi-currency-rupee"></i> <p>Watchlist</p> </a> </li>
                                 <li class="nav-item"> <a href="@Url.Action("PurchaseStockTrackerAdd", "StockTracker")" class="nav-link @investmentPurchaseDetailsActive"> <i class="nav-icon bi bi-receipt"></i> <p>Stock Purchase Details</p> </a> </li>
@@ -367,13 +258,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
     <script src="~/Content/theme/js/adminlte.js"></script>
     <script src="~/Content/theme/js/SidebarWrapper.js"></script>
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('#btnLogout').on('click', function (e) {
-                e.preventDefault();
-                window.location.href = '@Url.Action("Logout", "Login")';
-            });
-        });
-    </script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/ViewAssets/Views/Shared/_WebLayout-inline11.js")"></script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-﻿
+﻿@*||*@
 @{
     ViewBag.Title = "LoginIndex";
     Layout = "~/Views/Shared/_LoginLayout.cshtml";
@@ -12,6 +12,7 @@
 
         @using (Html.BeginForm("LoginIndex", "Login", FormMethod.Post, new { id = "loginForm" }))
         {
+            @Html.AntiForgeryToken()
             <div class="input-group">
                 <span class="icon">&#9993;</span>
                 <input type="text" id="email" name="email" autocomplete="off" placeholder="Email ID" />
@@ -30,4 +31,3 @@
 
     </div>
 </div>
-

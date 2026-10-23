@@ -1,5 +1,4 @@
-﻿@*|| jquery-3.6.0.min.js, CustomerView-inline2.js ||*@
-@model HBManager.Areas.GstBill.Models.CustomerMaster
+﻿@model HBManager.Areas.GstBill.Models.CustomerMaster
 @{
     ViewBag.Title = "CustomerView";
     Layout = "~/Views/Shared/_GstLayout.cshtml";
@@ -7,7 +6,6 @@
 
 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "customerViewForm" }))
 {
-    @Html.AntiForgeryToken()
     <div class="content-wrapper">
 
         <section class="content">
@@ -88,5 +86,17 @@
 }
 
 <script src="~/Scripts/jquery-3.6.0.min.js"></script>
-<script type="text/javascript" src="@Url.Content("~/Scripts/ViewAssets/Areas/GstBill/Views/Product/CustomerView-inline2.js")"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var getGstType = $("#gstType").val();
+        if (getGstType != '') {
+            $("#gstTypeEdit").val(getGstType).change();
+        }
+        $("#gstTypeEdit").change(function () {
+            const ddlValue = $(this).val();
+            $("#gstType").val(ddlValue);
+        });
+    });
+</script>
+
 

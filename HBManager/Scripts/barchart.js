@@ -73,7 +73,7 @@
 
         $.ajax({
             url: '/Default/GetBarGraphByGroup',
-            type: 'GET',
+            type: 'POST',
             data: {
                 g1: g1,
                 g2: g2,

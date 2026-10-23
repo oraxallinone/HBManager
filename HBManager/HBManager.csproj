@@ -118,7 +118,6 @@
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
-    <Compile Include="Security\ValidateAntiForgeryTokenAttribute.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Areas\GstBill\Controllers\InvoiceController.cs" />
     <Compile Include="Areas\GstBill\Controllers\ProductController.cs" />
@@ -163,9 +162,8 @@
     <Compile Include="Controllers\BudgetGroupingController.cs" />
     <Compile Include="Controllers\BudgetOverviewController.cs" />
     <Compile Include="Controllers\RepeatStatusController.cs" />
-    <Compile Include="Controllers\CalendarController.cs" />
+    <Compile Include="Controllers\CalenderController.cs" />
     <Compile Include="Controllers\DefaultController.cs" />
-    <Compile Include="Controllers\StockMarketController.cs" />
     <Compile Include="Controllers\GroupController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ImportController.cs" />
@@ -183,10 +181,9 @@
     <Compile Include="Models\Budget.cs" />
     <Compile Include="Models\WasteTracker.cs" />
     <Compile Include="Models\BudgetImportViewModel.cs" />
-    <Compile Include="Models\BudgetFilterRequest.cs" />
     <Compile Include="Models\BudgetVerificationModels.cs" />
-    <Compile Include="Models\CalendarDataViewModel.cs" />
-    <Compile Include="Models\CalendarDateViewModel.cs" />
+    <Compile Include="Models\CalenderDataViewModel.cs" />
+    <Compile Include="Models\CalenderDateViewModel.cs" />
     <Compile Include="Models\DashboardHeadingModel.cs" />
     <Compile Include="Models\GetExpensiveViewModel.cs" />
     <Compile Include="Models\Group3.cs" />
@@ -203,9 +200,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\BirthdayService.cs" />
     <Compile Include="Service\BudgetOverviewService.cs" />
-    <Compile Include="Service\BudgetImportService.cs" />
     <Compile Include="Service\BudgetService.cs" />
-    <Compile Include="Service\SqlConnectionFactory.cs" />
     <Compile Include="Service\DashboardService.cs" />
     <Compile Include="Service\GraphService.cs" />
     <Compile Include="Service\GroupService.cs" />
@@ -234,7 +229,7 @@
     <Content Include="Content\budget-index.css" />
     <Content Include="Content\budget-overview.css" />
     <Content Include="Content\budget-verification.css" />
-    <Content Include="Content\calendar-css.css" />
+    <Content Include="Content\calender-css.css" />
     <Content Include="Content\common.css" />
     <Content Include="Content\dashboard.css" />
     <Content Include="Content\group.css" />
@@ -252,8 +247,6 @@
     <Content Include="Content\repeat-status.css" />
     <Content Include="Content\salary.css" />
     <Content Include="Content\spinner.css" />
-    <Content Include="Content\ViewAssets\**\*.css" />
-    <Content Include="Scripts\ViewAssets\**\*.js" />
     <Content Include="Content\theme\assets\img\AdminLTEFullLogo.png" />
     <Content Include="Content\theme\assets\img\AdminLTELogo.png" />
     <Content Include="Content\theme\assets\img\avatar.png" />
@@ -334,7 +327,7 @@
     <Content Include="Upload\schemaHBManagerupto3march.sql" />
     <Content Include="Upload\sp_budget_verification.sql" />
     <Content Include="Upload\_____apr2026.sql" />
-    <Content Include="Views\Budget\BudgetMobileIndex.cshtml" />
+    <Content Include="Views\Budget\BudgeMobileIndex.cshtml" />
     <Content Include="Content\budget-mobile-index.css" />
     <Content Include="Scripts\budget-mobile.js" />
     <EntityDeploy Include="Areas\GstBill\Models\Model1.edmx">
@@ -364,7 +357,7 @@
     <Content Include="Scripts\budget.js" />
     <Content Include="Scripts\budgetGrouping.js" />
     <Content Include="Scripts\budgetOverview.js" />
-    <Content Include="Scripts\calendar.js" />
+    <Content Include="Scripts\calender.js" />
     <Content Include="Scripts\dashboard.js" />
     <Content Include="Scripts\group.js" />
     <Content Include="Scripts\jquery-3.6.0.js" />
@@ -423,7 +416,7 @@
     <Content Include="Views\Budget\BudgetIndex.cshtml" />
     <Content Include="Views\BudgetGrouping\BudgetGroupingIndex.cshtml" />
     <Content Include="Views\BudgetOverview\GroupBudgetOverview.cshtml" />
-    <Content Include="Views\Calendar\Index.cshtml" />
+    <Content Include="Views\Calender\CalenderIndex.cshtml" />
     <Content Include="Views\Group\GroupIndex.cshtml" />
     <Content Include="Views\Notes\NoteIndex.cshtml" />
     <Content Include="Views\Salary\SalaryIndex.cshtml" />
@@ -433,9 +426,9 @@
     <Content Include="Views\Import\ImportInitiate.cshtml" />
     <Content Include="GetBudgetInitiateBySalaryMonth.sql" />
     <Content Include="Views\UpdateDatetime\Index.cshtml" />
-    <Content Include="Views\StockMarket\StockTechData.cshtml" />
-    <Content Include="Views\StockMarket\StockCandle.cshtml" />
-    <Content Include="Views\StockMarket\PurchaseStockTracker.cshtml" />
+    <Content Include="Views\Default\StockTechData.cshtml" />
+    <Content Include="Views\Default\StockCandle.cshtml" />
+    <Content Include="Views\Default\PurchaseStockTracker.cshtml" />
     <Content Include="Views\StockTracker\AddToWatchlist.cshtml" />
     <Content Include="Views\StockTracker\Watchlist.cshtml" />
     <Content Include="Views\StockTracker\PurchaseStockTrackerAdd.cshtml" />

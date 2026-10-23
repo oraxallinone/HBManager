@@ -581,8 +581,8 @@
 
     function renderFundamentalData(symbol) {
         $.ajax({
-            url: '/StockMarket/GetStockFundamentalData',
-            type: 'GET',
+            url: '/Default/GetStockFundamentalData',
+            type: 'POST',
             data: { stockSymbol: symbol },
             dataType: 'json',
             success: function (response) {
@@ -762,8 +762,8 @@
         clearStockDataView();
 
         $.ajax({
-            url: '/StockMarket/GetNseStockCandles',
-            type: 'GET',
+            url: '/Default/GetNseStockCandles',
+            type: 'POST',
             data: {
                 stockSymbol: normalized.replace('.NS', '').replace('.BO', ''),
                 stockExchange: selectedExchange

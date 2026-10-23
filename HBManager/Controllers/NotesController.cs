@@ -13,7 +13,6 @@ namespace HBManager.Controllers
         private NoteService noteService = new NoteService();
 
         // GET: Notes
-        [HttpGet]
         public ActionResult NoteIndex()
         {
             return View();
@@ -44,7 +43,6 @@ namespace HBManager.Controllers
 
         // AJAX: Add new note
         [HttpPost]
-        [HBManager.Security.ValidateAntiForgeryTokenAttribute]
         public JsonResult AddNote(string noteName, string dateOfNote, int notePriority)
         {
             try
@@ -65,7 +63,6 @@ namespace HBManager.Controllers
 
         // AJAX: Update note
         [HttpPost]
-        [HBManager.Security.ValidateAntiForgeryTokenAttribute]
         public JsonResult UpdateNote(int noteId, string noteName, string dateOfNote, int notePriority)
         {
             try
@@ -89,7 +86,6 @@ namespace HBManager.Controllers
 
         // AJAX: Delete note
         [HttpPost]
-        [HBManager.Security.ValidateAntiForgeryTokenAttribute]
         public JsonResult DeleteNote(int noteId)
         {
             try
@@ -132,7 +128,6 @@ namespace HBManager.Controllers
 
         // AJAX: Add new subnote
         [HttpPost]
-        [HBManager.Security.ValidateAntiForgeryTokenAttribute]
         public JsonResult AddSubNote(int noteId, string subNoteName, string dateOfSubNote)
         {
             try
@@ -153,7 +148,6 @@ namespace HBManager.Controllers
 
         // AJAX: Update subnote
         [HttpPost]
-        [HBManager.Security.ValidateAntiForgeryTokenAttribute]
         public JsonResult UpdateSubNote(int subNoteId, string subNoteName, string dateOfSubNote)
         {
             try
@@ -183,7 +177,6 @@ namespace HBManager.Controllers
 
         // AJAX: Delete subnote
         [HttpPost]
-        [HBManager.Security.ValidateAntiForgeryTokenAttribute]
         public JsonResult DeleteSubNote(int subNoteId)
         {
             try

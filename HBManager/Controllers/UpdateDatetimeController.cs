@@ -8,7 +8,6 @@ namespace HBManager.Controllers
     {
         private readonly UpdateDatetimeService _svc = new UpdateDatetimeService();
 
-        [HttpGet]
         public ActionResult Index()
         {
             return View();
@@ -29,7 +28,6 @@ namespace HBManager.Controllers
         }
 
         [HttpPost]
-        [HBManager.Security.ValidateAntiForgeryTokenAttribute]
         public JsonResult UpdateBudgetDate(int id, DateTime spendDate)
         {
             var success = _svc.UpdateBudgetDate(id, spendDate);

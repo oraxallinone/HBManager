@@ -16,8 +16,8 @@
         hideError();
 
         $.ajax({
-            url: '/StockMarket/GetStockTechFundamentalData',
-            type: 'GET',
+            url: '/Default/GetStockTechFundamentalData',
+            type: 'POST',
             data: { stockSymbol: symbol },
             dataType: 'json',
             timeout: 30000,

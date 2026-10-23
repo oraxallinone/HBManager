@@ -1,17 +1,16 @@
-﻿using HBManager.Models;
-using HBManager.Service;
+using HBManager.Models;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.IO;
 using System.Web.Mvc;
 
 namespace YourProjectNamespace.Controllers
 {
     public class ImportController : Controller
     {
+        private readonly string connectionString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
 
         [HttpGet]
         public ActionResult ImportInitiate()
@@ -26,7 +25,7 @@ namespace YourProjectNamespace.Controllers
         {
             var rows = new List<Dictionary<string, object>>();
 
-                using (SqlConnection con = SqlConnectionFactory.CreateConnection())
+                using (SqlConnection con = new SqlConnection(connectionString))
                 {
                 using (SqlCommand cmd = new SqlCommand("dbo.GetBudgetInitiateBySalaryMonth", con))
                         {
@@ -67,7 +66,7 @@ namespace YourProjectNamespace.Controllers
                                     AND NULLIF(LTRIM(RTRIM(bi.[BankName])), '') IS NOT NULL
                                 ORDER BY bi.[BankName]";
 
-            using (SqlConnection con = SqlConnectionFactory.CreateConnection())
+            using (SqlConnection con = new SqlConnection(connectionString))
             using (SqlCommand cmd = new SqlCommand(query, con))
             {
                 cmd.Parameters.AddWithValue("@Year", year);
@@ -88,7 +87,6 @@ namespace YourProjectNamespace.Controllers
 
 
         [HttpPost]
-        [HBManager.Security.ValidateAntiForgeryTokenAttribute]
         public JsonResult MoveData(List<RowStatusItem> items)
         {
             if (items == null || items.Count == 0)
@@ -98,7 +96,7 @@ namespace YourProjectNamespace.Controllers
 
             try
             {
-                using (SqlConnection con = SqlConnectionFactory.CreateConnection())
+                using (SqlConnection con = new SqlConnection(connectionString))
                 {
                     con.Open();
 
@@ -123,7 +121,7 @@ namespace YourProjectNamespace.Controllers
                     }
                 }
 
-                //using (SqlConnection con = SqlConnectionFactory.CreateConnection())
+                //using (SqlConnection con = new SqlConnection(connectionString))
                 //{
                 //    con.Open();
                 //    using (SqlTransaction trans = con.BeginTransaction())
@@ -196,7 +194,6 @@ namespace YourProjectNamespace.Controllers
         }
 
         [HttpPost]
-        [HBManager.Security.ValidateAntiForgeryTokenAttribute]
         public JsonResult RevertTransfer(int id)
         {
             if (id <= 0)
@@ -206,7 +203,7 @@ namespace YourProjectNamespace.Controllers
 
             try
             {
-                using (SqlConnection con = SqlConnectionFactory.CreateConnection())
+                using (SqlConnection con = new SqlConnection(connectionString))
                 {
                     con.Open();
                     string revertQuery = @" UPDATE [dbo].[BudgetInitiate] SET [IsTransfer] = NULL WHERE [Id] = @Id";
@@ -227,7 +224,6 @@ namespace YourProjectNamespace.Controllers
         }
 
         [HttpPost]
-        [HBManager.Security.ValidateAntiForgeryTokenAttribute]
         public JsonResult UpdateDetails(int id, string details)
         {
             if (id <= 0)
@@ -237,7 +233,7 @@ namespace YourProjectNamespace.Controllers
 
             try
             {
-                using (SqlConnection con = SqlConnectionFactory.CreateConnection())
+                using (SqlConnection con = new SqlConnection(connectionString))
                 using (SqlCommand cmd = new SqlCommand(@"
                     UPDATE [dbo].[BudgetInitiate]
                     SET [Details] = @Details
@@ -261,50 +257,146 @@ namespace YourProjectNamespace.Controllers
             }
         }
 
+        // Action to pull latest 50 records for the dynamic grid
         [HttpPost]
-        [HBManager.Security.ValidateAntiForgeryTokenAttribute]
-        public JsonResult ImportCsv()
+        [ValidateAntiForgeryToken]
+        public JsonResult ImportInitiate(string sqlScript)
         {
+            if (string.IsNullOrWhiteSpace(sqlScript))
+            {
+                return Json(new { success = false, message = "The input script cannot be empty." });
+            }
+
+            // 1. Clean up and extract only the raw data tuples
+            string cleanScript = sqlScript.Trim();
+
+            // If the user pasted the "INSERT INTO...VALUES" wrapper, strip it off
+            if (cleanScript.ToUpper().Contains("VALUES"))
+            {
+                int valuesIndex = cleanScript.ToUpper().IndexOf("VALUES");
+                // Jump past the word "VALUES"
+                cleanScript = cleanScript.Substring(valuesIndex + 6).Trim();
+            }
+
+            // Remove any trailing semicolons or rogue spaces at the absolute end of the string
+            cleanScript = cleanScript.TrimEnd(';', ' ', '\r', '\n');
+
+            // Fix the specific syntax bug: if the string ends with a trailing comma after the last tuple ), 
+            // remove it so SQL Server doesn't expect another row.
+            if (cleanScript.EndsWith(","))
+            {
+                cleanScript = cleanScript.Substring(0, cleanScript.Length - 1).Trim();
+            }
+
+            // 2. Build the final executable SQL command safely
+            string masterSqlQuery = $@"
+        BEGIN TRANSACTION;
+        BEGIN TRY
+            -- Setup Staging Table structure
+            DECLARE @StagingTable TABLE (
+                [BankName] VARCHAR(150),
+                [Year] INT,
+                [Month] INT,
+                [TransactionType] VARCHAR(20),
+                [Amount] DECIMAL(18,2),
+                [TransactionDate] DATETIME,
+                [Details] NVARCHAR(MAX),
+                [IsTransfer] BIT
+            );
+
+            -- Populate staging from the cleaned incoming values block
+            INSERT INTO @StagingTable VALUES {cleanScript};
+
+            DECLARE @TotalPasted INT = (SELECT COUNT(*) FROM @StagingTable);
+
+            -- Filter out rows matching duplicate constraints
+            DELETE S FROM @StagingTable S
+            WHERE EXISTS (
+                SELECT 1 FROM [dbo].[BudgetInitiate] B
+                WHERE B.[TransactionType] = S.[TransactionType]
+                  AND B.[Amount] = S.[Amount]
+                  AND B.[TransactionDate] = S.[TransactionDate]
+                  AND ISNULL(B.[Details], '') = ISNULL(S.[Details], '')
+            );
+
+            DECLARE @Inserted INT = 0;
+            
+            -- Insert valid unique rows
+            INSERT INTO [dbo].[BudgetInitiate] 
+            ([BankName], [Year], [Month], [TransactionType], [Amount], [TransactionDate], [Details], [IsTransfer])
+            SELECT [BankName], [Year], [Month], [TransactionType], [Amount], [TransactionDate], [Details], [IsTransfer]
+            FROM @StagingTable;
+
+            SET @Inserted = @@ROWCOUNT;
+
+            COMMIT TRANSACTION;
+
+            -- Send back accurate analytical counts
+            SELECT 
+                @Inserted AS InsertedRows, 
+                (@TotalPasted - @Inserted) AS DuplicateRows,
+                0 AS ErrorRows;
+        END TRY
+        BEGIN CATCH
+            IF @@TRANCOUNT > 0 ROLLBACK TRANSACTION;
+            
+            SELECT 
+                0 AS InsertedRows, 
+                0 AS DuplicateRows,
+                1 AS ErrorRows;
+        END CATCH";
+
             try
             {
-                if (Request.ContentLength > 3 * 1024 * 1024)
+                int insertedCount = 0;
+                int duplicateCount = 0;
+                int errorCount = 0;
+
+                using (SqlConnection con = new SqlConnection(connectionString))
                 {
-                    return Json(new { success = false, message = "The CSV input exceeds the 3 MB limit." });
+                    using (SqlCommand cmd = new SqlCommand(masterSqlQuery, con))
+                    {
+                        con.Open();
+                        using (SqlDataReader rdr = cmd.ExecuteReader())
+                        {
+                            if (rdr.Read())
+                            {
+                                insertedCount = Convert.ToInt32(rdr["InsertedRows"]);
+                                duplicateCount = Convert.ToInt32(rdr["DuplicateRows"]);
+                                errorCount = Convert.ToInt32(rdr["ErrorRows"]);
+                            }
+                        }
+                    }
                 }
 
-                string csvData;
-                using (var reader = new StreamReader(Request.InputStream, Request.ContentEncoding, true))
+                if (errorCount > 0)
                 {
-                    csvData = reader.ReadToEnd();
+                    return Json(new { success = false, message = "Database Error: SQL execution failed. Please verify the structural layout of your value data blocks." });
                 }
 
-                var result = new BudgetImportService().ImportCsv(csvData);
                 return Json(new
                 {
                     success = true,
-                    inserted = result.Inserted,
-                    duplicates = result.Duplicates,
-                    errors = 0,
-                    message = $"Process complete. Inserted: {result.Inserted} row(s). Duplicates skipped: {result.Duplicates} row(s)."
+                    inserted = insertedCount,
+                    duplicates = duplicateCount,
+                    errors = errorCount,
+                    message = $"Process complete. Inserted: {insertedCount} row(s). Duplicates skipped: {duplicateCount} row(s)."
                 });
             }
-            catch (FormatException ex)
+            catch (Exception ex)
             {
-                return Json(new { success = false, message = ex.Message });
-            }
-            catch (SqlException ex)
-            {
-                return Json(new { success = false, message = "Database import failed: " + ex.Message });
+                return Json(new { success = false, message = "Execution Failure: " + ex.Message });
             }
         }
 
+
+
         [HttpPost]
-        [HBManager.Security.ValidateAntiForgeryTokenAttribute]
         public JsonResult DeleteBudgetInitiate(int id)
         {
             try
             {
-                using (SqlConnection con = SqlConnectionFactory.CreateConnection())
+                using (SqlConnection con = new SqlConnection(connectionString))
                 {
                     con.Open();
 

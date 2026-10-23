@@ -11,14 +11,12 @@ namespace HBManager.Controllers
     {
         private readonly string _uploadPath = "~/Upload";
 
-        [HttpGet]
         public ActionResult Index()
         {
             return View();
         }
 
         [HttpPost]
-        [HBManager.Security.ValidateAntiForgeryTokenAttribute]
         public JsonResult UploadFile()
         {
             try
@@ -46,7 +44,6 @@ namespace HBManager.Controllers
             }
         }
 
-        [HttpGet]
         public JsonResult GetFiles()
         {
             try
@@ -72,7 +69,6 @@ namespace HBManager.Controllers
         }
 
         [HttpPost]
-        [HBManager.Security.ValidateAntiForgeryTokenAttribute]
         public JsonResult DeleteFile(string name)
         {
             try
@@ -94,7 +90,6 @@ namespace HBManager.Controllers
         }
 
         // Stream file to browser (for download/view)
-        [HttpGet]
         public ActionResult GetFile(string name)
         {
             try

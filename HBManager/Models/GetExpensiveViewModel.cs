@@ -1,6 +1,6 @@
 ﻿namespace HBManager.Models
 {
-    public class CalendarBudgetModelIn
+    public class CalenderBudgetModelIn
     {
         public int forYear { get; set; }
         public int forMonth { get; set; }

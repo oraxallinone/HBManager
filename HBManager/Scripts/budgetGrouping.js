@@ -207,16 +207,7 @@ $(document).ready(function () {
         $.ajax({
             url: "/Budget/GetAllBudgetFromToWithGroup",
             type: "GET",
-            data: {
-                year: 0,
-                month: 0,
-                "groupIds[0]": g1,
-                "groupIds[1]": g2,
-                "groupIds[2]": g3,
-                "groupIds[3]": g4,
-                isAll: isAll,
-                searchText: searchText
-            },
+            data: { year: 0, month: 0, g1: g1, g2: g2, g3: g3, g4: g4, isAll: isAll, searchText: searchText },
             dataType: "json",
             success: function (res) {
                 if (res && res.length > 0) {
@@ -1054,16 +1045,7 @@ $(document).ready(function () {
         $.ajax({
             url: "/Budget/GetAllBudgetFromToWithGroup",
             type: "GET",
-            data: {
-                year: year,
-                month: month,
-                "groupIds[0]": g1,
-                "groupIds[1]": g2,
-                "groupIds[2]": g3,
-                "groupIds[3]": g4,
-                isAll: isAll,
-                searchText: searchText
-            },
+            data: { year: year, month: month, g1: g1, g2: g2, g3: g3, g4: g4, isAll: isAll, searchText: searchText },
             dataType: "json",
             success: function (res) {
                 if (res && res.length > 0) {

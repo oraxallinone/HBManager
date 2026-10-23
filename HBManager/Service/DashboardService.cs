@@ -9,9 +9,11 @@ namespace HBManager.Service
 {
     public class DashboardService
     {
+        private readonly string _connString;
 
         public DashboardService()
         {
+            _connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
         }
 
         public DashboardHeadingModel GetCurrentMonthSalaryDetails(int year, int month)
@@ -24,7 +26,7 @@ namespace HBManager.Service
                 PercentSpending = "0%"
             };
 
-            using (var con = SqlConnectionFactory.CreateConnection())
+            using (var con = new SqlConnection(_connString))
             using (var cmd = new SqlCommand("SP_DashboardHeading", con))
             {
                 cmd.CommandType = CommandType.StoredProcedure;

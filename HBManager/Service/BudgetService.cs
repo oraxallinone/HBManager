@@ -11,9 +11,11 @@ namespace HBManager.Service
 {
     public class BudgetService
     {
+        private readonly string _connString;
 
         public BudgetService()
         {
+            _connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
         }
 
         // Budget Verification Data
@@ -24,7 +26,7 @@ namespace HBManager.Service
             var outList = new List<BudgetVerificationOutModel>();
             var nowList = new List<BudgetVerificationNowModel>();
 
-            using (var conn = SqlConnectionFactory.CreateConnection())
+            using (var conn = new SqlConnection(_connString))
             {
                 conn.Open();
                 // M IN
@@ -103,7 +105,7 @@ namespace HBManager.Service
 
         public int InsertBudget(Budget model)
         {
-            using (var conn = SqlConnectionFactory.CreateConnection())
+            using (var conn = new SqlConnection(_connString))
             using (var cmd = new SqlCommand("sp_InsertBudget", conn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -125,7 +127,7 @@ namespace HBManager.Service
 
         public int UpdateBudgetById(Budget model)
         {
-            using (var conn = SqlConnectionFactory.CreateConnection())
+            using (var conn = new SqlConnection(_connString))
             using (var cmd = new SqlCommand("sp_UpdateBudgetById", conn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -149,7 +151,7 @@ namespace HBManager.Service
 
         public int UpdateBankName(int id, string bankName)
         {
-            using (var conn = SqlConnectionFactory.CreateConnection())
+            using (var conn = new SqlConnection(_connString))
             using (var cmd = new SqlCommand("UPDATE dbo.Budget SET BankName = @BankName WHERE Id = @Id", conn))
             {
                 cmd.Parameters.AddWithValue("@Id", id);
@@ -162,7 +164,7 @@ namespace HBManager.Service
         public List<Budget> GetBudgetByFromToDate(int year, int month)
         {
             var list = new List<Budget>();
-            using (var conn = SqlConnectionFactory.CreateConnection())
+            using (var conn = new SqlConnection(_connString))
             using (var cmd = new SqlCommand("sp_GetBudgetByFromToDate", conn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -184,7 +186,7 @@ namespace HBManager.Service
         public List<Budget> GetBudgetByFromToDateWithGroup(int year, int month, int g1, int g2, int g3, int g4, bool isAll, string searchText)
         {
             var list = new List<Budget>();
-            using (var conn = SqlConnectionFactory.CreateConnection())
+            using (var conn = new SqlConnection(_connString))
             using (var cmd = new SqlCommand("sp_GetBudgetByFromToDateWithGroup1", conn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -211,7 +213,7 @@ namespace HBManager.Service
 
         public Budget GetBudgetById(int id)
         {
-            using (var conn = SqlConnectionFactory.CreateConnection())
+            using (var conn = new SqlConnection(_connString))
             using (var cmd = new SqlCommand("sp_GetBudgetById", conn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -231,7 +233,7 @@ namespace HBManager.Service
 
         public int DeleteBudgetById(int id)
         {
-            using (var conn = SqlConnectionFactory.CreateConnection())
+            using (var conn = new SqlConnection(_connString))
             using (var cmd = new SqlCommand("sp_DeleteBudgetById", conn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -245,7 +247,7 @@ namespace HBManager.Service
 
         public int MoveBudgetToMonthIn(MoveBudgetToMonthInModel model)
         {
-            using (var conn = SqlConnectionFactory.CreateConnection())
+            using (var conn = new SqlConnection(_connString))
             {
                 conn.Open();
                 using (var transaction = conn.BeginTransaction())
@@ -309,7 +311,7 @@ namespace HBManager.Service
         public List<WasteTracker> GetWasteTrackerByBudgetMonth(int year, int month)
         {
             var list = new List<WasteTracker>();
-            using (var conn = SqlConnectionFactory.CreateConnection())
+            using (var conn = new SqlConnection(_connString))
             using (var cmd = new SqlCommand("sp_GetWasteTrackerByBudgetMonth", conn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -348,7 +350,7 @@ namespace HBManager.Service
 
         public int DeleteWasteTracker(int id)
         {
-            using (var conn = SqlConnectionFactory.CreateConnection())
+            using (var conn = new SqlConnection(_connString))
             using (var cmd = new SqlCommand("sp_DeleteWasteTracker", conn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -360,7 +362,7 @@ namespace HBManager.Service
 
         private int ExecuteWasteTrackerCommand(string procedureName, WasteTracker model, bool includeId)
         {
-            using (var conn = SqlConnectionFactory.CreateConnection())
+            using (var conn = new SqlConnection(_connString))
             using (var cmd = new SqlCommand(procedureName, conn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -405,7 +407,7 @@ namespace HBManager.Service
                 G4Groups = new List<GroupMaster2>()
             };
 
-            using (var conn = SqlConnectionFactory.CreateConnection())
+            using (var conn = new SqlConnection(_connString))
             using (var cmd = new SqlCommand("sp_GetAll4Group", conn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -474,7 +476,7 @@ namespace HBManager.Service
             // Convert list of IDs to comma-separated string
             string ids = string.Join(",", budgetIds);
 
-            using (var conn = SqlConnectionFactory.CreateConnection())
+            using (var conn = new SqlConnection(_connString))
             using (var cmd = new SqlCommand("sp_UpdateBudgetGroupsByIds", conn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -493,7 +495,7 @@ namespace HBManager.Service
         public List<GroupMaster2> GetGroupMasterUncutService()
         {
             var list = new List<GroupMaster2>();
-            using (var conn = SqlConnectionFactory.CreateConnection())
+            using (var conn = new SqlConnection(_connString))
             using (var cmd = new SqlCommand("sp_GetGroupMasterUncut", conn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -516,7 +518,7 @@ namespace HBManager.Service
         // Budget verification - insert / update for M IN and M Now
         public int InsertBudgetVerificationIn(BudgetVerificationInModel model)
         {
-            using (var conn = SqlConnectionFactory.CreateConnection())
+            using (var conn = new SqlConnection(_connString))
             using (var cmd = new SqlCommand("sp_InsertBudgetVerificationIn", conn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -534,7 +536,7 @@ namespace HBManager.Service
 
         public int UpdateBudgetVerificationIn(BudgetVerificationInModel model)
         {
-            using (var conn = SqlConnectionFactory.CreateConnection())
+            using (var conn = new SqlConnection(_connString))
             using (var cmd = new SqlCommand("sp_UpdateBudgetVerificationIn", conn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -553,7 +555,7 @@ namespace HBManager.Service
 
         public int InsertBudgetVerificationNow(BudgetVerificationNowModel model)
         {
-            using (var conn = SqlConnectionFactory.CreateConnection())
+            using (var conn = new SqlConnection(_connString))
             using (var cmd = new SqlCommand("sp_InsertBudgetVerificationNow", conn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -571,7 +573,7 @@ namespace HBManager.Service
 
         public int UpdateBudgetVerificationNow(BudgetVerificationNowModel model)
         {
-            using (var conn = SqlConnectionFactory.CreateConnection())
+            using (var conn = new SqlConnection(_connString))
             using (var cmd = new SqlCommand("sp_UpdateBudgetVerificationNow", conn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -590,7 +592,7 @@ namespace HBManager.Service
 
         public int DeleteBudgetVerificationIn(int idIn)
         {
-            using (var conn = SqlConnectionFactory.CreateConnection())
+            using (var conn = new SqlConnection(_connString))
             using (var cmd = new SqlCommand("sp_DeleteTblMonthInById", conn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -602,7 +604,7 @@ namespace HBManager.Service
 
         public int DeleteBudgetVerificationNow(int idNow)
         {
-            using (var conn = SqlConnectionFactory.CreateConnection())
+            using (var conn = new SqlConnection(_connString))
             using (var cmd = new SqlCommand("sp_DeleteMonthNowById", conn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -614,7 +616,7 @@ namespace HBManager.Service
 
         public bool UpdateText(int id, string details)
         {
-            using (var conn = SqlConnectionFactory.CreateConnection())
+            using (var conn = new SqlConnection(_connString))
             using (var cmd = new SqlCommand("usp_updateText", conn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -634,7 +636,7 @@ namespace HBManager.Service
 
         public int UpdateBudgetVerificationById(Budget model)
         {
-            using (var conn = SqlConnectionFactory.CreateConnection())
+            using (var conn = new SqlConnection(_connString))
             using (var cmd = new SqlCommand("sp_UpdateBudgetVerificationById", conn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;

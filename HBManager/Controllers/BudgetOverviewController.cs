@@ -11,7 +11,6 @@ namespace HBManager.Controllers
     {
         private readonly BudgetOverviewService _svc = new BudgetOverviewService();
 
-        [HttpGet]
         public ActionResult GroupBudgetOverview()
         {
             //budget-overview

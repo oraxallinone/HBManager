@@ -13,7 +13,6 @@ namespace HBManager.Areas.GstBill.Controllers
         private const string InvoiceCounterUpdateKey = "monday";
 
         #region------------------------Create GST Invoice----------------
-        [HttpGet]
         public ActionResult GstInvoiceCreate(string draftNo)
         {
             InvoiceGstViewModel obj = new InvoiceGstViewModel();
@@ -29,7 +28,7 @@ namespace HBManager.Areas.GstBill.Controllers
                         obj.INotes = draftData.INotes;
                         obj.IsDraft = true;
                         obj.IDraftNo = draftNo;
-                        if (draftData.INo == null) { obj.INo = GetNewInvoiceNo(); }
+                        if (draftData.INo == null) { obj.INo = getNewInvoiceNo(); }
                         else { obj.INo = draftData.INo; }
                         obj.IDate = Convert.ToDateTime(draftData.IDate);
                     }
@@ -42,8 +41,8 @@ namespace HBManager.Areas.GstBill.Controllers
                 else
                 {
                     obj.IsDraft = false;
-                    obj.IDraftNo = GetNewDraftNo();
-                    obj.INo = GetNewInvoiceNo();
+                    obj.IDraftNo = getNewDraftNo();
+                    obj.INo = getNewInvoiceNo();
                 }
                 return View(obj);
             }
@@ -55,7 +54,6 @@ namespace HBManager.Areas.GstBill.Controllers
         #endregion-------------------------------------------------------
 
         #region------------------------GST draft list--------------------
-        [HttpGet]
         public ActionResult GstDraftList()
         {
             var billList = (from a in db.InvoiceDetails
@@ -88,7 +86,6 @@ namespace HBManager.Areas.GstBill.Controllers
         #endregion-------------------------------------------------------
 
         #region------------------------GST invoice list------------------
-        [HttpGet]
         public ActionResult GstInvoiceList()
         {
             var billList = (from a in db.InvoiceDetails
@@ -128,7 +125,6 @@ namespace HBManager.Areas.GstBill.Controllers
         }
         #endregion-------------------------------------------------------
 
-        [HttpGet]
         public ActionResult InvoiceCounterUpdate()
         {
             var counter = db.CounterMasters
@@ -145,7 +141,6 @@ namespace HBManager.Areas.GstBill.Controllers
         }
 
         [HttpPost]
-        [HBManager.Security.ValidateAntiForgeryTokenAttribute]
         public ActionResult InvoiceCounterUpdate(int counterValue, string secretKey)
         {
             if (!string.Equals(secretKey, InvoiceCounterUpdateKey, StringComparison.Ordinal))
@@ -275,14 +270,14 @@ namespace HBManager.Areas.GstBill.Controllers
             return Json(customers, JsonRequestBehavior.AllowGet);
         }
 
-        private string GetNewDraftNo()
+        public string getNewDraftNo()
         {
             int dbCount = db.CounterMasters.Where(x => x.counterName == "invoiceDraft").FirstOrDefault().counterValue;
             string newNo = BillSupport.increamentDraft(dbCount);
             return newNo;
         }
 
-        private string GetNewInvoiceNo()
+        public string getNewInvoiceNo()
         {
             int dbCount = db.CounterMasters.Where(x => x.counterName == "invoiceGst").FirstOrDefault().counterValue;
             string newNo = BillSupport.increamentInvoice(dbCount);
@@ -290,7 +285,6 @@ namespace HBManager.Areas.GstBill.Controllers
         }
 
         [HttpPost]
-        [HBManager.Security.ValidateAntiForgeryTokenAttribute]
         public ActionResult GstInvoiceCreate(InvoiceGstViewModel model)
         {
             try
@@ -364,8 +358,8 @@ namespace HBManager.Areas.GstBill.Controllers
 
                 ReturnResult result = new ReturnResult
                 {
-                    newDraftNo = GetNewDraftNo(),
-                    newInvoiceNo = GetNewInvoiceNo()
+                    newDraftNo = getNewDraftNo(),
+                    newInvoiceNo = getNewInvoiceNo()
                 };
                 return Json(result);
             }
@@ -403,22 +397,22 @@ namespace HBManager.Areas.GstBill.Controllers
             return Math.Round(partATotal + partAGst + partBTotal, 0);
         }
 
-        [HttpGet]
-        public ActionResult GetItemByName(string itemname)
+        [HttpPost]
+        public ActionResult GetItmByName(string itemname)
         {
             var item = db.ItemMasters.Where(x => x.ItemDetails == itemname).FirstOrDefault();
-            return Json(item, JsonRequestBehavior.AllowGet);
+            return Json(item);
         }
 
-        [HttpGet]
+        [HttpPost]
         public JsonResult GetItemByCode(string itemCode)
         {
             var singleItem = db.ItemMasters.Where(x => x.ItemDetails == itemCode).FirstOrDefault();
             return Json(singleItem, JsonRequestBehavior.AllowGet);
         }
 
-        [HttpGet]
-        public JsonResult GetRupeesInWords(int rps)
+        [HttpPost]
+        public JsonResult GetRupeesInwords(int rps)
         {
             int numb = Convert.ToInt32(rps);
             string rupees = BillSupport.NumberToWords(numb);
@@ -427,7 +421,6 @@ namespace HBManager.Areas.GstBill.Controllers
 
 
 
-        [HttpGet]
         public JsonResult GetDraftData(string draftNo)
         {
             ReturnDraftResult data = new ReturnDraftResult();
@@ -474,7 +467,6 @@ namespace HBManager.Areas.GstBill.Controllers
         }
 
         [HttpPost]
-        [HBManager.Security.ValidateAntiForgeryTokenAttribute]
         public JsonResult UpdateItemPart(int idT, string itemPart)
         {
             try
@@ -530,8 +522,6 @@ namespace HBManager.Areas.GstBill.Controllers
             }
         }
 
-        [HttpPost]
-        [HBManager.Security.ValidateAntiForgeryTokenAttribute]
         public ActionResult CancelInvoice(string dNo)
         {
             InvoiceDetail invoice = db.InvoiceDetails.Where(x => x.IDraftNo == dNo && x.IsActive == true).FirstOrDefault();

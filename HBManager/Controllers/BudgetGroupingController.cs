@@ -12,7 +12,6 @@ namespace HBManager.Controllers
     {
         private readonly GroupMappingService _mappingService = new GroupMappingService();
 
-        [HttpGet]
         public ActionResult BudgetGroupingIndex()
         {
             Response.Cache.SetCacheability(HttpCacheability.NoCache);
@@ -27,7 +26,6 @@ namespace HBManager.Controllers
         }
 
         [HttpPost]
-        [HBManager.Security.ValidateAntiForgeryTokenAttribute]
         public JsonResult SaveGroupMappingConfiguration(GroupMappingConfiguration model)
         {
             if (model != null)
@@ -51,7 +49,6 @@ namespace HBManager.Controllers
         }
 
         [HttpPost]
-        [HBManager.Security.ValidateAntiForgeryTokenAttribute]
         public JsonResult DeleteGroupMappingConfiguration(int id)
         {
             var result = _mappingService.Delete(id);

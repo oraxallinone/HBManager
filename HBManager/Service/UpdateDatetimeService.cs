@@ -9,15 +9,17 @@ namespace HBManager.Service
 {
     public class UpdateDatetimeService
     {
+        private readonly string _connString;
 
         public UpdateDatetimeService()
         {
+            _connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
         }
 
         public List<UpdateDatetimeViewModel> GetBudgetDataByMonthYear(int month, int year)
         {
             var list = new List<UpdateDatetimeViewModel>();
-            using (var con = SqlConnectionFactory.CreateConnection())
+            using (var con = new SqlConnection(_connString))
             {
                 string query = "SELECT Id, Year, Month, SpendDate, Amount, Details, G1, G2, G3, G4, BankName FROM [dbo].[Budget] WHERE [Month] = @Month AND [Year] = @Year ORDER BY SpendDate ASC";
                 using (var cmd = new SqlCommand(query, con))
@@ -52,7 +54,7 @@ namespace HBManager.Service
 
         public bool UpdateBudgetDate(int id, DateTime spendDate)
         {
-            using (var con = SqlConnectionFactory.CreateConnection())
+            using (var con = new SqlConnection(_connString))
             {
                 string query = "UPDATE [dbo].[Budget] SET [SpendDate] = @SpendDate WHERE [Id] = @Id";
                 using (var cmd = new SqlCommand(query, con))

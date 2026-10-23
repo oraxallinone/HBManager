@@ -1,5 +1,4 @@
-﻿@*|| common-date-format.css, GstInvoiceCreate-inline1.css, select2.min.css || select2.min.js, common.js, gst-invoice-create.js ||*@
-@model HBManager.Areas.GstBill.Models.InvoiceGstViewModel
+﻿@model HBManager.Areas.GstBill.Models.InvoiceGstViewModel
 @{
     ViewBag.Title = "GstInvoiceCreate";
     Layout = "~/Views/Shared/_GstLayout.cshtml";
@@ -7,7 +6,35 @@
 
 @*CTRL + M + O -mini mize*@@*CTRL + M + L- opne*@
 <link href="~/Content/application-css/common-date-format.css" rel="stylesheet" />
-<link rel="stylesheet" href="@Url.Content("~/Content/ViewAssets/Areas/GstBill/Views/Invoice/GstInvoiceCreate-inline1.css")" />
+<style type="text/css">
+    .autocomplete-item:hover {
+        background-color: yellow;
+    }
+
+    #iMinus {
+        font-size: 2rem !important;
+        line-height: 0.7;
+        vertical-align: middle;
+    }
+
+    #iPlus {
+        font-size: 2rem !important;
+        line-height: 0.7;
+        vertical-align: middle;
+    }
+
+    .card-footer {
+        display: flex;
+    }
+
+   
+
+    #txtInternalNote {
+        height: 28px;
+        padding: 2px 6px;
+        font-size: 13px;
+    }
+</style>
 
 <div class="content-wrapper">
     <section class="content">
@@ -15,7 +42,6 @@
 
             @using (Html.BeginForm())
             {
-                @Html.AntiForgeryToken()
                 <div class="card card-info card-outline">
                     <div class="card-header">
                         <h3 class="card-title">@(Model.IsDraft ? "Edit Draft Bill" : "Create New Bill")</h3>
@@ -151,3 +177,4 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script src="~/Scripts/application-js/common.js"></script>
 <script src="~/Scripts/application-js/gst-invoice-create.js"></script>
+

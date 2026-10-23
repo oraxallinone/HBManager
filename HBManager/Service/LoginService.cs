@@ -13,14 +13,16 @@ namespace HBManager.Service
 
     public class LoginService
     {
+        private readonly string _connectionString;
 
         public LoginService()
         {
+            _connectionString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
         }
 
         public LoginResult CheckLogin(string userName, string userPassword)
         {
-            using (var conn = SqlConnectionFactory.CreateConnection())
+            using (var conn = new SqlConnection(_connectionString))
             using (var cmd = new SqlCommand("sp_login", conn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;

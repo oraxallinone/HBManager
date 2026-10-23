@@ -9,15 +9,17 @@ namespace HBManager.Service
 {
     public class GroupMappingService
     {
+        private readonly string _connString;
 
         public GroupMappingService()
         {
+            _connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
         }
 
         public List<GroupMappingConfiguration> GetAll()
         {
             var list = new List<GroupMappingConfiguration>();
-            using (var conn = SqlConnectionFactory.CreateConnection())
+            using (var conn = new SqlConnection(_connString))
             using (var cmd = new SqlCommand("sp_GetGroupMappingConfigurations", conn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -35,7 +37,7 @@ namespace HBManager.Service
 
         public int Save(GroupMappingConfiguration model)
         {
-            using (var conn = SqlConnectionFactory.CreateConnection())
+            using (var conn = new SqlConnection(_connString))
             using (var cmd = new SqlCommand(model.Id > 0 ? "sp_UpdateGroupMappingConfiguration" : "sp_InsertGroupMappingConfiguration", conn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -55,7 +57,7 @@ namespace HBManager.Service
 
         public int Delete(int id)
         {
-            using (var conn = SqlConnectionFactory.CreateConnection())
+            using (var conn = new SqlConnection(_connString))
             using (var cmd = new SqlCommand("sp_DeleteGroupMappingConfiguration", conn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;

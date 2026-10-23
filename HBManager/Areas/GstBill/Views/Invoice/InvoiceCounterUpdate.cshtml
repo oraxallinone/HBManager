@@ -1,4 +1,3 @@
-@*||*@
 @model HBManager.Areas.GstBill.Models.CounterMaster
 @{
     ViewBag.Title = "InvoiceCounterUpdate";
@@ -35,7 +34,6 @@
                             </div>
                             @using (Html.BeginForm("InvoiceCounterUpdate", "Invoice", FormMethod.Post, new { area = "GstBill" }))
                             {
-                                @Html.AntiForgeryToken()
                                 <div class="form-group col-md-4 px-0">
                                     <label for="counterValue">New Counter Value</label>
                                     <input type="number" id="counterValue" name="counterValue" class="form-control form-control-sm" min="@(Model.counterValue + 1)" required="required" />

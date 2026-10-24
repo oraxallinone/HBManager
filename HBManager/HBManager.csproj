@@ -170,7 +170,6 @@
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\NotesController.cs" />
     <Compile Include="Controllers\SalaryController.cs" />
-    <Compile Include="Controllers\StockTrackerController.cs" />
     <Compile Include="Controllers\UpdateDatetimeController.cs" />
     <Compile Include="Controllers\UploadController.cs" />
     <Compile Include="Global.asax.cs">
@@ -426,12 +425,6 @@
     <Content Include="Views\Import\ImportInitiate.cshtml" />
     <Content Include="GetBudgetInitiateBySalaryMonth.sql" />
     <Content Include="Views\UpdateDatetime\Index.cshtml" />
-    <Content Include="Views\Default\StockTechData.cshtml" />
-    <Content Include="Views\Default\StockCandle.cshtml" />
-    <Content Include="Views\Default\PurchaseStockTracker.cshtml" />
-    <Content Include="Views\StockTracker\AddToWatchlist.cshtml" />
-    <Content Include="Views\StockTracker\Watchlist.cshtml" />
-    <Content Include="Views\StockTracker\PurchaseStockTrackerAdd.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

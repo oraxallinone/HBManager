@@ -275,6 +275,8 @@
     <Content Include="Content\login.css" />
     <Content Include="Content\note-index.css" />
     <Content Include="Content\report-index.css" />
+    <Content Include="SQL_Scripts\backup-2026-10-24-schema.sql" />
+    <Content Include="SQL_Scripts\backup-2026-10-24-schema-data.sql" />
     <Content Include="Views\RepeatStatus\RepeatStatus.cshtml" />
     <Content Include="Content\repeat-status.css" />
     <Content Include="Content\salary-index.css" />
@@ -385,9 +387,6 @@
     <Content Include="Scripts\stock-tech-data.js" />
     <Content Include="Scripts\year-month-filter.js" />
     <Content Include="theme\img\doctor-doom-holding-mjolnir-ti.jpg" />
-    <Content Include="Upload\schemaHBManagerupto3march.sql" />
-    <Content Include="Upload\sp_budget_verification.sql" />
-    <Content Include="Upload\_____apr2026.sql" />
     <EntityDeploy Include="Areas\GstBill\Models\Model1.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>Model1.Designer.cs</LastGenOutput>
@@ -436,8 +435,6 @@
     <Content Include="theme\jquery.min.js" />
     <Content Include="theme\printBillStyle.css" />
     <Content Include="theme\sweetalert.min.js" />
-    <Content Include="Upload\_Finaance_16Jan.sql" />
-    <Content Include="Upload\_Finaance_8Jan.sql" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -479,7 +476,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Areas\GstBill\Views\Shared\" />
-    <Folder Include="SQL_Scripts\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

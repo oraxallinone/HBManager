@@ -5,9 +5,15 @@ using System.Web.Mvc;
 
 namespace HBManager.Controllers
 {
+    [HBManager.Filters.ValidateAntiForgeryTokenHeader]
     public class RepeatStatusController : Controller
     {
-        private readonly RepeatStatusService _service = new RepeatStatusService();
+        private readonly IRepeatStatusService _service;
+
+        public RepeatStatusController(IRepeatStatusService repeatStatusService)
+        {
+            _service = repeatStatusService ?? throw new ArgumentNullException(nameof(repeatStatusService));
+        }
 
         public ActionResult RepeatStatus()
         {

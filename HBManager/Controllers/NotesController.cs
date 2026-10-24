@@ -1,16 +1,20 @@
 ﻿using HBManager.Service;
 using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
 namespace HBManager.Controllers
 {
+    [HBManager.Filters.ValidateAntiForgeryTokenHeader]
     public class NotesController : Controller
     {
-        private NoteService noteService = new NoteService();
+        private readonly INotesService _notesService;
+
+        public NotesController(INotesService notesService)
+        {
+            _notesService = notesService ?? throw new ArgumentNullException(nameof(notesService));
+        }
 
         // GET: Notes
         public ActionResult NoteIndex()
@@ -24,14 +28,7 @@ namespace HBManager.Controllers
         {
             try
             {
-                DataTable dt = noteService.GetNotes();
-                var notes = dt.AsEnumerable().Select(row => new
-                {
-                    noteId = row["NoteId"],
-                    noteName = row["NoteName"],
-                    dateOfNote = ((DateTime)row["DateOfNote"]).ToString("dd-MMM-yyyy"),
-                    notePriority = row["NotePriority"]
-                }).ToList();
+                var notes = _notesService.GetNotesForDisplay();
 
                 return Json(new { success = true, data = notes }, JsonRequestBehavior.AllowGet);
             }
@@ -51,7 +48,7 @@ namespace HBManager.Controllers
                     return Json(new { success = false, message = "Note name is required" });
 
                 DateTime noteDate = DateTime.Parse(dateOfNote);
-                int noteId = noteService.AddNote(noteName, noteDate, notePriority);
+                int noteId = _notesService.AddNote(noteName, noteDate, notePriority);
 
                 return Json(new { success = true, noteId = noteId, message = "Note added successfully" });
             }
@@ -71,7 +68,7 @@ namespace HBManager.Controllers
                     return Json(new { success = false, message = "Note name is required" });
 
                 DateTime noteDate = DateTime.Parse(dateOfNote);
-                bool result = noteService.UpdateNote(noteId, noteName, noteDate, notePriority);
+                bool result = _notesService.UpdateNote(noteId, noteName, noteDate, notePriority);
 
                 if (result)
                     return Json(new { success = true, message = "Note updated successfully" });
@@ -90,7 +87,7 @@ namespace HBManager.Controllers
         {
             try
             {
-                bool result = noteService.DeleteNote(noteId);
+                bool result = _notesService.DeleteNote(noteId);
 
                 if (result)
                     return Json(new { success = true, message = "Note deleted successfully" });
@@ -109,14 +106,7 @@ namespace HBManager.Controllers
         {
             try
             {
-                DataTable dt = noteService.GetSubNotes(noteId);
-                var subNotes = dt.AsEnumerable().Select(row => new
-                {
-                    subNoteId = row["SubNoteId"],
-                    noteId = row["NoteId"],
-                    subNoteName = row["SubNoteName"],
-                    dateOfSubNote = ((DateTime)row["DateOfSubNote"]).ToString("dd-MMM-yyyy")
-                }).ToList();
+                var subNotes = _notesService.GetSubNotesForDisplay(noteId);
 
                 return Json(new { success = true, data = subNotes }, JsonRequestBehavior.AllowGet);
             }
@@ -136,7 +126,7 @@ namespace HBManager.Controllers
                     return Json(new { success = false, message = "SubNote name is required" });
 
                 DateTime subNoteDate = DateTime.Parse(dateOfSubNote);
-                int subNoteId = noteService.AddSubNote(noteId, subNoteName, subNoteDate);
+                int subNoteId = _notesService.AddSubNote(noteId, subNoteName, subNoteDate);
 
                 return Json(new { success = true, subNoteId = subNoteId, message = "SubNote added successfully" });
             }
@@ -156,7 +146,7 @@ namespace HBManager.Controllers
                     return Json(new { success = false, message = "SubNote name is required" });
 
                 DateTime subNoteDate = DateTime.Parse(dateOfSubNote);
-                bool result = noteService.UpdateSubNote(subNoteId, subNoteName, subNoteDate);
+                bool result = _notesService.UpdateSubNote(subNoteId, subNoteName, subNoteDate);
 
                 // Always return success if DB update succeeded
                 if (result)
@@ -181,7 +171,7 @@ namespace HBManager.Controllers
         {
             try
             {
-                bool result = noteService.DeleteSubNote(subNoteId);
+                bool result = _notesService.DeleteSubNote(subNoteId);
 
                 if (result)
                     return Json(new { success = true, message = "SubNote deleted successfully" });

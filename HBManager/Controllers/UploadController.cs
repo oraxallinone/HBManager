@@ -1,15 +1,21 @@
-﻿using System;
+using HBManager.Service;
+using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
 namespace HBManager.Controllers
 {
+    [HBManager.Filters.ValidateAntiForgeryTokenHeader]
     public class UploadController : Controller
     {
-        private readonly string _uploadPath = "~/Upload";
+        private readonly IUploadService _uploadService;
+        private const string UploadPath = "~/Upload";
+
+        public UploadController(IUploadService uploadService)
+        {
+            _uploadService = uploadService ?? throw new ArgumentNullException(nameof(uploadService));
+        }
 
         public ActionResult Index()
         {
@@ -24,19 +30,12 @@ namespace HBManager.Controllers
                 if (Request.Files.Count == 0)
                     return Json(new { success = false, message = "No file uploaded" });
 
-                var f = Request.Files[0];
-                if (f == null || f.ContentLength == 0)
+                var file = Request.Files[0];
+                if (file == null || file.ContentLength == 0)
                     return Json(new { success = false, message = "Empty file" });
 
-                var fileName = Path.GetFileName(f.FileName);
-                var safeName = Path.GetFileName(fileName); // basic sanitize
-                var saveDir = Server.MapPath(_uploadPath);
-                if (!Directory.Exists(saveDir)) Directory.CreateDirectory(saveDir);
-
-                var savePath = Path.Combine(saveDir, safeName);
-                f.SaveAs(savePath);
-
-                return Json(new { success = true, name = safeName });
+                var name = _uploadService.SaveFile(file, Server.MapPath(UploadPath));
+                return Json(new { success = true, name });
             }
             catch (Exception ex)
             {
@@ -48,19 +47,7 @@ namespace HBManager.Controllers
         {
             try
             {
-                var dir = Server.MapPath(_uploadPath);
-                if (!Directory.Exists(dir)) return Json(new List<object>(), JsonRequestBehavior.AllowGet);
-
-                var files = Directory.GetFiles(dir)
-                    .Select(p => new FileInfo(p))
-                    .Select(fi => new
-                    {
-                        name = fi.Name,
-                        size = fi.Length,
-                        ext = fi.Extension.ToLower()
-                    }).OrderByDescending(f => f.name).ToList();
-
-                return Json(files, JsonRequestBehavior.AllowGet);
+                return Json(_uploadService.GetFiles(Server.MapPath(UploadPath)), JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -73,14 +60,10 @@ namespace HBManager.Controllers
         {
             try
             {
-                if (string.IsNullOrEmpty(name)) return Json(new { success = false, message = "Invalid name" });
-
-                var path = Path.Combine(Server.MapPath(_uploadPath), Path.GetFileName(name));
-                if (System.IO.File.Exists(path))
-                {
-                    System.IO.File.Delete(path);
+                if (string.IsNullOrEmpty(name))
+                    return Json(new { success = false, message = "Invalid name" });
+                if (_uploadService.DeleteFile(name, Server.MapPath(UploadPath)))
                     return Json(new { success = true });
-                }
                 return Json(new { success = false, message = "File not found" });
             }
             catch (Exception ex)
@@ -89,17 +72,12 @@ namespace HBManager.Controllers
             }
         }
 
-        // Stream file to browser (for download/view)
         public ActionResult GetFile(string name)
         {
             try
             {
-                var path = Path.Combine(Server.MapPath(_uploadPath), Path.GetFileName(name));
-                if (!System.IO.File.Exists(path)) return HttpNotFound();
-
-                var contentType = MimeMapping.GetMimeMapping(path);
-                // return inline when possible so images/pdf/xlsx viewer can open in browser
-                return File(path, contentType);
+                var path = _uploadService.GetFilePath(name, Server.MapPath(UploadPath));
+                return File(path, MimeMapping.GetMimeMapping(path));
             }
             catch
             {

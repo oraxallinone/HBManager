@@ -1,7 +1,7 @@
 ﻿using System;
 namespace HBManager.Models
 {
-    public class UpdateDatetimeViewModel
+    public class UpdateDateTimeViewModel
     {
         public int Id { get; set; }
         public int Year { get; set; }

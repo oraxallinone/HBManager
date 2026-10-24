@@ -1,4 +1,4 @@
-﻿using HBManager.Models;
+using HBManager.Models;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -7,31 +7,31 @@ using System.Data.SqlClient;
 
 namespace HBManager.Service
 {
-    public class UpdateDatetimeService
+    public class UpdateDateTimeService : IUpdateDateTimeService
     {
         private readonly string _connString;
 
-        public UpdateDatetimeService()
+        public UpdateDateTimeService()
         {
             _connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
         }
 
-        public List<UpdateDatetimeViewModel> GetBudgetDataByMonthYear(int month, int year)
+        public List<UpdateDateTimeViewModel> GetBudgetDataByMonthYear(int month, int year)
         {
-            var list = new List<UpdateDatetimeViewModel>();
-            using (var con = new SqlConnection(_connString))
+            var list = new List<UpdateDateTimeViewModel>();
+            using (var connection = new SqlConnection(_connString))
             {
-                string query = "SELECT Id, Year, Month, SpendDate, Amount, Details, G1, G2, G3, G4, BankName FROM [dbo].[Budget] WHERE [Month] = @Month AND [Year] = @Year ORDER BY SpendDate ASC";
-                using (var cmd = new SqlCommand(query, con))
+                const string query = "SELECT Id, Year, Month, SpendDate, Amount, Details, G1, G2, G3, G4, BankName FROM [dbo].[Budget] WHERE [Month] = @Month AND [Year] = @Year ORDER BY SpendDate ASC";
+                using (var command = new SqlCommand(query, connection))
                 {
-                    cmd.Parameters.AddWithValue("@Month", month);
-                    cmd.Parameters.AddWithValue("@Year", year);
-                    con.Open();
-                    using (var reader = cmd.ExecuteReader())
+                    command.Parameters.AddWithValue("@Month", month);
+                    command.Parameters.AddWithValue("@Year", year);
+                    connection.Open();
+                    using (var reader = command.ExecuteReader())
                     {
                         while (reader.Read())
                         {
-                            list.Add(new UpdateDatetimeViewModel
+                            list.Add(new UpdateDateTimeViewModel
                             {
                                 Id = Convert.ToInt32(reader["Id"]),
                                 Year = Convert.ToInt32(reader["Year"]),
@@ -54,17 +54,13 @@ namespace HBManager.Service
 
         public bool UpdateBudgetDate(int id, DateTime spendDate)
         {
-            using (var con = new SqlConnection(_connString))
+            using (var connection = new SqlConnection(_connString))
+            using (var command = new SqlCommand("UPDATE [dbo].[Budget] SET [SpendDate] = @SpendDate WHERE [Id] = @Id", connection))
             {
-                string query = "UPDATE [dbo].[Budget] SET [SpendDate] = @SpendDate WHERE [Id] = @Id";
-                using (var cmd = new SqlCommand(query, con))
-                {
-                    cmd.Parameters.AddWithValue("@Id", id);
-                    cmd.Parameters.AddWithValue("@SpendDate", spendDate);
-                    con.Open();
-                    int rowsAffected = cmd.ExecuteNonQuery();
-                    return rowsAffected > 0;
-                }
+                command.Parameters.AddWithValue("@Id", id);
+                command.Parameters.AddWithValue("@SpendDate", spendDate);
+                connection.Open();
+                return command.ExecuteNonQuery() > 0;
             }
         }
     }

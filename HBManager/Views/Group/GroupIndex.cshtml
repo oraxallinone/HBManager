@@ -1,10 +1,12 @@
-﻿@*|| group.css || group.js ||*@
+﻿@*|| group-index.css || group-index.js ||*@
 @{
     ViewBag.Title = "GroupIndex";
     Layout = "~/Views/Shared/_WebLayout.cshtml";
 }
 
+
 <link href="~/Content/group.css" rel="stylesheet" />
+<link rel="stylesheet" href="~/Content/group-index.css" />
 
 
 <div class="app-content">
@@ -54,25 +56,7 @@
                         </div>
 
 
-                        <style>
-                            .table-responsive {
-                                max-height: 70vh;
-                                overflow: auto;
-                            }
 
-                                .table-responsive #gridTableGroup thead th {
-                                    position: sticky;
-                                    top: 0;
-                                    z-index: 5;
-                                    background: #ffffff;
-                                }
-
-                            /* ensure consistent column widths */
-                            #gridTableGroup {
-                                width: 100%;
-                                table-layout: fixed;
-                            }
-                        </style>
 
                         <div class="table-responsive">
                             <table id="gridTableGroup" class="table table-hover  custom-tbl">
@@ -101,6 +85,4 @@
     </div>
 </div>
 
-<script src="~/Scripts/group.js"></script>
-
-
+<script src="~/Scripts/group-index.js"></script>

@@ -12,42 +12,21 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
         <link href="~/Content/application-css/loader.css" rel="stylesheet" />
         <script src="~/Scripts/jquery-3.6.0.js"></script>
+        <script src="~/Scripts/anti-forgery.js"></script>
         <script src="~/theme/bootstrap.bundle.min.js"></script>
         <script src="~/theme/bs-custom-file-input.min.js"></script>
         <script src="~/theme/adminlte.min.js"></script>
         <script src="~/theme/sweetalert.min.js"></script>
 
-        <script type="text/javascript">
-        $(document).ready(function () {
 
-            $(document).ajaxStart(function () {
-                $("#pageLoader").fadeIn(200);
-            });
 
-            $(document).ajaxStop(function () {
-                $("#pageLoader").fadeOut(200);
-            });
 
-        });
-        </script>
-        <script type="text/javascript">
-        $(document).ready(function () {
-            $('#btnLogoutGst').on('click', function (e) {
-                //e.preventDefault(); // stop # default behavior
 
-                window.location.href = '@Url.Action("Logout", "Login", new { area = "" })';
-            });
-        });
-        </script>
-
-        <style>
-            .content-wrapper {
-                min-height: 672.2px !important;
-            }
-        </style>
         @RenderSection("head", required: false)
-    </head>
+        <link rel="stylesheet" href="~/Content/gst-layout.css" />
+</head>
     <body class="hold-transition sidebar-mini" style="font-family:'Times New Roman';font-size:13px">
+        @Html.AntiForgeryToken()
         <div class="wrapper">
             <nav class="main-header navbar navbar-expand navbar-white navbar-light">
                 <ul class="navbar-nav">
@@ -63,7 +42,7 @@
                             <i class="fa-solid fa-right-from-bracket"></i>
                         </a>
                         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                            <span id="btnLogoutGst" class="dropdown-item dropdown-header text-red">Logout</span>
+                            <span id="btnLogoutGst" data-logout-url="@Url.Action("Logout", "Login", new { area = "" })" class="dropdown-item dropdown-header text-red">Logout</span>
                             <div class="dropdown-divider"></div>
                             <a href="#" class="dropdown-item">
                             </a>
@@ -105,5 +84,6 @@
             </div>
             @RenderBody()
         </div>
-    </body>
+        <script src="~/Scripts/gst-layout.js"></script>
+</body>
 </html>

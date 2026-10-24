@@ -8,9 +8,15 @@ using System.Web.Mvc;
 
 namespace HBManager.Controllers
 {
+    [HBManager.Filters.ValidateAntiForgeryTokenHeader]
     public class GroupController : Controller
     {
-        private readonly GroupService _svc = new GroupService();
+        private readonly IGroupService _svc;
+
+        public GroupController(IGroupService groupService)
+        {
+            _svc = groupService ?? throw new ArgumentNullException(nameof(groupService));
+        }
 
         #region ---------------------- group ---------------------------
         public ActionResult GroupIndex()

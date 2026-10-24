@@ -7,7 +7,7 @@ using System.Data.SqlClient;
 
 namespace HBManager.Service
 {
-    public class BudgetOverviewService
+    public class BudgetOverviewService : IBudgetOverviewService
     {
         private readonly string _connString;
 

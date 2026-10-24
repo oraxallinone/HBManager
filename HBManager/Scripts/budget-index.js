@@ -494,7 +494,7 @@
         }
 
         $.ajax({
-            url: '/UpdateDatetime/UpdateBudgetDate',
+            url: '/UpdateDateTime/UpdateBudgetDate',
             type: 'POST',
             data: { id: id, spendDate: date + ' ' + String(hour24).padStart(2, '0') + ':' + String(minute).padStart(2, '0') + ':00' },
             dataType: 'json',

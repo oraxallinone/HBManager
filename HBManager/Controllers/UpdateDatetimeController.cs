@@ -1,16 +1,22 @@
-﻿using HBManager.Service;
+using HBManager.Service;
 using System;
 using System.Web.Mvc;
 
 namespace HBManager.Controllers
 {
-    public class UpdateDatetimeController : Controller
+    [HBManager.Filters.ValidateAntiForgeryTokenHeader]
+    public class UpdateDateTimeController : Controller
     {
-        private readonly UpdateDatetimeService _svc = new UpdateDatetimeService();
+        private readonly IUpdateDateTimeService _service;
+
+        public UpdateDateTimeController(IUpdateDateTimeService updateDateTimeService)
+        {
+            _service = updateDateTimeService ?? throw new ArgumentNullException(nameof(updateDateTimeService));
+        }
 
         public ActionResult Index()
         {
-            return View();
+            return View("~/Views/UpdateDatetime/Index.cshtml");
         }
 
         [HttpGet]
@@ -18,7 +24,7 @@ namespace HBManager.Controllers
         {
             try
             {
-                var data = _svc.GetBudgetDataByMonthYear(month, year);
+                var data = _service.GetBudgetDataByMonthYear(month, year);
                 return Json(new { Success = true, Data = data }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -30,7 +36,7 @@ namespace HBManager.Controllers
         [HttpPost]
         public JsonResult UpdateBudgetDate(int id, DateTime spendDate)
         {
-            var success = _svc.UpdateBudgetDate(id, spendDate);
+            var success = _service.UpdateBudgetDate(id, spendDate);
             return Json(new { Success = success });
         }
     }

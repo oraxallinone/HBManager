@@ -1,0 +1,98 @@
+.app-main {
+            padding-bottom: 0;
+        }
+
+        body {
+            font-size: 15px;
+            font-family: 'Times New Roman';
+        }
+
+        .floating-label-group {
+            position: relative;
+            margin-bottom: 25px;
+        }
+
+            .floating-label-group .form-control {
+                padding: 5px 12px;
+                height: auto;
+                border: 1px solid #276ea5;
+                border-radius: 4px;
+                background: transparent;
+            }
+
+            .floating-label-group label {
+                position: absolute;
+                border-radius: 4px;
+                top: 6px;
+                left: 12px;
+                color: #656889;
+                font-size: 14px;
+                pointer-events: none;
+                transition: all 0.2s ease;
+                background-color: #f0f0f0;
+                padding: 0 4px;
+            }
+
+            .floating-label-group input:focus + label,
+            .floating-label-group input:not(:placeholder-shown) + label,
+            .floating-label-group textarea:focus + label,
+            .floating-label-group textarea:not(:placeholder-shown) + label {
+                top: -10px;
+                left: 8px;
+                font-size: 12px;
+                color: #333;
+            }
+
+            .floating-label-group input[type="file"] + label {
+                top: -10px;
+                left: 8px;
+                font-size: 12px;
+                color: #333;
+            }
+
+        .ddl-master {
+            width: 170px;
+            color: #c02222;
+            height: 25px;
+            box-shadow: rgb(50 50 93 / 26%) 0px 2px 5px -1px, rgb(0 0 0 / 57%) 0px 2px 3px -1px;
+            text-align: center;
+            justify-content: center;
+            align-items: center;
+            border-radius: 4px;
+            border: 0px;
+        }
+
+        @media (min-width: 992px) {
+            body.sidebar-mini.sidebar-collapse .app-sidebar {
+                min-width: 3rem;
+                max-width: 3rem;
+            }
+
+            body.sidebar-mini.sidebar-collapse .sidebar-menu .nav-link {
+                justify-content: center;
+                padding-left: 0;
+                padding-right: 0;
+                width: 100%;
+            }
+
+            body.sidebar-mini.sidebar-collapse .sidebar-menu .nav-link .nav-icon {
+                margin-left: 0;
+                margin-right: 0;
+            }
+
+            body.sidebar-mini.sidebar-collapse .app-sidebar:hover {
+                min-width: var(--lte-sidebar-width);
+                max-width: var(--lte-sidebar-width);
+            }
+
+            body.sidebar-mini.sidebar-collapse .app-sidebar:hover .sidebar-menu .nav-link {
+                justify-content: flex-start;
+                padding-left: 0.5rem;
+                padding-right: 0.5rem;
+                width: auto;
+            }
+
+            body.sidebar-mini.sidebar-collapse .app-sidebar:hover .sidebar-menu .nav-link .nav-icon {
+                margin-right: 0.5rem;
+            }
+        }

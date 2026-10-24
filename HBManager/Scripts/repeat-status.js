@@ -1,3 +1,5 @@
+$('.app-content-header').hide();
+
 $(function () {
     var monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     function loadRepeatStatus() {

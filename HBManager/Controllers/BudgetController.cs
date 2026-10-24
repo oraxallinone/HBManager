@@ -11,9 +11,15 @@ using System.Web.Mvc;
 
 namespace HBManager.Controllers
 {
+    [HBManager.Filters.ValidateAntiForgeryTokenHeader]
     public class BudgetController : Controller
     {
-        private readonly BudgetService _svc = new BudgetService();
+        private readonly IBudgetService _svc;
+
+        public BudgetController(IBudgetService budgetService)
+        {
+            _svc = budgetService ?? throw new ArgumentNullException(nameof(budgetService));
+        }
 
         // Mobile-friendly budget index view
         public ActionResult BudgeMobileIndex()
@@ -163,13 +169,7 @@ namespace HBManager.Controllers
         [HttpPost]
         public JsonResult UpdateBudgetGroups(List<int> budgetIds, int? g1, int? g2, int? g3, int? g4)
         {
-            // Convert null to 0 if default option was selected, or keep null if value was selected
-            int? g1Val = (g1.HasValue && g1.Value > 0) ? g1 : (int?)null;
-            int? g2Val = (g2.HasValue && g2.Value > 0) ? g2 : (int?)null;
-            int? g3Val = (g3.HasValue && g3.Value > 0) ? g3 : (int?)null;
-            int? g4Val = (g4.HasValue && g4.Value > 0) ? g4 : (int?)null;
-
-            var rowIffected = _svc.UpdateBudgetGroupsByIds(budgetIds, g1Val, g2Val, g3Val, g4Val);
+            var rowIffected = _svc.UpdateBudgetGroupsByIds(budgetIds, g1, g2, g3, g4);
             return Json(rowIffected);
         }
 

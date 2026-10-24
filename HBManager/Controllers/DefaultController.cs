@@ -16,10 +16,15 @@ using System.Configuration;
 
 namespace HBManager.Controllers
 {
+    [HBManager.Filters.ValidateAntiForgeryTokenHeader]
     public class DefaultController : Controller
     {
-        private readonly GraphService _graphService = new GraphService();
-        private readonly DashboardService _dashboardService = new DashboardService();
+        private readonly IDefaultService _defaultService;
+
+        public DefaultController(IDefaultService defaultService)
+        {
+            _defaultService = defaultService ?? throw new ArgumentNullException(nameof(defaultService));
+        }
 
         public ActionResult Dashboard()
         {

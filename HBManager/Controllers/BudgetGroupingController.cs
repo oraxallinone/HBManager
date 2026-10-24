@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using HBManager.Models;
@@ -8,9 +7,15 @@ using HBManager.Service;
 
 namespace HBManager.Controllers
 {
+    [HBManager.Filters.ValidateAntiForgeryTokenHeader]
     public class BudgetGroupingController : Controller
     {
-        private readonly GroupMappingService _mappingService = new GroupMappingService();
+        private readonly IBudgetGroupingService _mappingService;
+
+        public BudgetGroupingController(IBudgetGroupingService budgetGroupingService)
+        {
+            _mappingService = budgetGroupingService ?? throw new ArgumentNullException(nameof(budgetGroupingService));
+        }
 
         public ActionResult BudgetGroupingIndex()
         {
@@ -28,15 +33,10 @@ namespace HBManager.Controllers
         [HttpPost]
         public JsonResult SaveGroupMappingConfiguration(GroupMappingConfiguration model)
         {
-            if (model != null)
+            var validationMessage = _mappingService.ValidateAndNormalize(model);
+            if (validationMessage != null)
             {
-                model.MappingGroup = (model.MappingGroup ?? string.Empty).Trim().ToLowerInvariant();
-            }
-
-            if (model == null || !new[] { "g1", "g2", "g3", "g4" }.Contains(model.MappingGroup) ||
-                model.G1Id < 0 || model.G2Id < 0 || model.G3Id < 0 || model.G4Id < 0)
-            {
-                return Json(new { Success = false, Message = "Enter a valid mapping combination." });
+                return Json(new { Success = false, Message = validationMessage });
             }
 
             var result = _mappingService.Save(model);

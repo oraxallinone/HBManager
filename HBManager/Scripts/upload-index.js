@@ -1,0 +1,82 @@
+$(function () {
+            $('#searchDDlG1').hide();
+            $('#searchDDlG2').hide();
+            $('#searchDDlG3').hide();
+            $('#searchDDlG4').hide();
+
+            function loadFiles() {
+                $.getJSON('/Upload/GetFiles', function (list) {
+                    var html = '';
+                    $.each(list, function (i, f) {
+                        html += '<tr>';
+                        html += '<td>' + f.name + '</td>';
+                        html += '<td>' + (f.size/1024).toFixed(2) + ' KB</td>';
+                        html += '<td>' + f.ext + '</td>';
+                        html += '<td>';
+                        if (f.ext === '.xlsx' || f.ext === '.xls' || f.ext === '.csv') {
+                            html += '<a href="#" class="btn btn-sm btn-info btn-view" data-name="' + encodeURIComponent(f.name) + '">View</a> ';
+                        } else {
+                            html += '<a target="_blank" class="btn btn-sm btn-secondary" href="/Upload/GetFile?name=' + encodeURIComponent(f.name) + '">Open</a> ';
+                        }
+                        html += '<a href="#" class="btn btn-sm btn-danger btn-delete" data-name="' + encodeURIComponent(f.name) + '">Delete</a>';
+                        html += '</td>';
+                        html += '</tr>';
+                    });
+                    $('#filesTable tbody').html(html);
+                });
+            }
+
+            $('#btnUpload').on('click', function () {
+                var file = $('#fileInput')[0].files[0];
+                if (!file) { alert('Select a file'); return; }
+                var fd = new FormData();
+                fd.append('file', file);
+
+                $.ajax({
+                    url: '/Upload/UploadFile',
+                    type: 'POST',
+                    data: fd,
+                    processData: false,
+                    contentType: false,
+                    success: function (res) {
+                        if (res.success) {
+                            $('#fileInput').val('');
+                            loadFiles();
+                        } else {
+                            alert('Upload failed: ' + res.message);
+                        }
+                    },
+                    error: function (e) { alert('Upload error'); }
+                });
+            });
+
+            // delegate delete & view
+            $('#filesTable').on('click', '.btn-delete', function (e) {
+                e.preventDefault();
+                var name = decodeURIComponent($(this).data('name'));
+                if (!confirm('Delete "' + name + '"?')) return;
+                $.post('/Upload/DeleteFile', { name: name }, function (res) {
+                    if (res.success) loadFiles(); else alert(res.message || 'Delete failed');
+                });
+            });
+
+            $('#filesTable').on('click', '.btn-view', function (e) {
+                e.preventDefault();
+                var name = decodeURIComponent($(this).data('name'));
+                // fetch file as arraybuffer and render with SheetJS
+                fetch('/Upload/GetFile?name=' + encodeURIComponent(name))
+                    .then(r => r.arrayBuffer())
+                    .then(ab => {
+                        var data = new Uint8Array(ab);
+                        var workbook = XLSX.read(data, { type: 'array' });
+                        var firstSheet = workbook.SheetNames[0];
+                        var html = XLSX.utils.sheet_to_html(workbook.Sheets[firstSheet]);
+                        $('#excelPreview').html(html);
+                        var modal = new bootstrap.Modal(document.getElementById('excelModal'));
+                        modal.show();
+                    })
+                    .catch(err => { alert('Failed to load file: ' + err); });
+            });
+
+            loadFiles();
+        });

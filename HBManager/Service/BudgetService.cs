@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace HBManager.Service
 {
-    public class BudgetService
+    public class BudgetService : IBudgetService
     {
         private readonly string _connString;
 
@@ -472,6 +472,11 @@ namespace HBManager.Service
             {
                 return 0;
             }
+
+            g1 = g1.HasValue && g1.Value > 0 ? g1 : (int?)null;
+            g2 = g2.HasValue && g2.Value > 0 ? g2 : (int?)null;
+            g3 = g3.HasValue && g3.Value > 0 ? g3 : (int?)null;
+            g4 = g4.HasValue && g4.Value > 0 ? g4 : (int?)null;
 
             // Convert list of IDs to comma-separated string
             string ids = string.Join(",", budgetIds);

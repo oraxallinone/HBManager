@@ -7,9 +7,15 @@ using System.Web.Mvc;
 
 namespace HBManager.Controllers
 {
+    [HBManager.Filters.ValidateAntiForgeryTokenHeader]
     public class BirthdayController : Controller
     {
-        private readonly BirthdayService _birthdayService = new BirthdayService();
+        private readonly IBirthdayService _birthdayService;
+
+        public BirthdayController(IBirthdayService birthdayService)
+        {
+            _birthdayService = birthdayService ?? throw new ArgumentNullException(nameof(birthdayService));
+        }
 
         public ActionResult Index()
         {

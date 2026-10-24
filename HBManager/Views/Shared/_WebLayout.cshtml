@@ -19,125 +19,13 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 
-    <style>
-        .app-main {
-            padding-bottom: 0;
-        }
 
-        body {
-            font-size: 15px;
-            font-family: 'Times New Roman';
-        }
 
-        .floating-label-group {
-            position: relative;
-            margin-bottom: 25px;
-        }
 
-            .floating-label-group .form-control {
-                padding: 5px 12px;
-                height: auto;
-                border: 1px solid #276ea5;
-                border-radius: 4px;
-                background: transparent;
-            }
-
-            .floating-label-group label {
-                position: absolute;
-                border-radius: 4px;
-                top: 6px;
-                left: 12px;
-                color: #656889;
-                font-size: 14px;
-                pointer-events: none;
-                transition: all 0.2s ease;
-                background-color: #f0f0f0;
-                padding: 0 4px;
-            }
-
-            .floating-label-group input:focus + label,
-            .floating-label-group input:not(:placeholder-shown) + label,
-            .floating-label-group textarea:focus + label,
-            .floating-label-group textarea:not(:placeholder-shown) + label {
-                top: -10px;
-                left: 8px;
-                font-size: 12px;
-                color: #333;
-            }
-
-            .floating-label-group input[type="file"] + label {
-                top: -10px;
-                left: 8px;
-                font-size: 12px;
-                color: #333;
-            }
-
-        .ddl-master {
-            width: 170px;
-            color: #c02222;
-            height: 25px;
-            box-shadow: rgb(50 50 93 / 26%) 0px 2px 5px -1px, rgb(0 0 0 / 57%) 0px 2px 3px -1px;
-            text-align: center;
-            justify-content: center;
-            align-items: center;
-            border-radius: 4px;
-            border: 0px;
-        }
-
-        @@media (min-width: 992px) {
-            body.sidebar-mini.sidebar-collapse .app-sidebar {
-                min-width: 3rem;
-                max-width: 3rem;
-            }
-
-            body.sidebar-mini.sidebar-collapse .sidebar-menu .nav-link {
-                justify-content: center;
-                padding-left: 0;
-                padding-right: 0;
-                width: 100%;
-            }
-
-            body.sidebar-mini.sidebar-collapse .sidebar-menu .nav-link .nav-icon {
-                margin-left: 0;
-                margin-right: 0;
-            }
-
-            body.sidebar-mini.sidebar-collapse .app-sidebar:hover {
-                min-width: var(--lte-sidebar-width);
-                max-width: var(--lte-sidebar-width);
-            }
-
-            body.sidebar-mini.sidebar-collapse .app-sidebar:hover .sidebar-menu .nav-link {
-                justify-content: flex-start;
-                padding-left: 0.5rem;
-                padding-right: 0.5rem;
-                width: auto;
-            }
-
-            body.sidebar-mini.sidebar-collapse .app-sidebar:hover .sidebar-menu .nav-link .nav-icon {
-                margin-right: 0.5rem;
-            }
-        }
-    </style>
-
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $(document).ajaxStart(function () {
-                showLoader();
-            });
-            $(document).ajaxStop(function () {
-                hideLoader();
-            });
-            function showLoader() {
-                $("#loadingSpinner").fadeIn(200);
-            }
-            function hideLoader() {
-                $("#loadingSpinner").fadeOut(200);
-            }
-        });
-    </script>
+    <link rel="stylesheet" href="~/Content/web-layout.css" />
 </head>
 <body class="layout-fixed sidebar-expand-lg sidebar-mini sidebar-collapse bg-body-tertiary">
+    @Html.AntiForgeryToken()
     @{
         var curController = ViewContext.RouteData.Values["controller"] != null ? ViewContext.RouteData.Values["controller"].ToString() : "";
         var curAction = ViewContext.RouteData.Values["action"] != null ? ViewContext.RouteData.Values["action"].ToString() : "";
@@ -159,7 +47,7 @@
 
         // Feature tree check
         var featureIs = (curController == "Default" && curAction == "BarChart") ||
-                        curController == "Calender" ||
+                        curController == "Calendar" ||
                         curController == "BudgetOverview" ||
                         curController == "Upload" ||
                         curController == "Birthday" ||
@@ -170,7 +58,7 @@
         var featureStockCandleActive = (curController == "Default" && curAction == "StockCandle") ? "active" : "";
         var featureStockTechDataActive = (curController == "Default" && curAction == "StockTechData") ? "active" : "";
         var featurePurchaseStockActive = (curController == "Default" && curAction == "PurchaseStockTracker") ? "active" : "";
-        var featureCalenderActive = (curController == "Calender" && curAction == "CalenderIndex") ? "active" : "";
+        var featureCalenderActive = (curController == "Calendar" && curAction == "CalenderIndex") ? "active" : "";
         var featureGroupBudgetActive = (curController == "BudgetOverview" && curAction == "GroupBudgetOverview") ? "active" : "";
         var featureUploadFilesActive = (curController == "Upload" && curAction == "Index") ? "active" : "";
         var featureBirthdayAddActive = (curController == "Birthday" && curAction == "BirthdayIndex") ? "active" : "";
@@ -192,12 +80,12 @@
         var investmentPurchaseDetailsActive = (curController == "StockTracker" && curAction == "PurchaseStockTrackerAdd") ? "active" : "";
 
         // Master tree check
-        var masterIs = (curController == "Salary" || curController == "Group" || curController == "UpdateDatetime");
+        var masterIs = (curController == "Salary" || curController == "Group" || curController == "UpdateDateTime");
         var masterOpen = masterIs ? "menu-open" : "";
         var masterActive = masterIs ? "active" : "";
         var masterSalaryActive = (curController == "Salary" && curAction == "SalaryIndex") ? "active" : "";
         var masterGroupActive = (curController == "Group" && curAction == "GroupIndex") ? "active" : "";
-        var masterUpdateDatetimeActive = (curController == "UpdateDatetime" && curAction == "Index") ? "active" : "";
+        var masterUpdateDatetimeActive = (curController == "UpdateDateTime" && curAction == "Index") ? "active" : "";
     }
 
     <div class="app-wrapper">
@@ -260,7 +148,7 @@
                             </li>
 
                             <li class="user-footer">
-                                <input id="btnLogout" type="button" class="btn btn-default btn-flat float-end" value="Sign out" />
+                                <input id="btnLogout" data-logout-url="@Url.Action("Logout", "Login")" type="button" class="btn btn-default btn-flat float-end" value="Sign out" />
                             </li>
                         </ul>
                     </li>
@@ -307,7 +195,7 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item"> <a href="@Url.Action("BarChart", "Default")" class="nav-link @featureBarChartActive"> <i class="nav-icon bi bi-bar-chart-line"></i> <p>Bar Graph</p> </a> </li>
-                                <li class="nav-item"> <a href="@Url.Action("CalenderIndex", "Calender")" class="nav-link @featureCalenderActive"> <i class="nav-icon bi bi-calendar3"></i> <p>Calender</p> </a> </li>
+                                <li class="nav-item"> <a href="@Url.Action("CalenderIndex", "Calendar")" class="nav-link @featureCalenderActive"> <i class="nav-icon bi bi-calendar3"></i> <p>Calendar</p> </a> </li>
                                 <li class="nav-item"> <a href="@Url.Action("GroupBudgetOverview", "BudgetOverview")" class="nav-link @featureGroupBudgetActive"> <i class="nav-icon bi bi-people"></i> <p>Group Sum</p> </a> </li>
                                 <li class="nav-item"> <a href="@Url.Action("Index", "Upload")" class="nav-link @featureUploadFilesActive"> <i class="nav-icon bi bi-upload"></i> <p>File Upload</p> </a> </li>
                                 <li class="nav-item"> <a href="@Url.Action("BirthdayIndex", "Birthday")" class="nav-link @featureBirthdayAddActive"> <i class="nav-icon bi bi-gift"></i> <p>Birthday Add</p> </a> </li>
@@ -317,7 +205,7 @@
                         </li>
 
                         <!-- Investment Menu -->
-                       
+
 
                         <!-- Master Menu -->
                         <li class="nav-item @masterOpen">
@@ -353,13 +241,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
     <script src="~/Content/theme/js/adminlte.js"></script>
     <script src="~/Content/theme/js/SidebarWrapper.js"></script>
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('#btnLogout').on('click', function (e) {
-                e.preventDefault();
-                window.location.href = '@Url.Action("Logout", "Login")';
-            });
-        });
-    </script>
+    <script src="~/Scripts/anti-forgery.js"></script>
+
+    <script src="~/Scripts/web-layout.js"></script>
 </body>
 </html>

@@ -7,8 +7,16 @@ using System.Web.Mvc;
 
 namespace HBManager.Controllers
 {
+    [HBManager.Filters.ValidateAntiForgeryTokenHeader]
     public class LoginController : Controller
     {
+        private readonly ILoginService _loginService;
+
+        public LoginController(ILoginService loginService)
+        {
+            _loginService = loginService ?? throw new ArgumentNullException(nameof(loginService));
+        }
+
         public ActionResult LoginIndex()
         {
             return View();
@@ -17,8 +25,7 @@ namespace HBManager.Controllers
         [HttpPost]
         public JsonResult CheckLogin(string email, string password, bool rememberMe)
         {
-            var loginService = new LoginService();
-            var result = loginService.CheckLogin(email, password);
+            var result = _loginService.CheckLogin(email, password);
             if (result != null)
             {
                 // Set session or authentication here as needed

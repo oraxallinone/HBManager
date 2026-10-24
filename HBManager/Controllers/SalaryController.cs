@@ -8,9 +8,15 @@ using System.Web.Mvc;
 
 namespace HBManager.Controllers
 {
+    [HBManager.Filters.ValidateAntiForgeryTokenHeader]
     public class SalaryController : Controller
     {
-        private readonly SalaryService _svc = new SalaryService();
+        private readonly ISalaryService _svc;
+
+        public SalaryController(ISalaryService salaryService)
+        {
+            _svc = salaryService ?? throw new ArgumentNullException(nameof(salaryService));
+        }
 
         public ActionResult SalaryIndex()
         {

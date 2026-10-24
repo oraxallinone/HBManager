@@ -8,7 +8,7 @@ using System.Web;
 
 namespace HBManager.Service
 {
-    public class NoteService
+    public class NotesService : INotesService
     {
         private string _connectionString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
 
@@ -26,6 +26,7 @@ namespace HBManager.Service
                         SqlDataAdapter adapter = new SqlDataAdapter(cmd);
                         adapter.Fill(dt);
                     }
+
                 }
             }
             catch (Exception ex)
@@ -33,6 +34,17 @@ namespace HBManager.Service
                 throw new Exception("Error fetching notes: " + ex.Message);
             }
             return dt;
+        }
+
+        public List<object> GetNotesForDisplay()
+        {
+            return GetNotes().AsEnumerable().Select(row => (object)new
+            {
+                noteId = row["NoteId"],
+                noteName = row["NoteName"],
+                dateOfNote = ((DateTime)row["DateOfNote"]).ToString("dd-MMM-yyyy"),
+                notePriority = row["NotePriority"]
+            }).ToList();
         }
 
         // Add new note
@@ -136,6 +148,7 @@ namespace HBManager.Service
                         SqlDataAdapter adapter = new SqlDataAdapter(cmd);
                         adapter.Fill(dt);
                     }
+
                 }
             }
             catch (Exception ex)
@@ -143,6 +156,17 @@ namespace HBManager.Service
                 throw new Exception("Error fetching subnotes: " + ex.Message);
             }
             return dt;
+        }
+
+        public List<object> GetSubNotesForDisplay(int noteId)
+        {
+            return GetSubNotes(noteId).AsEnumerable().Select(row => (object)new
+            {
+                subNoteId = row["SubNoteId"],
+                noteId = row["NoteId"],
+                subNoteName = row["SubNoteName"],
+                dateOfSubNote = ((DateTime)row["DateOfSubNote"]).ToString("dd-MMM-yyyy")
+            }).ToList();
         }
 
         // Add new subnote

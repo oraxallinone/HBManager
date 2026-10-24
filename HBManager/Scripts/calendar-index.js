@@ -129,7 +129,7 @@
         }
         $.ajax({
             type: "POST",
-            url: '/Calender/GetDataForCalender',
+            url: '/Calendar/GetDataForCalender',
             dataType: "json",
             contentType: "application/json; charset=utf-8",
             data: JSON.stringify(CalenderBudgetModelIn),

@@ -11,7 +11,7 @@ namespace HBManager.Service
         public int UserType { get; set; }
     }
 
-    public class LoginService
+    public class LoginService : ILoginService
     {
         private readonly string _connectionString;
 

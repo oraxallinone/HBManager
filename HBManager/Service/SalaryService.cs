@@ -7,7 +7,7 @@ using System.Data.SqlClient;
 
 namespace HBManager.Service
 {
-    public class SalaryService
+    public class SalaryService : ISalaryService
     {
         private readonly string _connString;
 

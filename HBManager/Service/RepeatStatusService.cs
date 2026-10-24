@@ -7,7 +7,7 @@ using System.Data.SqlClient;
 
 namespace HBManager.Service
 {
-    public class RepeatStatusService
+    public class RepeatStatusService : IRepeatStatusService
     {
         private readonly string _connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
 
@@ -72,7 +72,7 @@ namespace HBManager.Service
             return reader[name] == DBNull.Value ? (int?)null : Convert.ToInt32(reader[name]);
         }
 
-        public void SetRepeatStatus(int year, int month, int? g1, int? g2, int? g3, int? g4, bool completed)
+        public void SetRepeatStatus(int year, int month, int? g1, int? g2, int? g3, int? g4, bool isCompleted)
         {
             using (var conn = new SqlConnection(_connString))
             using (var cmd = new SqlCommand("sp_SetRepeatStatus", conn))
@@ -84,7 +84,7 @@ namespace HBManager.Service
                 cmd.Parameters.AddWithValue("@G2", (object)g2 ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@G3", (object)g3 ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@G4", (object)g4 ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@Completed", completed);
+                cmd.Parameters.AddWithValue("@Completed", isCompleted);
                 conn.Open();
                 cmd.ExecuteNonQuery();
             }

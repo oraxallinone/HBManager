@@ -7,7 +7,7 @@ using System.Data.SqlClient;
 
 namespace HBManager.Service
 {
-    public class GroupService
+    public class GroupService : IGroupService
     {
         private readonly string _connString;
 

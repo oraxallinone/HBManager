@@ -7,7 +7,7 @@ using System.Data.SqlClient;
 
 namespace HBManager.Service
 {
-    public class BirthdayService
+    public class BirthdayService : IBirthdayService
     {
         private readonly string _connString;
 

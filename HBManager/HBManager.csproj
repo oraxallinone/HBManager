@@ -474,16 +474,15 @@
     <Content Include="Views\Budget\BudgetVerification.cshtml" />
     <Content Include="Views\Import\ExecuteQuery.cshtml" />
     <Content Include="Views\Import\ImportInitiate.cshtml" />
-    <Content Include="GetBudgetInitiateBySalaryMonth.sql" />
     <Content Include="Views\UpdateDatetime\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Areas\GstBill\Views\Shared\" />
+    <Folder Include="SQL_Scripts\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
-    <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

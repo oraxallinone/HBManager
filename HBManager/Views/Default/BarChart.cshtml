@@ -5,6 +5,10 @@
 }
 
 <link href="~/Content/bar-chart.css" rel="stylesheet" />
+<div id="barChartConfig" hidden
+     data-get-groups-url="@Url.Action("Get4Group", "Budget")"
+     data-chart-url="@Url.Action("GetBarGraphByGroup", "Default")"
+     data-log-client-error-url="@Url.Action("LogClientError", "Import")"></div>
 
 <div class="app-content">
     <div class="container-fluid">

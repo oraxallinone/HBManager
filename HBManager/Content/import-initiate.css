@@ -1,5 +1,4 @@
-body {
-            padding-top: 20px;
+.import-initiate-page {
             background-color: #fafafa;
         }
 
@@ -8,7 +7,57 @@ body {
             padding: 25px;
             border-radius: 4px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
+        }
+
+        .import-toolbar {
+            display: flex;
+            align-items: flex-end;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .import-filters {
+            display: flex;
+            align-items: flex-end;
+            flex: 1;
+            gap: 8px;
+        }
+
+        .filter-field {
+            flex: 0 1 160px;
+            min-width: 110px;
+        }
+
+        .filter-field label {
+            display: block;
+            margin-bottom: 3px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .filter-field .form-select {
+            width: 100%;
+            min-width: 0;
+            height: 32px;
+            padding: 4px 28px 4px 8px;
+            font-size: 12px;
+        }
+
+        #btnMove {
+            height: 32px;
+            padding: 4px 10px;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        .import-toolbar > [data-bs-target="#importQueryModal"] {
+            padding: 5px 10px;
+            font-size: 12px;
+        }
+
+        .import-toolbar > [data-bs-target="#importQueryModal"] .bi,
+        #btnMove .bi {
+            font-size: 12px;
         }
 
         .textarea-sql {
@@ -19,17 +68,186 @@ body {
         }
 
         .grid-container {
-            max-height: 82vh;
-            overflow-y: auto;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            width: 100%;
+            height: calc(100vh - 185px);
+            min-height: 240px;
+            overflow: auto;
+            border: 1px solid rgba(148, 163, 184, 0.3);
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.68);
+            box-shadow: 0 12px 32px rgba(15, 23, 42, 0.09), inset 0 1px 0 rgba(255, 255, 255, 0.95);
+            scrollbar-color: #9aabc1 rgba(226, 232, 240, 0.55);
+            scrollbar-width: thin;
         }
 
-        .table-sticky thead {
+        .grid-container::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        .grid-container::-webkit-scrollbar-track {
+            background: rgba(226, 232, 240, 0.55);
+            border-radius: 10px;
+        }
+
+        .grid-container::-webkit-scrollbar-thumb {
+            background: #9aabc1;
+            border: 2px solid rgba(226, 232, 240, 0.55);
+            border-radius: 10px;
+        }
+
+        #auditGrid {
+            width: 100%;
+            min-width: 1100px;
+            table-layout: fixed;
+            margin-bottom: 0;
+            border-color: rgba(148, 163, 184, 0.2);
+            color: #233047;
+            --bs-table-bg: transparent;
+            --bs-table-striped-bg: transparent;
+        }
+
+        #auditGrid .column-id {
+            width: 5%;
+        }
+
+        #auditGrid .column-bank {
+            width: 8%;
+        }
+
+        #auditGrid .column-period {
+            width: 7%;
+        }
+
+        #auditGrid .column-type {
+            width: 7%;
+        }
+
+        #auditGrid .column-transfer {
+            width: 12%;
+        }
+
+        #auditGrid .column-amount {
+            width: 8%;
+        }
+
+        #auditGrid .column-date {
+            width: 10%;
+        }
+
+        #auditGrid .column-details {
+            width: 31%;
+        }
+
+        #auditGrid .column-actions {
+            width: 12%;
+        }
+
+        #auditGrid th,
+        #auditGrid td {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            border-color: rgba(148, 163, 184, 0.18);
+        }
+
+        #auditGrid thead th {
+            padding: 9px 8px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(235, 241, 248, 0.94));
+            color: #42526b;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.035em;
+            text-transform: uppercase;
+            box-shadow: inset 0 -1px 0 rgba(148, 163, 184, 0.24);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        #auditGrid tbody td {
+            padding: 8px;
+            background-color: rgba(255, 255, 255, 0.72);
+            box-shadow: inset 0 0 0 9999px rgba(255, 255, 255, 0.42);
+            transition: background-color 140ms ease, color 140ms ease;
+        }
+
+        #auditGrid.table-striped > tbody > tr:nth-of-type(odd) > * {
+            box-shadow: inset 0 0 0 9999px rgba(226, 232, 240, 0.48);
+            color: inherit;
+        }
+
+        #auditGrid .column-search {
+            box-sizing: border-box;
+            max-width: 100%;
+        }
+
+        #auditGrid .actions-heading,
+        #auditGrid .actions-cell {
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        #auditGrid .details-cell {
+            overflow-wrap: anywhere;
+            text-overflow: clip;
+            white-space: normal;
+        }
+
+        #auditGrid .date-cell {
+            white-space: nowrap;
+        }
+
+        .table-sticky thead th {
             position: sticky;
             top: 0;
-            background-color: #f5f5f5;
-            z-index: 2;
+            z-index: 3;
+        }
+
+        #auditGrid tbody tr.credit-row > td,
+        #auditGrid.table-striped > tbody > tr.credit-row:nth-of-type(odd) > * {
+            color: #111827;
+            background-color: transparent !important;
+            box-shadow: inset 0 0 0 9999px rgba(187, 247, 208, 0.78) !important;
+        }
+
+        #auditGrid tbody tr.skipped-row:not(.credit-row) > td {
+            color: #2563eb;
+        }
+
+        #auditGrid tbody tr:hover > td,
+        #auditGrid.table-striped > tbody > tr:hover > * {
+            background-color: transparent !important;
+            box-shadow: inset 0 0 0 9999px rgba(191, 219, 254, 0.78) !important;
+            color: inherit;
+        }
+
+        #auditGrid tbody tr.credit-row:hover > td {
+            box-shadow: inset 0 0 0 9999px rgba(110, 231, 183, 0.78) !important;
+            color: #111827;
+        }
+
+        #auditGrid tbody tr.skipped-row:not(.credit-row):hover > td {
+            color: #2563eb;
+        }
+
+        #auditGrid tbody tr.row-selected:not(.credit-row) > td,
+        #auditGrid.table-striped > tbody > tr.row-selected:not(.credit-row) > * {
+            background-color: transparent !important;
+            box-shadow: inset 0 0 0 9999px rgba(253, 230, 138, 0.72) !important;
+        }
+
+        #auditGrid tbody tr > td .status-trans {
+            color: #047857;
+            font-weight: 700;
+        }
+
+        #auditGrid tbody tr.credit-row > td .status-trans,
+        #auditGrid tbody tr.credit-row > td .status-skip {
+            color: #111827;
+        }
+
+        #auditGrid tbody tr.skipped-row:not(.credit-row) > td .status-skip {
+            color: #2563eb;
+            font-weight: 700;
         }
 
         .radio-inline {
@@ -46,25 +264,51 @@ body {
         }
 
         .status-skip {
-            color: #a94442;
+            color: #0d6efd;
             font-weight: bold;
             text-transform: uppercase;
         }
 
-        .btn-revert {
-            background-color: #d9534f;
-            border-color: #d43f3a;
-            color: #fff;
-            padding: 4px 10px;
-            font-size: 11px;
+        #auditGrid .btn-delete,
+        #auditGrid .btn-revert {
+            display: inline-flex;
+            width: 26px;
+            height: 24px;
+            align-items: center;
+            justify-content: center;
+            margin: 0 2px;
+            padding: 0;
+            border: 1px solid transparent;
             border-radius: 3px;
             cursor: pointer;
         }
 
-            .btn-revert:hover {
-                background-color: #c9302c;
-                border-color: #ac2925;
-            }
+        #auditGrid .btn-delete {
+            background-color: #dc3545;
+            border-color: #dc3545;
+            color: #fff;
+        }
+
+        #auditGrid .btn-delete:hover {
+            background-color: #bb2d3b;
+            border-color: #b02a37;
+        }
+
+        #auditGrid .btn-revert {
+            background-color: #ffc107;
+            border-color: #ffc107;
+            color: #212529;
+        }
+
+        #auditGrid .btn-revert:hover {
+            background-color: #e0a800;
+            border-color: #d39e00;
+        }
+
+        #auditGrid .btn-delete .bi,
+        #auditGrid .btn-revert .bi {
+            font-size: 12px;
+        }
 
         .sort-arrow {
             font-size: 10px;
@@ -84,9 +328,10 @@ body {
             display: block;
             width: 100%;
             min-width: 45px;
-            margin-top: 4px;
+            height: 23px;
+            margin-top: 3px;
             padding: 2px 4px;
-            font-size: 10px;
+            font-size: 9px;
             font-weight: normal;
             border: 1px solid #ccc;
             border-radius: 2px;
@@ -96,25 +341,159 @@ body {
             cursor: pointer;
         }
 
-        .details-source {
-            display: none;
+        .details-modal-dialog {
+            max-width: 560px;
         }
 
-        #auditGrid tbody tr.row-selected,
-        #auditGrid tbody tr.row-selected.success {
-            background-color: #fff2a8 !important;
+        .details-modal {
+            overflow: hidden;
+            border: 0;
+            border-radius: 14px;
+            box-shadow: 0 24px 70px rgba(15, 23, 42, 0.24);
+        }
+
+        .details-modal-header {
+            display: flex;
+            align-items: center;
+            padding: 20px 24px;
+            border-bottom: 1px solid #e8edf4;
+            background: linear-gradient(135deg, #f8fbff 0%, #fff 100%);
+        }
+
+        .details-modal-heading {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+        }
+
+        .details-modal-icon {
+            display: inline-flex;
+            width: 42px;
+            height: 42px;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            background: #e8f0ff;
+            color: #2563eb;
+            font-size: 19px;
+        }
+
+        .details-modal-header .modal-title {
+            color: #172033;
+            font-size: 17px;
+            font-weight: 700;
+        }
+
+        .details-modal-subtitle {
+            margin: 3px 0 0;
+            color: #718096;
+            font-size: 12px;
+        }
+
+        .details-modal-body {
+            padding: 22px 24px;
+        }
+
+        .details-editor-label {
+            display: block;
+            margin-bottom: 8px;
+            color: #344054;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .details-modal .details-editor {
+            min-height: 150px;
+            padding: 12px 14px;
+            border: 1px solid #d8e0ec;
+            border-radius: 9px;
+            color: #263248;
+            font-size: 13px;
+            line-height: 1.6;
+            box-shadow: none;
+            resize: vertical;
+        }
+
+        .details-modal .details-editor:focus {
+            border-color: #7aa7ff;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+        }
+
+        .details-editor-hint {
+            margin-top: 7px;
+            color: #8490a2;
+            font-size: 11px;
+        }
+
+        .details-modal-footer {
+            gap: 8px;
+            padding: 14px 24px 20px;
+            border-top: 0;
+        }
+
+        .details-cancel-button,
+        .details-save-button {
+            min-height: 36px;
+            padding: 7px 14px;
+            border-radius: 7px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .details-save-button {
+            box-shadow: 0 3px 8px rgba(37, 99, 235, 0.2);
+        }
+
+        .details-source {
+            display: none;
         }
 
         #auditGrid tbody tr {
             border-bottom: 1px solid #eee;
         }
 
-            #auditGrid tbody tr.success {
-                background-color: #dff0d8 !important;
+        @media (max-width: 991px) {
+            .filter-field {
+                flex: 1 1 0;
+            }
+        }
+
+        @media (max-width: 767px) {
+            .main-card {
+                padding: 12px;
             }
 
-        .input-sm {
-            height: 28px;
-            padding: 3px 6px;
-            font-size: 12px;
+            .grid-container {
+                height: calc(100vh - 240px);
+                min-height: 200px;
+            }
+
+            .import-toolbar {
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            .import-filters {
+                flex-wrap: wrap;
+            }
+
+            .filter-field {
+                flex: 1 1 140px;
+            }
+        }
+
+        @media (max-width: 420px) {
+            .import-toolbar {
+                flex-direction: row;
+                align-items: center;
+                flex-wrap: wrap;
+            }
+
+            .import-filters {
+                flex: 1 1 100%;
+            }
+
+            .filter-field {
+                flex: 1 1 100%;
+            }
         }

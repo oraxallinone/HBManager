@@ -28,8 +28,9 @@
     });
 
     function loadGroupDropdowns() {
+        var config = document.getElementById('barChartConfig');
         $.ajax({
-            url: '/Budget/Get4Group',
+            url: config.dataset.getGroupsUrl,
             type: 'GET',
             dataType: 'json',
             success: function (res) {
@@ -48,6 +49,31 @@
             },
             error: function (xhr) {
                 console.error('Error loading groups:', xhr.statusText);
+                logClientError('Error loading groups', '/Budget/Get4Group', xhr);
+            }
+        });
+    }
+
+    function logClientError(message, requestUrl, xhr) {
+        var config = document.getElementById('barChartConfig');
+        if (!config) {
+            return;
+        }
+
+        $.ajax({
+            url: config.dataset.logClientErrorUrl,
+            type: 'POST',
+            data: {
+                controllerName: 'Default',
+                actionName: 'BarChart',
+                message: message,
+                details: 'Request URL: ' + requestUrl +
+                    '; HTTP status: ' + (xhr.status || 0) +
+                    '; status text: ' + (xhr.statusText || 'Unknown') +
+                    '; response: ' + (xhr.responseText || '').substring(0, 2000)
+            },
+            error: function (logXhr) {
+                console.error('Unable to write chart error to the application log:', logXhr.statusText);
             }
         });
     }
@@ -61,6 +87,7 @@
     }
 
     function loadTrendChart() {
+        var config = document.getElementById('barChartConfig');
         var g1 = parseInt($("#ddlG1").val()) || null;
         var g2 = parseInt($("#ddlG2").val()) || null;
         var g3 = parseInt($("#ddlG3").val()) || null;
@@ -72,7 +99,7 @@
         }
 
         $.ajax({
-            url: '/Default/GetBarGraphByGroup',
+            url: config.dataset.chartUrl,
             type: 'POST',
             data: {
                 g1: g1,
@@ -94,6 +121,7 @@
             },
             error: function (xhr) {
                 console.error('Chart load error:', xhr.statusText);
+                logClientError('Chart load failed', config.dataset.chartUrl, xhr);
                 $("#chartContainerTrend").html('<div style="padding:20px;color:#c00">Error loading chart</div>');
             }
         });

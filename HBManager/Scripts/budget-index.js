@@ -5,15 +5,22 @@
     // global container for uncut group list (name requested)
     var GobalGroupMasterUncut = [];
     var wasteByReference = {};
+    var groupDropdownsLoaded = false;
+    var groupDropdownRequest = null;
+    var groupMasterLoaded = false;
+    var groupMasterRequest = null;
 
     var screenWidth = window.screen.width;
     console.log(screenWidth);
     $(".div-responsive").css("height", "67vh");
 
-     // call on page load
-    bindGet4Group();//1
-    GetGroupMasterUncut();//2
-    setThisYearMonth()//3 set month n year
+    // Load both group sources before the first salary and budget requests.
+    $.when(bindGet4Group(), GetGroupMasterUncut())
+        .done(setThisYearMonth)
+        .fail(function () {
+            $('#budgetLoader').hide();
+            alert("Could not load group values. Please refresh the page and try again.");
+        });
 
     $("#lnkMaximize").click(function () {
         $(".div-responsive").css("height", "72vh");
@@ -145,54 +152,70 @@
     }
 
     function bindGet4Group() {
-        $.ajax({
-            url: '/Budget/Get4Group',
-            type: 'GET',
-            dataType: 'json',
-            success: function (res) {
-                // ensure selects exist
-                var $g1 = $('#searchDDlG1'), $g2 = $('#searchDDlG2'), $g3 = $('#searchDDlG3'), $g4 = $('#searchDDlG4');
+        if (groupDropdownsLoaded) {
+            return $.Deferred().resolve().promise();
+        }
+        if (groupDropdownRequest) {
+            return groupDropdownRequest;
+        }
 
-                // reset with default options
-                $g1.empty().append('<option value="0">-- G1 --</option>');
-                $g2.empty().append('<option value="0">-- G2 --</option>');
-                $g3.empty().append('<option value="0">-- G3 --</option>');
-                $g4.empty().append('<option value="0">-- G4 --</option>');
-
-                if (!res) return;
-
-                if (res.G1Groups && res.G1Groups.length) {
-                    $.each(res.G1Groups, function (i, item) {
-                        $g1.append($('<option>').val(item.GroupId).text(item.GroupName));
-                    });
-                }
-                if (res.G2Groups && res.G2Groups.length) {
-                    $.each(res.G2Groups, function (i, item) {
-                        $g2.append($('<option>').val(item.GroupId).text(item.GroupName));
-                    });
-                }
-                if (res.G3Groups && res.G3Groups.length) {
-                    $.each(res.G3Groups, function (i, item) {
-                        $g3.append($('<option>').val(item.GroupId).text(item.GroupName));
-                    });
-                }
-                if (res.G4Groups && res.G4Groups.length) {
-                    $.each(res.G4Groups, function (i, item) {
-                        $g4.append($('<option>').val(item.GroupId).text(item.GroupName));
-                    });
-                }
-
-                if ($('#gridTableBudget tbody tr').length) {
-                    bindData();
-                }
-            },
-            error: function (xhr, status, err) {
-                console.error('bindGet4Group error:', err);
+        groupDropdownRequest = loadGroupData('/Budget/Get4Group').then(function (res) {
+            if (!res || !Array.isArray(res.G1Groups) || !Array.isArray(res.G2Groups) ||
+                !Array.isArray(res.G3Groups) || !Array.isArray(res.G4Groups)) {
+                throw new Error('The group dropdown response is incomplete.');
             }
+
+            // ensure selects exist
+            var $g1 = $('#searchDDlG1'), $g2 = $('#searchDDlG2'), $g3 = $('#searchDDlG3'), $g4 = $('#searchDDlG4');
+
+            // reset with default options
+            $g1.empty().append('<option value="0">-- G1 --</option>');
+            $g2.empty().append('<option value="0">-- G2 --</option>');
+            $g3.empty().append('<option value="0">-- G3 --</option>');
+            $g4.empty().append('<option value="0">-- G4 --</option>');
+
+            if (res.G1Groups && res.G1Groups.length) {
+                $.each(res.G1Groups, function (i, item) {
+                    $g1.append($('<option>').val(item.GroupId).text(item.GroupName));
+                });
+            }
+            if (res.G2Groups && res.G2Groups.length) {
+                $.each(res.G2Groups, function (i, item) {
+                    $g2.append($('<option>').val(item.GroupId).text(item.GroupName));
+                });
+            }
+            if (res.G3Groups && res.G3Groups.length) {
+                $.each(res.G3Groups, function (i, item) {
+                    $g3.append($('<option>').val(item.GroupId).text(item.GroupName));
+                });
+            }
+            if (res.G4Groups && res.G4Groups.length) {
+                $.each(res.G4Groups, function (i, item) {
+                    $g4.append($('<option>').val(item.GroupId).text(item.GroupName));
+                });
+            }
+            groupDropdownsLoaded = true;
+            return res;
         });
+        groupDropdownRequest.fail(function (xhr, status, err) {
+            console.error('bindGet4Group error:', err || status);
+        }).always(function () {
+            groupDropdownRequest = null;
+        });
+        return groupDropdownRequest;
     }
 
     function bindData() {
+        if (!groupDropdownsLoaded || !groupMasterLoaded) {
+            $.when(bindGet4Group(), GetGroupMasterUncut())
+                .done(bindData)
+                .fail(function () {
+                    $('#budgetLoader').hide();
+                    alert("Could not load group values. Please try again.");
+                });
+            return;
+        }
+
         var year = parseInt($("#ddlYear").val(), 10) || 0;
         var month = parseInt($("#ddlMonth").val(), 10) || 0;
 
@@ -601,27 +624,60 @@
     }
 
     //load all the group to global array 
-    function GetGroupMasterUncut() {
-        $.ajax({
-            url: '/Budget/GetGroupMasterUncut',
+    function loadGroupData(url, retriesRemaining) {
+        retriesRemaining = retriesRemaining == null ? 2 : retriesRemaining;
+
+        return $.ajax({
+            url: url,
             type: 'GET',
             dataType: 'json',
-            success: function (res) {
-                //see
-                GobalGroupMasterUncut = res || [];
-            },
-            error: function (xhr, status, err) {
-                console.error('GetGroupMasterUncut error:', err);
-                GobalGroupMasterUncut = [];
+            cache: false
+        }).then(null, function (xhr, status, err) {
+            if (retriesRemaining <= 0) {
+                return $.Deferred().reject(xhr, status, err).promise();
             }
+
+            return $.Deferred(function (deferred) {
+                setTimeout(function () {
+                    loadGroupData(url, retriesRemaining - 1)
+                        .done(deferred.resolve)
+                        .fail(deferred.reject);
+                }, 400);
+            }).promise();
         });
+    }
+
+    function GetGroupMasterUncut() {
+        if (groupMasterLoaded) {
+            return $.Deferred().resolve(GobalGroupMasterUncut).promise();
+        }
+        if (groupMasterRequest) {
+            return groupMasterRequest;
+        }
+
+        groupMasterRequest = loadGroupData('/Budget/GetGroupMasterUncut').then(function (res) {
+            if (!Array.isArray(res)) {
+                throw new Error('The group name response was not a list.');
+            }
+            GobalGroupMasterUncut = res;
+            groupMasterLoaded = true;
+            return res;
+        });
+        groupMasterRequest.fail(function (xhr, status, err) {
+            console.error('GetGroupMasterUncut error:', err || status);
+            GobalGroupMasterUncut = [];
+        }).always(function () {
+            groupMasterRequest = null;
+        });
+        return groupMasterRequest;
     }
 
     //id to group name convert
     function extractNameById(groupId) {
         if (!groupId) return "";
 
-        var item = GobalGroupMasterUncut.find(x => x.GroupId === groupId);
+        var id = parseInt(groupId, 10);
+        var item = GobalGroupMasterUncut.find(x => parseInt(x.GroupId, 10) === id);
         return item ? item.GroupName : "";
     }
 

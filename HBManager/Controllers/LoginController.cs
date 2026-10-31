@@ -19,6 +19,10 @@ namespace HBManager.Controllers
 
         public ActionResult LoginIndex()
         {
+            Response.Cache.SetCacheability(HttpCacheability.NoCache);
+            Response.Cache.SetNoStore();
+            Response.Cache.SetExpires(DateTime.UtcNow.AddDays(-1));
+            Response.Cache.SetRevalidation(HttpCacheRevalidation.AllCaches);
             return View();
         }
 
@@ -28,14 +32,21 @@ namespace HBManager.Controllers
             var result = _loginService.CheckLogin(email, password);
             if (result != null)
             {
-                // Set session or authentication here as needed
+                string redirectUrl = null;
                 if (result.UserType == 9)
                 {
-                    return Json(new { success = true, redirectUrl = Url.Action("BudgetVerification", "Budget") });
+                    redirectUrl = Url.Action("BudgetVerification", "Budget");
                 }
                 else if (result.UserType == 1 || result.UserType == 2)
                 {
-                    return Json(new { success = true, redirectUrl = Url.Action("Index", "Product", new { area = "GstBill" }) });
+                    redirectUrl = Url.Action("Index", "Product", new { area = "GstBill" });
+                }
+
+                if (redirectUrl != null)
+                {
+                    Session.Timeout = 20;
+                    Session[HBManager.Filters.RequireLoginSessionAttribute.SessionKey] = result.UserType;
+                    return Json(new { success = true, redirectUrl = redirectUrl });
                 }
             }
             return Json(new { success = false, message = "Invalid credentials or inactive user." });

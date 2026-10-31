@@ -19,7 +19,7 @@ namespace HBManager
                 { typeof(BudgetGroupingController), () => new BudgetGroupingController(new BudgetGroupingService()) },
                 { typeof(BudgetOverviewController), () => new BudgetOverviewController(new BudgetOverviewService()) },
                 { typeof(CalendarController), () => new CalendarController(new CalendarService()) },
-                { typeof(DefaultController), () => new DefaultController(new DefaultService()) },
+                { typeof(DefaultController), () => new DefaultController(new DefaultService(), new GraphService()) },
                 { typeof(GroupController), () => new GroupController(new GroupService()) },
                 { typeof(HomeController), () => new HomeController(new HomeService()) },
                 { typeof(ImportController), () => new ImportController(new ImportService()) },

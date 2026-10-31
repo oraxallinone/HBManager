@@ -121,6 +121,7 @@
     <Compile Include="App_Start\HBManagerDependencyResolver.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Filters\ValidateAntiForgeryTokenHeaderAttribute.cs" />
+    <Compile Include="Filters\RequireLoginSessionAttribute.cs" />
     <Compile Include="Areas\GstBill\Controllers\InvoiceController.cs" />
     <Compile Include="Areas\GstBill\Controllers\ProductController.cs" />
     <Compile Include="Areas\GstBill\GstBillAreaRegistration.cs" />
@@ -234,6 +235,7 @@
     <Compile Include="Service\RepeatStatusService.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\ErrorLogs\ErrorLogs.txt" />
     <Content Include="Areas\GstBill\Models\Model1.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>Model1.edmx</DependentUpon>
@@ -265,6 +267,7 @@
     <Content Include="Content\gst-layout.css" />
     <Content Include="Content\home-index.css" />
     <Content Include="Content\import-initiate.css" />
+    <Content Include="Content\error-logs.css" />
     <Content Include="Content\login-index.css" />
     <Content Include="Content\img\bg1.jpg" />
     <Content Include="Content\img\bg22.jpg" />
@@ -275,8 +278,14 @@
     <Content Include="Content\login.css" />
     <Content Include="Content\note-index.css" />
     <Content Include="Content\report-index.css" />
+    <Content Include="ErrorLogs\ErrorLogs.txt" />
+    <Content Include="Scripts\error-logs.js" />
     <Content Include="SQL_Scripts\backup-2026-10-24-schema.sql" />
     <Content Include="SQL_Scripts\backup-2026-10-24-schema-data.sql" />
+    <Content Include="theme\img\619752.jpg" />
+    <Content Include="theme\img\619755.jpg" />
+    <Content Include="theme\img\619756.jpg" />
+    <Content Include="theme\img\619760.jpg" />
     <Content Include="Views\RepeatStatus\RepeatStatus.cshtml" />
     <Content Include="Content\repeat-status.css" />
     <Content Include="Content\salary-index.css" />
@@ -472,9 +481,9 @@
     <Content Include="Views\Import\ExecuteQuery.cshtml" />
     <Content Include="Views\Import\ImportInitiate.cshtml" />
     <Content Include="Views\UpdateDatetime\Index.cshtml" />
+    <Content Include="Views\Import\ErrorLogs.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
     <Folder Include="Areas\GstBill\Views\Shared\" />
   </ItemGroup>
   <ItemGroup>

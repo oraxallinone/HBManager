@@ -146,7 +146,7 @@
     font-size: 12px;
     font-weight: bolder;
     margin-top: 0px;
-    color: var(--calendar-deep);
+    color: #fff3cd;
 }
 
 .highlight {
@@ -166,6 +166,7 @@
 
 .calendar-page .card-body {
     background: rgba(220, 235, 234, 0.42);
+    height: 68vh;
 }
 
 .calendar-page .card-footer {

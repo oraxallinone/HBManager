@@ -23,6 +23,70 @@ namespace HBManager.Controllers
         }
 
         [HttpGet]
+        public ActionResult ErrorLogs()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public JsonResult GetErrorLogs()
+        {
+            try
+            {
+                var logContent = _importService.ReadAllErrorLogs();
+                return Json(new { success = true, logs = logContent }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public JsonResult ClearErrorLogs()
+        {
+            try
+            {
+                _importService.ClearAllErrorLogs();
+                return Json(new { success = true, message = "Logs cleared successfully." });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public JsonResult TestException()
+        {
+            try
+            {
+                _importService.WriteTestErrorLog();
+                return Json(new { success = true, message = "Test exception was written to the log file." });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        [HttpPost]
+        public JsonResult LogClientError(string controllerName, string actionName, string message, string details)
+        {
+            try
+            {
+                _importService.LogClientError(controllerName, actionName, message, details);
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        [HttpGet]
         public JsonResult GetBudgetData(int year, int month, string bankName = null)
         {
             return Json(_importService.GetBudgetData(year, month, bankName), JsonRequestBehavior.AllowGet);

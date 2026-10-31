@@ -158,6 +158,8 @@ $(document).ready(function () {
 
     // global container for uncut group list (name requested)
     var GobalGroupMasterUncut = [];
+    var groupMasterLoaded = false;
+    var groupMasterRequest = null;
 
     //var screenWidth = window.screen.width; console.log(screenWidth);
 
@@ -194,6 +196,15 @@ $(document).ready(function () {
 
     //ok
     function getAllBudgetForGroupOnly() {
+        if (!groupMasterLoaded) {
+            GetGroupMasterUncut()
+                .done(getAllBudgetForGroupOnly)
+                .fail(function () {
+                    alert("Could not load group names. Please try again.");
+                });
+            return;
+        }
+
         var year = $("#ddlYear").val();
         var month = $("#ddlMonth").val();
         var isAll = $('#checkForAll').prop('checked');
@@ -241,15 +252,17 @@ $(document).ready(function () {
     });
 
 
-    GetGroupMasterUncut(); // call on page load
-
-    setThisYearMonth();//set month n year
-
     // Hide Update button initially
     $("#btnUpdateBudgetGroup").hide();
     $("#btnUpdateBudgetGroupSingle").hide();
 
     Get4Group();
+
+    GetGroupMasterUncut()
+        .done(setThisYearMonth)
+        .fail(function () {
+            alert("Could not load group names. Please refresh the page and try again.");
+        });
 
 
 
@@ -1027,6 +1040,15 @@ $(document).ready(function () {
     //execute on page load
     //ok
     function GetAllBudgetFromToWithGroup() {
+        if (!groupMasterLoaded) {
+            GetGroupMasterUncut()
+                .done(GetAllBudgetFromToWithGroup)
+                .fail(function () {
+                    alert("Could not load group names. Please try again.");
+                });
+            return;
+        }
+
         var year = $("#ddlYear").val();
         var month = $("#ddlMonth").val();
         var isAll = $('#checkForAll').prop('checked');
@@ -1064,10 +1086,7 @@ $(document).ready(function () {
 
     //ok
     function extractNameById(groupId) {
-        if (!groupId) return "";
-
-        var item = GobalGroupMasterUncut.find(x => x.GroupId === groupId);
-        return item ? item.GroupName : "";
+        return GetGroupMasterNameById(groupId);
     }
 
     //binding all rows to table
@@ -1399,19 +1418,33 @@ $(document).ready(function () {
 
     //ok
     function GetGroupMasterUncut() {
-        $.ajax({
+        if (groupMasterLoaded) {
+            return $.Deferred().resolve(GobalGroupMasterUncut).promise();
+        }
+        if (groupMasterRequest) {
+            return groupMasterRequest;
+        }
+
+        groupMasterRequest = $.ajax({
             url: '/Budget/GetGroupMasterUncut',
             type: 'GET',
             dataType: 'json',
-            success: function (res) {
-                //see
-                GobalGroupMasterUncut = res || [];
-            },
-            error: function (xhr, status, err) {
-                console.error('GetGroupMasterUncut error:', err);
-                GobalGroupMasterUncut = [];
+            cache: false
+        }).then(function (res) {
+            if (!Array.isArray(res)) {
+                throw new Error('The group names response was not a list.');
             }
+            GobalGroupMasterUncut = res;
+            groupMasterLoaded = true;
+            return res;
+        }).fail(function (xhr, status, err) {
+            console.error('GetGroupMasterUncut error:', err);
+            GobalGroupMasterUncut = [];
+        }).always(function () {
+            groupMasterRequest = null;
         });
+
+        return groupMasterRequest;
     }
 
     //not

@@ -2,6 +2,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@Page.Title</title>
     @RenderSection("head", required: false)
     <link rel="icon" type="image/png" sizes="32x32" href='@Url.Content("~/Content/img/financep1.png")' />
@@ -34,7 +35,8 @@
         var dashIs = (curController == "Default" && (curAction == "Dashboard")) ||
                      curController == "Budget" ||
                      curController == "BudgetGrouping" ||
-                     curController == "Import";
+                     curController == "Import" ||
+                     curController == "RepeatStatus";
         var dashOpen = dashIs ? "menu-open" : "";
         var dashActive = dashIs ? "active" : "";
         var dashDashboardActive = (curController == "Default" && curAction == "Dashboard") ? "active" : "";
@@ -43,6 +45,7 @@
         var dashBudgetGroupingActive = (curController == "BudgetGrouping" && curAction == "BudgetGroupingIndex") ? "active" : "";
         var dashBudgetIndexActive = (curController == "Budget" && curAction == "BudgetIndex") ? "active" : "";
         var dashImportByQueryActive = (curController == "Import" && curAction == "ImportInitiate") ? "active" : "";
+        var dashImportErrorLogsActive = (curController == "Import" && curAction == "ErrorLogs") ? "active" : "";
         var dashRepeatStatusActive = (curController == "RepeatStatus" && curAction == "RepeatStatus") ? "active" : "";
 
         // Feature tree check
@@ -184,6 +187,7 @@
                                 <li class="nav-item"> <a href="@Url.Action("BudgetIndex", "Budget")" class="nav-link @dashBudgetIndexActive"> <i class="nav-icon bi bi-cash-coin"></i> <p>Final</p> </a> </li>
                                 <li class="nav-item"> <a href="@Url.Action("RepeatStatus", "RepeatStatus")" class="nav-link @dashRepeatStatusActive"> <i class="nav-icon bi bi-arrow-repeat"></i> <p>Repeat Status</p> </a> </li>
                                 <li class="nav-item"> <a href="@Url.Action("ImportInitiate", "Import")" class="nav-link @dashImportByQueryActive"> <i class="nav-icon bi bi-database-fill-down"></i> <p>Import By Query</p> </a> </li>
+                                <li class="nav-item"> <a href="@Url.Action("ErrorLogs", "Import")" class="nav-link @dashImportErrorLogsActive"> <i class="nav-icon bi bi-exclamation-triangle"></i> <p>Import Error Logs</p> </a> </li>
                             </ul>
                         </li>
 
@@ -244,5 +248,6 @@
     <script src="~/Scripts/anti-forgery.js"></script>
 
     <script src="~/Scripts/web-layout.js"></script>
+    @RenderSection("scripts", required: false)
 </body>
 </html>

@@ -34,16 +34,16 @@ var selectedRowId = null;
                 $("#summaryPanel").slideUp();
             });
 
-            // Script form insertion logic mapping
             $("#sqlScriptForm").submit(function (e) {
                 e.preventDefault();
                 var rawScript = $("#sqlScript").val().trim();
                 if (!rawScript) { alert("Please paste structural data script blocks first."); return false; }
 
+                var form = $(this);
                 $.ajax({
-                    url: $(this).attr("action"),
+                    url: form.attr("action"),
                     type: "POST",
-                    data: $(this).serialize(),
+                    data: form.serialize(),
                     success: function (res) {
                         $("#summaryPanel").slideUp(200, function () {
                             if (res.success) {
@@ -53,6 +53,8 @@ var selectedRowId = null;
                                 $("#summaryPanel").removeClass("alert-danger alert-info alert-success").addClass(res.inserted > 0 ? "alert-success" : "alert-info");
                                 $("#summaryStatus").text(res.inserted > 0 ? "Data Sync Completed Successfully" : "Process Complete (No Rows Added)");
                                 $("#summaryPanel").slideDown();
+                                $("#sqlScript").val("");
+                                bootstrap.Modal.getOrCreateInstance(document.getElementById("importQueryModal")).hide();
                                 loadBankNames();
                             } else {
                                 $("#summaryPanel").removeClass("alert-success alert-info").addClass("alert-danger").slideDown();
@@ -60,12 +62,18 @@ var selectedRowId = null;
                                 $("#summaryMessage").text(res.message);
                             }
                         });
+                    },
+                    error: function () {
+                        $("#summaryPanel").removeClass("alert-success alert-info").addClass("alert-danger").show();
+                        $("#summaryStatus").text("Processing Interrupted");
+                        $("#summaryMessage").text("The import request failed. Please try again.");
                     }
                 });
             });
 
             // NEW MOVE BUTTON INTERACTION: Captures selected radio arrays and dispatches to server endpoint
             $("#btnMove").click(function () {
+                debugger
                 var selectedItems = [];
                 var selectedRow = $('#auditGrid tbody tr.row-selected');
 
@@ -201,7 +209,7 @@ var selectedRowId = null;
                 event.stopPropagation();
                 $('#detailsRecordId').val($(this).data('id'));
                 $('#detailsEditor').val($(this).find('.details-source').val() || '');
-                $('#detailsModal').modal('show');
+                bootstrap.Modal.getOrCreateInstance(document.getElementById('detailsModal')).show();
             });
 
             $('#btnSaveDetails').click(function () {
@@ -218,7 +226,7 @@ var selectedRowId = null;
                     },
                     success: function (response) {
                         if (response.success) {
-                            $('#detailsModal').modal('hide');
+                            bootstrap.Modal.getOrCreateInstance(document.getElementById('detailsModal')).hide();
                             loadGridData();
                         } else {
                             alert(response.message);
@@ -290,7 +298,7 @@ var selectedRowId = null;
             if (year == "0" || month == "0") {
 
                 $("#auditGrid tbody").html(
-                    "<tr><td colspan='10' style='text-align:center;padding:40px;'>Select Year and Month filters to load target transaction streams.</td></tr>"
+                "<tr><td colspan='9' style='text-align:center;padding:40px;'>Select Year and Month filters to load target transaction streams.</td></tr>"
                 );
 
                 return;
@@ -306,24 +314,29 @@ var selectedRowId = null;
                 type: "GET",
                 dataType: "json",
                 success: function (payload) {
-            var htmlBuffer = "";
-            $("#auditGrid tbody").empty();
+                    var htmlBuffer = "";
+                    $("#auditGrid tbody").empty();
 
                     $.each(payload, function (idx, obj) {
-                        var shortDetails = obj.Details && obj.Details.length > 25 ? obj.Details.substring(0, 25) + "..." : (obj.Details || "");
-                        var highlightClass = obj.TransactionType === "Credit" ? "success" : "";
+                        var details = obj.Details || "";
+                        var isCredit = (obj.TransactionType || "").trim().toLowerCase() === "credit";
+                        var transferStatus = (obj.IsTransferStatus || "").trim().toLowerCase();
+                        var isSkipped = transferStatus === "skiped";
+                        var rowClasses = [];
+                        if (isCredit) rowClasses.push("credit-row");
+                        if (isSkipped) rowClasses.push("skipped-row");
 
-                        htmlBuffer += "<tr class='" + highlightClass + "' data-id='" + obj.Id + "'>";
+                        htmlBuffer += "<tr class='" + rowClasses.join(" ") + "' data-id='" + obj.Id + "'>";
                         htmlBuffer += "<td>" + obj.Id + "</td>";
                         htmlBuffer += "<td>" + (obj.BankName || '') + "</td>";
-                                htmlBuffer += "<td>" + obj.Year + "/" + obj.Month + "</td>";
+                        htmlBuffer += "<td>" + obj.Year + "/" + obj.Month + "</td>";
                         htmlBuffer += "<td>" + obj.TransactionType + "</td>";
 
                         // NEW DYNAMIC TRANS/SKIP COLUMN RENDERING
                         htmlBuffer += "<td style='text-align: center; vertical-align: middle;'>";
-                        if (obj.IsTransferStatus === "Transfered") {
+                        if (transferStatus === "transfered") {
                             htmlBuffer += "<span class='status-trans'>Transfered</span>";
-                        } else if (obj.IsTransferStatus === "Skiped") {
+                        } else if (isSkipped) {
                             htmlBuffer += "<span class='status-skip'>Skiped</span>";
                         } else {
                             // If unassigned, render dynamic interactive radio buttons bound to row ID
@@ -333,18 +346,18 @@ var selectedRowId = null;
                         htmlBuffer += "</td>";
 
                         htmlBuffer += "<td style='font-weight: bold;'>₹" + parseFloat(obj.Amount).toFixed(2) + "</td>";
-                        htmlBuffer += "<td style='white-space:nowrap; text-transform: uppercase;'>" + obj.TransactionDate + "</td>";
-                                htmlBuffer += "<td class='details-cell' data-id='" + obj.Id + "' title='Double-click to edit details'>";
-                                htmlBuffer += shortDetails;
-                                htmlBuffer += "<textarea class='details-source'>" + escapeHtml(obj.Details || '') + "</textarea></td>";
-                                // Delete column
-                                htmlBuffer += "<td style='text-align:center; vertical-align:middle;'>";
-                                htmlBuffer += "<button type='button' class='btn btn-danger btn-xs btnDelete' data-id='" + obj.Id + "'>";
-                                htmlBuffer += "<span class='glyphicon glyphicon-trash'></span>";
-                                htmlBuffer += "</button>";
-                                htmlBuffer += "</td>";
-
-                        htmlBuffer += "<td style='text-align:center; vertical-align:middle;'><button type='button' class='btn-revert' data-id='" + obj.Id + "'>Revert</button></td>";
+                        htmlBuffer += "<td class='date-cell'>" + escapeHtml(obj.TransactionDate || "") + "</td>";
+                        htmlBuffer += "<td class='details-cell' data-id='" + obj.Id + "' title='Double-click to edit details'>";
+                        htmlBuffer += escapeHtml(details);
+                        htmlBuffer += "<textarea class='details-source'>" + escapeHtml(details) + "</textarea></td>";
+                        htmlBuffer += "<td class='actions-cell'>";
+                        htmlBuffer += "<button type='button' class='btn-delete btnDelete' data-id='" + obj.Id + "' title='Delete' aria-label='Delete'>";
+                        htmlBuffer += "<i class='bi bi-trash' aria-hidden='true'></i>";
+                        htmlBuffer += "</button>";
+                        htmlBuffer += "<button type='button' class='btn-revert' data-id='" + obj.Id + "' title='Revert' aria-label='Revert'>";
+                        htmlBuffer += "<i class='bi bi-arrow-counterclockwise' aria-hidden='true'></i>";
+                        htmlBuffer += "</button>";
+                        htmlBuffer += "</td>";
                         htmlBuffer += "</tr>";
                     });
 

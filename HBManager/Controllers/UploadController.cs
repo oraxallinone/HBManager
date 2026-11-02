@@ -6,7 +6,6 @@ using System.Web.Mvc;
 
 namespace HBManager.Controllers
 {
-    [HBManager.Filters.ValidateAntiForgeryTokenHeader]
     public class UploadController : Controller
     {
         private readonly IUploadService _uploadService;

@@ -8,7 +8,6 @@ using System.Web.Mvc;
 
 namespace HBManager.Controllers
 {
-    [HBManager.Filters.ValidateAntiForgeryTokenHeader]
     public class GroupController : Controller
     {
         private readonly IGroupService _svc;

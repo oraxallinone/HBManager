@@ -110,7 +110,6 @@
                 <div class="modal-body">
                     @using (Html.BeginForm("ImportInitiate", "Import", FormMethod.Post, new { id = "sqlScriptForm" }))
                     {
-                        @Html.AntiForgeryToken()
                         <div class="form-group">
                             <label for="sqlScript" class="control-label">Paste SQL Insert Statement Block:</label>
                             <textarea id="sqlScript" name="sqlScript" class="form-control textarea-sql" rows="18"

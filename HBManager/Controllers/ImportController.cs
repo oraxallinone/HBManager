@@ -6,7 +6,6 @@ using System.Web.Mvc;
 
 namespace HBManager.Controllers
 {
-    [HBManager.Filters.ValidateAntiForgeryTokenHeader]
     public class ImportController : Controller
     {
         private readonly IImportService _importService;
@@ -43,7 +42,6 @@ namespace HBManager.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public JsonResult ClearErrorLogs()
         {
             try
@@ -58,7 +56,6 @@ namespace HBManager.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public JsonResult TestException()
         {
             try
@@ -117,7 +114,6 @@ namespace HBManager.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public JsonResult ImportInitiate(string sqlScript)
         {
             return Json(_importService.ImportInitiate(sqlScript));

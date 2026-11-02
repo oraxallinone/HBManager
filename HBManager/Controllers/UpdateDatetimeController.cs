@@ -4,7 +4,6 @@ using System.Web.Mvc;
 
 namespace HBManager.Controllers
 {
-    [HBManager.Filters.ValidateAntiForgeryTokenHeader]
     public class UpdateDateTimeController : Controller
     {
         private readonly IUpdateDateTimeService _service;

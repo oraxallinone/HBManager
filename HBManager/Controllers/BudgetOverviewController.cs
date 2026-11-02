@@ -7,7 +7,6 @@ using System.Web.Mvc;
 
 namespace HBManager.Controllers
 {
-    [HBManager.Filters.ValidateAntiForgeryTokenHeader]
     public class BudgetOverviewController : Controller
     {
         private readonly IBudgetOverviewService _svc;

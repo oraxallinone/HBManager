@@ -120,7 +120,6 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\HBManagerDependencyResolver.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="Filters\ValidateAntiForgeryTokenHeaderAttribute.cs" />
     <Compile Include="Filters\RequireLoginSessionAttribute.cs" />
     <Compile Include="Areas\GstBill\Controllers\InvoiceController.cs" />
     <Compile Include="Areas\GstBill\Controllers\ProductController.cs" />
@@ -351,7 +350,6 @@
     <Content Include="Scripts\application-js\common.js" />
     <Content Include="Scripts\application-js\gst-invoice-create.js" />
     <Content Include="Scripts\about.js" />
-    <Content Include="Scripts\anti-forgery.js" />
     <Content Include="Scripts\bar-chart.js" />
     <Content Include="Scripts\birthday.js" />
     <Content Include="Scripts\birthday-index.js" />

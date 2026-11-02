@@ -7,7 +7,6 @@ using System.Web.Mvc;
 
 namespace HBManager.Controllers
 {
-    [HBManager.Filters.ValidateAntiForgeryTokenHeader]
     public class LoginController : Controller
     {
         private readonly ILoginService _loginService;

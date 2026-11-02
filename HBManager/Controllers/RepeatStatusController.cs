@@ -5,7 +5,6 @@ using System.Web.Mvc;
 
 namespace HBManager.Controllers
 {
-    [HBManager.Filters.ValidateAntiForgeryTokenHeader]
     public class RepeatStatusController : Controller
     {
         private readonly IRepeatStatusService _service;

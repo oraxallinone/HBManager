@@ -8,7 +8,6 @@ using System.Web.Mvc;
 
 namespace HBManager.Controllers
 {
-    [HBManager.Filters.ValidateAntiForgeryTokenHeader]
     public class SalaryController : Controller
     {
         private readonly ISalaryService _svc;

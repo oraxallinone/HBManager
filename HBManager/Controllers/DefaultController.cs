@@ -16,7 +16,6 @@ using System.Configuration;
 
 namespace HBManager.Controllers
 {
-    [HBManager.Filters.ValidateAntiForgeryTokenHeader]
     public class DefaultController : Controller
     {
         private readonly IDefaultService _defaultService;

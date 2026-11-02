@@ -26,7 +26,6 @@
     <link rel="stylesheet" href="~/Content/web-layout.css" />
 </head>
 <body class="layout-fixed sidebar-expand-lg sidebar-mini sidebar-collapse bg-body-tertiary">
-    @Html.AntiForgeryToken()
     @{
         var curController = ViewContext.RouteData.Values["controller"] != null ? ViewContext.RouteData.Values["controller"].ToString() : "";
         var curAction = ViewContext.RouteData.Values["action"] != null ? ViewContext.RouteData.Values["action"].ToString() : "";

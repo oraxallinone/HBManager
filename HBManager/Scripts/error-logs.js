@@ -66,16 +66,12 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        const tokenInput = document.querySelector('input[name="__RequestVerificationToken"]');
-        const token = tokenInput ? tokenInput.value : "";
-
         fetch(config.dataset.clearLogsUrl, {
             method: "POST",
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
                 "X-Requested-With": "XMLHttpRequest"
-            },
-            body: "__RequestVerificationToken=" + encodeURIComponent(token)
+            }
         })
             .then(function (response) { return response.json(); })
             .then(function (data) {
@@ -91,8 +87,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function writeTestException() {
-        const tokenInput = document.querySelector('input[name="__RequestVerificationToken"]');
-        const token = tokenInput ? tokenInput.value : "";
         testExceptionButton.disabled = true;
 
         fetch(config.dataset.testExceptionUrl, {
@@ -100,8 +94,7 @@ document.addEventListener("DOMContentLoaded", function () {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
                 "X-Requested-With": "XMLHttpRequest"
-            },
-            body: "__RequestVerificationToken=" + encodeURIComponent(token)
+            }
         })
             .then(function (response) { return response.json(); })
             .then(function (data) {

@@ -18,7 +18,6 @@
         <h2>Enter Budget Details Query</h2>
         @using (Html.BeginForm("ExecuteQuery", "Import", FormMethod.Post, new { id = "queryForm" }))
         {
-            @Html.AntiForgeryToken()
             <h4>SELECT [Id] ,[Year] ,[Month] ,[SpendDate] ,[Amount] ,[Details] ,[G1] ,[G2] ,[G3] ,[G4] ,[CreatedTime] ,[IsVerified] FROM [cbtsplco_annapurna].[dbo].[Budget]</h4>
 
             <div class="form-group" style="margin-bottom: 15px;">

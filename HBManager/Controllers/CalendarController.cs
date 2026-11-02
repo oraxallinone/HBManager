@@ -7,7 +7,6 @@ using System.Web.Mvc;
 
 namespace HBManager.Controllers
 {
-    [HBManager.Filters.ValidateAntiForgeryTokenHeader]
     public class CalendarController : Controller
     {
         private readonly ICalendarService _calendarService;

@@ -6,7 +6,6 @@ using System.Web.Mvc;
 
 namespace HBManager.Controllers
 {
-    [HBManager.Filters.ValidateAntiForgeryTokenHeader]
     public class NotesController : Controller
     {
         private readonly INotesService _notesService;

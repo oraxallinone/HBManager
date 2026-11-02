@@ -7,7 +7,6 @@ using HBManager.Service;
 
 namespace HBManager.Controllers
 {
-    [HBManager.Filters.ValidateAntiForgeryTokenHeader]
     public class BudgetGroupingController : Controller
     {
         private readonly IBudgetGroupingService _mappingService;

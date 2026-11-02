@@ -385,6 +385,7 @@
     <Content Include="Scripts\upload-index.js" />
     <Content Include="Scripts\web-layout.js" />
     <Content Include="MDFiles\project_refactoring_guidelines.md" />
+    <Content Include="MDFiles\sql_server_session_state_setup_guide.md" />
     <None Include="Scripts\jquery-1.9.0.intellisense.js" />
     <Content Include="Scripts\jquery-1.9.0.js" />
     <Content Include="Scripts\jquery-1.9.0.min.js" />

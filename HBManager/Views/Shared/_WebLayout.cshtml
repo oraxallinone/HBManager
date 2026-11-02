@@ -100,6 +100,13 @@
                             <i class="bi bi-list"></i>
                         </a>
                     </li>
+                    <li class="nav-item d-flex align-items-center ms-2">
+                        <button type="button" id="btnClearPageCache" class="btn btn-outline-primary btn-sm">
+                            <i class="bi bi-arrow-clockwise" aria-hidden="true"></i>
+                            Clear Cache
+                        </button>
+                        <span id="clearPageCacheStatus" class="ms-2" role="status" aria-live="polite"></span>
+                    </li>
                 </ul>
 
                 <ul class="navbar-nav ms-auto">
@@ -244,9 +251,65 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
     <script src="~/Content/theme/js/adminlte.js"></script>
     <script src="~/Content/theme/js/SidebarWrapper.js"></script>
-    <script src="~/Scripts/anti-forgery.js"></script>
-
-    <script src="~/Scripts/web-layout.js"></script>
+    <script src="~/Scripts/web-layout.js?v=20261102"></script>
     @RenderSection("scripts", required: false)
+    <script>
+        (function () {
+            var button = document.getElementById('btnClearPageCache');
+            var status = document.getElementById('clearPageCacheStatus');
+
+            if (!button || !status) {
+                return;
+            }
+
+            button.addEventListener('click', function () {
+                if (button.disabled) {
+                    return;
+                }
+
+                var assetUrls = new Set();
+                var currentOrigin = window.location.origin;
+
+                function addAsset(url) {
+                    var assetUrl = new URL(url, window.location.href);
+                    if (assetUrl.origin === currentOrigin && /\.(css|js)$/i.test(assetUrl.pathname)) {
+                        assetUrls.add(assetUrl.href);
+                    }
+                }
+
+                document.querySelectorAll('link[rel~="stylesheet"][href], script[src]').forEach(function (element) {
+                    addAsset(element.href || element.src);
+                });
+
+                if (window.performance && typeof window.performance.getEntriesByType === 'function') {
+                    window.performance.getEntriesByType('resource').forEach(function (entry) {
+                        if (entry.initiatorType === 'script' || entry.initiatorType === 'css' || entry.initiatorType === 'link') {
+                            addAsset(entry.name);
+                        }
+                    });
+                }
+
+                button.disabled = true;
+                status.textContent = 'Refreshing page assets...';
+
+                Promise.all(Array.from(assetUrls).map(function (url) {
+                    return fetch(url, {
+                        cache: 'reload',
+                        credentials: 'same-origin'
+                    }).then(function (response) {
+                        if (!response.ok) {
+                            throw new Error('Asset request failed (' + response.status + '): ' + url);
+                        }
+                    });
+                })).then(function () {
+                    window.location.reload();
+                }).catch(function (error) {
+                    console.error('Could not refresh the current page assets.', error);
+                    status.textContent = 'Cache refresh failed. Check the console and try again.';
+                    button.disabled = false;
+                });
+            });
+        }());
+    </script>
 </body>
 </html>

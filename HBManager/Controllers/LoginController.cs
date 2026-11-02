@@ -43,7 +43,6 @@ namespace HBManager.Controllers
 
                 if (redirectUrl != null)
                 {
-                    Session.Timeout = 20;
                     Session[HBManager.Filters.RequireLoginSessionAttribute.SessionKey] = result.UserType;
                     return Json(new { success = true, redirectUrl = redirectUrl });
                 }

@@ -110,7 +110,7 @@
                 </ul>
 
                 <ul class="navbar-nav ms-auto">
-                    @if (curController != "RepeatStatus")
+                    @if (curController != "RepeatStatus" && !(curController == "Notes" && curAction == "NoteIndex"))
                     {
                     <li style="margin-top: 9px;">
                         <input type="checkbox" id="checkForAll" style="vertical-align:middle; margin-right:4px;" />

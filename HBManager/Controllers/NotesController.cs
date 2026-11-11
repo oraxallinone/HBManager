@@ -1,7 +1,6 @@
-﻿using HBManager.Service;
+using HBManager.Service;
 using System;
-using System.Collections.Generic;
-using System.Web;
+using System.Globalization;
 using System.Web.Mvc;
 
 namespace HBManager.Controllers
@@ -39,15 +38,18 @@ namespace HBManager.Controllers
 
         // AJAX: Add new note
         [HttpPost]
-        public JsonResult AddNote(string noteName, string dateOfNote, int notePriority)
+        public JsonResult AddNote(string noteName, string noteDescription, string dateOfNote, int notePriority)
         {
             try
             {
                 if (string.IsNullOrWhiteSpace(noteName))
                     return Json(new { success = false, message = "Note name is required" });
 
-                DateTime noteDate = DateTime.Parse(dateOfNote);
-                int noteId = _notesService.AddNote(noteName, noteDate, notePriority);
+                DateTime noteDate;
+                if (!DateTime.TryParseExact(dateOfNote, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out noteDate))
+                    return Json(new { success = false, message = "A valid note date is required" });
+
+                int noteId = _notesService.AddNote(noteName.Trim(), noteDescription, noteDate, notePriority);
 
                 return Json(new { success = true, noteId = noteId, message = "Note added successfully" });
             }
@@ -59,20 +61,37 @@ namespace HBManager.Controllers
 
         // AJAX: Update note
         [HttpPost]
-        public JsonResult UpdateNote(int noteId, string noteName, string dateOfNote, int notePriority)
+        public JsonResult UpdateNote(int noteId, string noteName, string noteDescription, string dateOfNote, int notePriority)
         {
             try
             {
                 if (string.IsNullOrWhiteSpace(noteName))
                     return Json(new { success = false, message = "Note name is required" });
 
-                DateTime noteDate = DateTime.Parse(dateOfNote);
-                bool result = _notesService.UpdateNote(noteId, noteName, noteDate, notePriority);
+                DateTime noteDate;
+                if (!DateTime.TryParseExact(dateOfNote, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out noteDate))
+                    return Json(new { success = false, message = "A valid note date is required" });
+
+                bool result = _notesService.UpdateNote(noteId, noteName.Trim(), noteDescription, noteDate, notePriority);
 
                 if (result)
                     return Json(new { success = true, message = "Note updated successfully" });
                 else
                     return Json(new { success = false, message = "Failed to update note" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        [HttpPost]
+        public JsonResult UpdateNoteCompletion(int noteId, bool isCompleted)
+        {
+            try
+            {
+                bool result = _notesService.UpdateNoteCompletion(noteId, isCompleted);
+                return Json(new { success = result, message = result ? "Task status updated" : "Task not found" });
             }
             catch (Exception ex)
             {
@@ -124,8 +143,11 @@ namespace HBManager.Controllers
                 if (string.IsNullOrWhiteSpace(subNoteName))
                     return Json(new { success = false, message = "SubNote name is required" });
 
-                DateTime subNoteDate = DateTime.Parse(dateOfSubNote);
-                int subNoteId = _notesService.AddSubNote(noteId, subNoteName, subNoteDate);
+                DateTime subNoteDate;
+                if (!DateTime.TryParseExact(dateOfSubNote, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out subNoteDate))
+                    return Json(new { success = false, message = "A valid subnote date is required" });
+
+                int subNoteId = _notesService.AddSubNote(noteId, subNoteName.Trim(), subNoteDate);
 
                 return Json(new { success = true, subNoteId = subNoteId, message = "SubNote added successfully" });
             }
@@ -144,19 +166,26 @@ namespace HBManager.Controllers
                 if (string.IsNullOrWhiteSpace(subNoteName))
                     return Json(new { success = false, message = "SubNote name is required" });
 
-                DateTime subNoteDate = DateTime.Parse(dateOfSubNote);
-                bool result = _notesService.UpdateSubNote(subNoteId, subNoteName, subNoteDate);
+                DateTime subNoteDate;
+                if (!DateTime.TryParseExact(dateOfSubNote, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out subNoteDate))
+                    return Json(new { success = false, message = "A valid subnote date is required" });
 
-                // Always return success if DB update succeeded
-                if (result)
-                {
-                    return Json(new { success = true, message = "SubNote updated successfully" });
-                }
-                else
-                {
-                    // Double-check: If DB update succeeded but result is false, still return success
-                    return Json(new { success = true, message = "SubNote updated successfully (forced)" });
-                }
+                bool result = _notesService.UpdateSubNote(subNoteId, subNoteName.Trim(), subNoteDate);
+                return Json(new { success = result, message = result ? "SubNote updated successfully" : "Subnote not found" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        [HttpPost]
+        public JsonResult UpdateSubNoteCompletion(int subNoteId, bool isCompleted)
+        {
+            try
+            {
+                bool result = _notesService.UpdateSubNoteCompletion(subNoteId, isCompleted);
+                return Json(new { success = result, message = result ? "Subtask status updated" : "Subtask not found" });
             }
             catch (Exception ex)
             {

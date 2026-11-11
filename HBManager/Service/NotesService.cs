@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Configuration;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 
@@ -42,13 +43,18 @@ namespace HBManager.Service
             {
                 noteId = row["NoteId"],
                 noteName = row["NoteName"],
-                dateOfNote = ((DateTime)row["DateOfNote"]).ToString("dd-MMM-yyyy"),
-                notePriority = row["NotePriority"]
+                noteDescription = row["NoteDescription"] == DBNull.Value ? string.Empty : row["NoteDescription"],
+                dateOfNote = row["DateOfNote"] == DBNull.Value ? string.Empty : ((DateTime)row["DateOfNote"]).ToString("dd-MMM-yyyy", CultureInfo.InvariantCulture),
+                notePriority = row["NotePriority"] == DBNull.Value ? (int?)null : Convert.ToInt32(row["NotePriority"]),
+                isCompleted = row["IsCompleted"] != DBNull.Value && Convert.ToBoolean(row["IsCompleted"]),
+                subNoteCount = Convert.ToInt32(row["SubNoteCount"]),
+                completedSubNoteCount = Convert.ToInt32(row["CompletedSubNoteCount"]),
+                subNoteNames = row["SubNoteNames"] == DBNull.Value ? string.Empty : row["SubNoteNames"].ToString()
             }).ToList();
         }
 
         // Add new note
-        public int AddNote(string noteName, DateTime dateOfNote, int priority)
+        public int AddNote(string noteName, string description, DateTime dateOfNote, int priority)
         {
             try
             {
@@ -58,6 +64,7 @@ namespace HBManager.Service
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
                         cmd.Parameters.AddWithValue("@NoteName", noteName);
+                        cmd.Parameters.AddWithValue("@NoteDescription", (object)description ?? DBNull.Value);
                         cmd.Parameters.AddWithValue("@DateOfNote", dateOfNote);
                         cmd.Parameters.AddWithValue("@NotePriority", priority);
 
@@ -83,7 +90,7 @@ namespace HBManager.Service
         }
 
         // Update note
-        public bool UpdateNote(int noteId, string noteName, DateTime dateOfNote, int priority)
+        public bool UpdateNote(int noteId, string noteName, string description, DateTime dateOfNote, int priority)
         {
             try
             {
@@ -94,18 +101,40 @@ namespace HBManager.Service
                         cmd.CommandType = CommandType.StoredProcedure;
                         cmd.Parameters.AddWithValue("@NoteId", noteId);
                         cmd.Parameters.AddWithValue("@NoteName", noteName);
+                        cmd.Parameters.AddWithValue("@NoteDescription", (object)description ?? DBNull.Value);
                         cmd.Parameters.AddWithValue("@DateOfNote", dateOfNote);
                         cmd.Parameters.AddWithValue("@NotePriority", priority);
 
                         conn.Open();
-                        int result = cmd.ExecuteNonQuery();
-                        return result > 0;
+                        object result = cmd.ExecuteScalar();
+                        return result != null && result != DBNull.Value && Convert.ToInt32(result) > 0;
                     }
                 }
             }
             catch (Exception ex)
             {
                 throw new Exception("Error updating note: " + ex.Message);
+            }
+        }
+
+        public bool UpdateNoteCompletion(int noteId, bool isCompleted)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(_connectionString))
+                using (SqlCommand cmd = new SqlCommand("sp_updateNoteCompletion", conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@NoteId", noteId);
+                    cmd.Parameters.AddWithValue("@IsCompleted", isCompleted);
+                    conn.Open();
+                    object result = cmd.ExecuteScalar();
+                    return result != null && result != DBNull.Value && Convert.ToInt32(result) > 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error updating task status: " + ex.Message);
             }
         }
 
@@ -165,8 +194,30 @@ namespace HBManager.Service
                 subNoteId = row["SubNoteId"],
                 noteId = row["NoteId"],
                 subNoteName = row["SubNoteName"],
-                dateOfSubNote = ((DateTime)row["DateOfSubNote"]).ToString("dd-MMM-yyyy")
+                dateOfSubNote = row["DateOfSubNote"] == DBNull.Value ? string.Empty : ((DateTime)row["DateOfSubNote"]).ToString("dd-MMM-yyyy", CultureInfo.InvariantCulture),
+                isCompleted = row["IsCompleted"] != DBNull.Value && Convert.ToBoolean(row["IsCompleted"])
             }).ToList();
+        }
+
+        public bool UpdateSubNoteCompletion(int subNoteId, bool isCompleted)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(_connectionString))
+                using (SqlCommand cmd = new SqlCommand("sp_updateSubNoteCompletion", conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@SubNoteId", subNoteId);
+                    cmd.Parameters.AddWithValue("@IsCompleted", isCompleted);
+                    conn.Open();
+                    object result = cmd.ExecuteScalar();
+                    return result != null && result != DBNull.Value && Convert.ToInt32(result) > 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error updating subtask status: " + ex.Message);
+            }
         }
 
         // Add new subnote
@@ -210,8 +261,8 @@ namespace HBManager.Service
                         cmd.Parameters.AddWithValue("@DateOfSubNote", dateOfSubNote);
 
                         conn.Open();
-                        int result = cmd.ExecuteNonQuery();
-                        return result > 0;
+                        object result = cmd.ExecuteScalar();
+                        return result != null && result != DBNull.Value && Convert.ToInt32(result) > 0;
                     }
                 }
             }

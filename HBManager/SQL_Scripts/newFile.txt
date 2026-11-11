@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TaskMaster - Modern Task Management</title>
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Custom scrollbar and subtle transitions */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+    .modal-backdrop {
+      background-color: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(4px);
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen font-sans flex flex-col antialiased selection:bg-indigo-500 selection:text-white">
+
+  <!-- Header Section -->
+  <header class="sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b border-slate-200 shadow-sm transition-all">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-col sm:flex-row items-center justify-between gap-4">
+      
+      <!-- Logo & Branding -->
+      <div class="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-start">
+        <div class="flex items-center gap-2.5">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-indigo-500 flex items-center justify-center text-white shadow-md shadow-indigo-200">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+            </svg>
+          </div>
+          <div>
+            <h1 class="text-xl font-bold tracking-tight text-slate-900 leading-none">TaskMaster</h1>
+            <p class="text-xs text-slate-500 font-medium mt-0.5">Focus, Execute, Track</p>
+          </div>
+        </div>
+
+        <!-- Mobile New Task Shortcut -->
+        <button id="openModalBtnMobile" class="sm:hidden inline-flex items-center justify-center p-2 rounded-xl bg-indigo-600 text-white shadow-sm active:scale-95 transition-transform" title="New Task">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Live Search Bar -->
+      <div class="relative w-full sm:max-w-md">
+        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+          </svg>
+        </div>
+        <input 
+          id="searchInput" 
+          type="text" 
+          placeholder="Search by title, description, or subtasks..." 
+          class="w-full pl-10 pr-9 py-2 bg-slate-100/80 hover:bg-slate-100 focus:bg-white text-sm rounded-xl border border-transparent focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100 outline-none transition-all placeholder:text-slate-400 font-normal"
+        />
+        <button id="clearSearchBtn" class="hidden absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="hidden sm:flex items-center gap-2.5">
+        <button id="exportTasksBtn" class="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200/80 rounded-xl transition shadow-xs active:scale-95" title="Export tasks to JSON">
+          <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+          </svg>
+          Export
+        </button>
+
+        <button id="openModalBtn" class="inline-flex items-center gap-1.5 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl shadow-sm hover:shadow transition-all active:scale-95">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+          </svg>
+          New Task
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+    <!-- Metrics & Filter Bar -->
+    <section class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+      <!-- Status Badges / Counters -->
+      <div class="flex flex-wrap items-center gap-2 sm:gap-3 text-xs font-medium">
+        <div class="flex items-center gap-2 px-3 py-1.5 bg-white border border-slate-200 rounded-xl shadow-2xs">
+          <span class="w-2 h-2 rounded-full bg-slate-400"></span>
+          <span class="text-slate-500">Total:</span>
+          <span id="totalBadge" class="font-bold text-slate-800">0</span>
+        </div>
+        <div class="flex items-center gap-2 px-3 py-1.5 bg-white border border-slate-200 rounded-xl shadow-2xs">
+          <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+          <span class="text-slate-500">Pending:</span>
+          <span id="pendingBadge" class="font-bold text-amber-600">0</span>
+        </div>
+        <div class="flex items-center gap-2 px-3 py-1.5 bg-white border border-slate-200 rounded-xl shadow-2xs">
+          <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+          <span class="text-slate-500">Completed:</span>
+          <span id="completedBadge" class="font-bold text-emerald-600">0</span>
+        </div>
+      </div>
+
+      <!-- Filters & Quick Actions -->
+      <div class="flex items-center gap-2 self-end md:self-auto">
+        <label for="priorityFilter" class="text-xs font-medium text-slate-500 hidden sm:block">Priority:</label>
+        <select id="priorityFilter" class="text-xs font-medium bg-white border border-slate-200 rounded-xl px-2.5 py-1.5 outline-none focus:ring-2 focus:ring-indigo-100 text-slate-700">
+          <option value="ALL">All Priorities</option>
+          <option value="High">High</option>
+          <option value="Medium">Medium</option>
+          <option value="Low">Low</option>
+        </select>
+
+        <label for="statusFilter" class="text-xs font-medium text-slate-500 hidden sm:block ml-1">Status:</label>
+        <select id="statusFilter" class="text-xs font-medium bg-white border border-slate-200 rounded-xl px-2.5 py-1.5 outline-none focus:ring-2 focus:ring-indigo-100 text-slate-700">
+          <option value="ALL">All Status</option>
+          <option value="PENDING">Pending</option>
+          <option value="COMPLETED">Completed</option>
+        </select>
+
+        <button id="exportTasksMobileBtn" class="sm:hidden inline-flex items-center p-1.5 text-slate-600 bg-white border border-slate-200 rounded-xl" title="Export JSON">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+          </svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- Task List Container -->
+    <div id="taskList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+      <!-- Cards rendered via JavaScript -->
+    </div>
+
+    <!-- Empty State -->
+    <div id="emptyState" class="hidden flex-col items-center justify-center text-center py-16 px-4 bg-white border border-dashed border-slate-300 rounded-3xl mt-4">
+      <div class="w-16 h-16 rounded-2xl bg-indigo-50 flex items-center justify-center text-indigo-500 mb-4 shadow-inner">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+        </svg>
+      </div>
+      <h3 class="text-base font-semibold text-slate-900" id="emptyTitle">No tasks found</h3>
+      <p class="text-xs text-slate-500 max-w-sm mt-1" id="emptySubtitle">Get started by creating a new task or adjust your active search filters.</p>
+      <button id="emptyActionBtn" class="mt-4 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-medium rounded-xl transition shadow-sm active:scale-95 inline-flex items-center gap-1.5">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+        </svg>
+        Create New Task
+      </button>
+    </div>
+
+  </main>
+
+  <!-- Modal Dialog (Add / Edit Task) -->
+  <div id="taskModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto hidden">
+    <!-- Backdrop -->
+    <div id="modalOverlay" class="fixed inset-0 modal-backdrop transition-opacity"></div>
+
+    <!-- Modal Content -->
+    <div class="relative bg-white rounded-2xl shadow-2xl max-w-xl w-full p-6 max-h-[90vh] flex flex-col z-10 transition-all border border-slate-100">
+      
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <h2 id="modalTitle" class="text-lg font-bold text-slate-900">Add New Task</h2>
+        <button id="closeModalBtn" type="button" class="text-slate-400 hover:text-slate-600 rounded-lg p-1 transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Form Body (Scrollable) -->
+      <form id="taskForm" class="overflow-y-auto flex-1 py-4 pr-1 space-y-4">
+        <input type="hidden" id="taskId">
+
+        <!-- Task Title -->
+        <div>
+          <label for="taskTitleInput" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
+            Task Title <span class="text-red-500">*</span>
+          </label>
+          <input 
+            type="text" 
+            id="taskTitleInput" 
+            required
+            placeholder="e.g., Redesign landing page experience" 
+            class="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition"
+          />
+        </div>
+
+        <!-- Description -->
+        <div>
+          <label for="taskDescInput" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
+            Description
+          </label>
+          <textarea 
+            id="taskDescInput" 
+            rows="3" 
+            placeholder="Provide context, deliverables, or checklist notes..." 
+            class="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition resize-none"
+          ></textarea>
+        </div>
+
+        <!-- Due Date & Priority Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label for="taskDueDateInput" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
+              Due Date <span class="text-red-500">*</span>
+            </label>
+            <input 
+              type="date" 
+              id="taskDueDateInput" 
+              required
+              class="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition"
+            />
+          </div>
+
+          <div>
+            <label for="taskPriorityInput" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
+              Priority
+            </label>
+            <select 
+              id="taskPriorityInput" 
+              class="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition"
+            >
+              <option value="Low">Low Priority</option>
+              <option value="Medium" selected>Medium Priority</option>
+              <option value="High">High Priority</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Subtasks Section inside Modal -->
+        <div class="pt-2">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-semibold text-slate-700 uppercase tracking-wider">Nested Subtasks</span>
+            <button 
+              type="button" 
+              id="addSubtaskBtn" 
+              class="inline-flex items-center gap-1 text-xs font-semibold text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 px-2.5 py-1 rounded-lg transition"
+            >
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+              </svg>
+              Add Subtask
+            </button>
+          </div>
+
+          <div id="modalSubtasksContainer" class="space-y-2.5 max-h-48 overflow-y-auto p-1 bg-slate-50 border border-slate-200 rounded-xl">
+            <!-- Dynamic rows will be inserted here -->
+          </div>
+          <p id="subtasksEmptyNote" class="text-xs text-slate-400 text-center py-3">No subtasks added yet. Click "+ Add Subtask" to attach milestones.</p>
+        </div>
+
+        <!-- Modal Actions Footer -->
+        <div class="pt-4 border-t border-slate-100 flex items-center justify-end gap-2.5">
+          <button 
+            type="button" 
+            id="cancelModalBtn" 
+            class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition"
+          >
+            Cancel
+          </button>
+          <button 
+            type="submit" 
+            class="px-5 py-2 text-xs font-semibold bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-sm transition active:scale-95"
+          >
+            Save Task
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Notification Toast -->
+  <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+    <div class="flex items-center gap-2.5 bg-slate-900 text-white px-4 py-3 rounded-2xl shadow-xl text-xs font-medium">
+      <span id="toastIcon" class="text-emerald-400">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+        </svg>
+      </span>
+      <span id="toastMsg">Action completed successfully</span>
+    </div>
+  </div>
+
+  <!-- JavaScript Application Logic -->
+  <script>
+    /**
+     * TaskMaster - Task Management Application
+     * Full client-side architecture with localStorage persistence
+     */
+
+    // Initial seed dataset for demo/first launch
+    const DEFAULT_TASKS = [
+      {
+        id: 'task-1',
+        title: 'Launch Brand Identity Overhaul',
+        description: 'Finalize brand guidelines, typography scale, responsive SVG icons, and color palette tokens for client sign-off.',
+        dueDate: '2026-11-20',
+        priority: 'High',
+        completed: false,
+        subtasks: [
+          { id: 'sub-1', title: 'Color harmony accessibility audit (WCAG AA)', dueDate: '2026-11-12', completed: true },
+          { id: 'sub-2', title: 'Export vector glyph sets & icon system', dueDate: '2026-11-16', completed: false },
+          { id: 'sub-3', title: 'Draft marketing style-guide deck', dueDate: '2026-11-19', completed: false }
+        ]
+      },
+      {
+        id: 'task-2',
+        title: 'Backend Database Migration to PostgreSQL',
+        description: 'Execute zero-downtime database replication, verify foreign key indexes, and validate data snapshots.',
+        dueDate: '2026-11-28',
+        priority: 'High',
+        completed: false,
+        subtasks: [
+          { id: 'sub-4', title: 'Create staging backup mirrors', dueDate: '2026-11-14', completed: true },
+          { id: 'sub-5', title: 'Benchmark slow query execution times', dueDate: '2026-11-22', completed: false }
+        ]
+      },
+      {
+        id: 'task-3',
+        title: 'Quarterly Team Retrospective & Roadmap',
+        description: 'Organize interactive retrospective workshop, review OKR attainment metrics, and outline Sprint goals.',
+        dueDate: '2026-11-15',
+        priority: 'Medium',
+        completed: true,
+        subtasks: [
+          { id: 'sub-6', title: 'Send retrospective Miro board invite', dueDate: '2026-11-10', completed: true },
+          { id: 'sub-7', title: 'Compile sprint velocity data', dueDate: '2026-11-12', completed: true }
+        ]
+      }
+    ];
+
+    // App State
+    let tasks = [];
+    let expandedSubtasks = new Set(); // tracks open accordion task IDs
+
+    // DOM Elements
+    const taskListEl = document.getElementById('taskList');
+    const emptyStateEl = document.getElementById('emptyState');
+    const totalBadgeEl = document.getElementById('totalBadge');
+    const pendingBadgeEl = document.getElementById('pendingBadge');
+    const completedBadgeEl = document.getElementById('completedBadge');
+    const searchInput = document.getElementById('searchInput');
+    const clearSearchBtn = document.getElementById('clearSearchBtn');
+    const priorityFilter = document.getElementById('priorityFilter');
+    const statusFilter = document.getElementById('statusFilter');
+
+    // Modal Elements
+    const taskModal = document.getElementById('taskModal');
+    const modalOverlay = document.getElementById('modalOverlay');
+    const taskForm = document.getElementById('taskForm');
+    const modalTitle = document.getElementById('modalTitle');
+    const taskIdInput = document.getElementById('taskId');
+    const taskTitleInput = document.getElementById('taskTitleInput');
+    const taskDescInput = document.getElementById('taskDescInput');
+    const taskDueDateInput = document.getElementById('taskDueDateInput');
+    const taskPriorityInput = document.getElementById('taskPriorityInput');
+    const modalSubtasksContainer = document.getElementById('modalSubtasksContainer');
+    const subtasksEmptyNote = document.getElementById('subtasksEmptyNote');
+    const addSubtaskBtn = document.getElementById('addSubtaskBtn');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const cancelModalBtn = document.getElementById('cancelModalBtn');
+    const openModalBtn = document.getElementById('openModalBtn');
+    const openModalBtnMobile = document.getElementById('openModalBtnMobile');
+    const emptyActionBtn = document.getElementById('emptyActionBtn');
+    const exportTasksBtn = document.getElementById('exportTasksBtn');
+    const exportTasksMobileBtn = document.getElementById('exportTasksMobileBtn');
+
+    // Toast Notification helper
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toastMsg');
+      toastMsg.textContent = message;
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+
+      setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('translate-y-20', 'opacity-0');
+      }, 2600);
+    }
+
+    // Initialize State from LocalStorage
+    function loadTasks() {
+      const stored = localStorage.getItem('taskmaster_data_v1');
+      if (stored) {
+        try {
+          tasks = JSON.parse(stored);
+        } catch (e) {
+          tasks = DEFAULT_TASKS;
+        }
+      } else {
+        tasks = DEFAULT_TASKS;
+        saveTasks();
+      }
+      renderTasks();
+    }
+
+    // Save State to LocalStorage
+    function saveTasks() {
+      localStorage.setItem('taskmaster_data_v1', JSON.stringify(tasks));
+      renderCounters();
+    }
+
+    // Calculate & Render Counters
+    function renderCounters() {
+      const total = tasks.length;
+      const completed = tasks.filter(t => t.completed).length;
+      const pending = total - completed;
+
+      totalBadgeEl.textContent = total;
+      completedBadgeEl.textContent = completed;
+      pendingBadgeEl.textContent = pending;
+    }
+
+    // Format Date for Card UI
+    function formatDateDisplay(dateStr) {
+      if (!dateStr) return 'No due date';
+      const parts = dateStr.split('-');
+      if (parts.length !== 3) return dateStr;
+      const d = new Date(parts[0], parts[1] - 1, parts[2]);
+      return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    }
+
+    // Priority badge styling helper
+    function getPriorityBadge(priority) {
+      switch (priority) {
+        case 'High':
+          return '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-2xs font-semibold bg-rose-50 text-rose-700 border border-rose-200">High</span>';
+        case 'Low':
+          return '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-2xs font-semibold bg-slate-100 text-slate-600 border border-slate-200">Low</span>';
+        default:
+          return '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-2xs font-semibold bg-amber-50 text-amber-700 border border-amber-200">Medium</span>';
+      }
+    }
+
+    // Escape HTML to prevent XSS
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    // Main Render Routine
+    function renderTasks() {
+      const searchTerm = searchInput.value.trim().toLowerCase();
+      const priorityVal = priorityFilter.value;
+      const statusVal = statusFilter.value;
+
+      // Filter tasks
+      const filteredTasks = tasks.filter(task => {
+        // Priority filter
+        if (priorityVal !== 'ALL' && task.priority !== priorityVal) return false;
+
+        // Status filter
+        if (statusVal === 'PENDING' && task.completed) return false;
+        if (statusVal === 'COMPLETED' && !task.completed) return false;
+
+        // Search text filter across title, description, and subtasks
+        if (searchTerm) {
+          const matchTitle = task.title.toLowerCase().includes(searchTerm);
+          const matchDesc = (task.description || '').toLowerCase().includes(searchTerm);
+          const matchSubtask = (task.subtasks || []).some(sub => sub.title.toLowerCase().includes(searchTerm));
+          if (!matchTitle && !matchDesc && !matchSubtask) return false;
+        }
+
+        return true;
+      });
+
+      renderCounters();
+
+      // Empty State Handling
+      if (filteredTasks.length === 0) {
+        taskListEl.innerHTML = '';
+        emptyStateEl.classList.remove('hidden');
+        emptyStateEl.classList.add('flex');
+        return;
+      } else {
+        emptyStateEl.classList.add('hidden');
+        emptyStateEl.classList.remove('flex');
+      }
+
+      // Render cards
+      taskListEl.innerHTML = filteredTasks.map(task => {
+        const subtasks = task.subtasks || [];
+        const completedSubs = subtasks.filter(s => s.completed).length;
+        const totalSubs = subtasks.length;
+        const isAccordionOpen = expandedSubtasks.has(task.id);
+
+        const cardCompletedClass = task.completed ? 'bg-slate-50/90 border-slate-200 opacity-90' : 'bg-white border-slate-200 shadow-sm hover:shadow-md';
+        const titleClass = task.completed ? 'line-through text-slate-400' : 'text-slate-800 font-semibold';
+
+        return `
+          <div class="group relative rounded-2xl border p-5 transition-all duration-200 flex flex-col justify-between ${cardCompletedClass}" data-task-id="${task.id}">
+            <div>
+              <!-- Card Header: Status Toggle, Title, Priority -->
+              <div class="flex items-start justify-between gap-3">
+                <div class="flex items-start gap-3 flex-1 min-w-0">
+                  <button 
+                    onclick="toggleTaskStatus('${task.id}')"
+                    class="mt-0.5 w-5 h-5 rounded-lg border flex items-center justify-center transition-colors ${
+                      task.completed 
+                        ? 'bg-emerald-500 border-emerald-500 text-white' 
+                        : 'border-slate-300 hover:border-indigo-500 bg-white'
+                    }"
+                    title="${task.completed ? 'Mark pending' : 'Mark completed'}"
+                  >
+                    ${task.completed ? `
+                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                    ` : ''}
+                  </button>
+                  <div class="flex-1 min-w-0">
+                    <h3 class="text-base truncate leading-snug ${titleClass}" title="${escapeHtml(task.title)}">
+                      ${escapeHtml(task.title)}
+                    </h3>
+                  </div>
+                </div>
+                <div>${getPriorityBadge(task.priority)}</div>
+              </div>
+
+              <!-- Description -->
+              ${task.description ? `
+                <p class="mt-2.5 text-xs text-slate-500 line-clamp-2 leading-relaxed">
+                  ${escapeHtml(task.description)}
+                </p>
+              ` : ''}
+
+              <!-- Due Date Indicator -->
+              <div class="mt-4 flex items-center gap-1.5 text-xs font-medium text-slate-500">
+                <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+                <span>${formatDateDisplay(task.dueDate)}</span>
+              </div>
+            </div>
+
+            <!-- Card Bottom: Subtasks Accordion & Action Buttons -->
+            <div class="mt-4 pt-3 border-t border-slate-100 flex flex-col gap-2">
+              
+              <!-- Accordion Toggle Button -->
+              <div class="flex items-center justify-between">
+                <button 
+                  onclick="toggleSubtaskAccordion('${task.id}')"
+                  class="text-xs font-semibold text-slate-600 hover:text-indigo-600 flex items-center gap-1.5 py-1 transition-colors"
+                >
+                  <span class="text-slate-400">
+                    <svg class="w-3.5 h-3.5 transform transition-transform ${isAccordionOpen ? 'rotate-180' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                  </span>
+                  <span>Subtasks (${completedSubs}/${totalSubs})</span>
+                </button>
+
+                <!-- Actions: Edit & Delete -->
+                <div class="flex items-center gap-1">
+                  <button 
+                    onclick="editTask('${task.id}')"
+                    class="p-1.5 rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 transition"
+                    title="Edit Task"
+                  >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+                    </svg>
+                  </button>
+                  <button 
+                    onclick="deleteTask('${task.id}')"
+                    class="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition"
+                    title="Delete Task"
+                  >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Collapsible Subtasks Container -->
+              ${isAccordionOpen ? `
+                <div class="mt-2 space-y-1.5 bg-slate-50/80 p-2.5 rounded-xl border border-slate-100 transition-all">
+                  ${totalSubs === 0 ? `
+                    <p class="text-2xs text-slate-400 italic py-1">No subtasks assigned.</p>
+                  ` : subtasks.map(sub => `
+                    <div class="flex items-center justify-between text-xs py-1 px-1.5 rounded-lg hover:bg-white transition-colors group/sub">
+                      <label class="flex items-center gap-2 cursor-pointer flex-1 min-w-0 pr-2">
+                        <input 
+                          type="checkbox" 
+                          ${sub.completed ? 'checked' : ''} 
+                          onchange="toggleSubtaskStatus('${task.id}', '${sub.id}')"
+                          class="w-3.5 h-3.5 rounded text-indigo-600 focus:ring-indigo-500 border-slate-300 transition"
+                        />
+                        <span class="truncate ${sub.completed ? 'line-through text-slate-400' : 'text-slate-700 font-medium'}">
+                          ${escapeHtml(sub.title)}
+                        </span>
+                      </label>
+                      <span class="text-2xs text-slate-400 whitespace-nowrap pl-1">
+                        ${formatDateDisplay(sub.dueDate)}
+                      </span>
+                    </div>
+                  `).join('')}
+                </div>
+              ` : ''}
+
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Accordion Toggle
+    window.toggleSubtaskAccordion = function(taskId) {
+      if (expandedSubtasks.has(taskId)) {
+        expandedSubtasks.delete(taskId);
+      } else {
+        expandedSubtasks.add(taskId);
+      }
+      renderTasks();
+    };
+
+    // Toggle Task Complete State
+    window.toggleTaskStatus = function(taskId) {
+      const task = tasks.find(t => t.id === taskId);
+      if (task) {
+        task.completed = !task.completed;
+        saveTasks();
+        renderTasks();
+        showToast(task.completed ? 'Task marked complete' : 'Task marked pending');
+      }
+    };
+
+    // Toggle Nested Subtask State
+    window.toggleSubtaskStatus = function(taskId, subtaskId) {
+      const task = tasks.find(t => t.id === taskId);
+      if (task && task.subtasks) {
+        const sub = task.subtasks.find(s => s.id === subtaskId);
+        if (sub) {
+          sub.completed = !sub.completed;
+          // Check if all subtasks complete, optionally update task
+          saveTasks();
+          renderTasks();
+        }
+      }
+    };
+
+    // Delete Task
+    window.deleteTask = function(taskId) {
+      tasks = tasks.filter(t => t.id !== taskId);
+      expandedSubtasks.delete(taskId);
+      saveTasks();
+      renderTasks();
+      showToast('Task deleted');
+    };
+
+    // Modal Operations
+    function openModal(isEdit = false, taskData = null) {
+      modalSubtasksContainer.innerHTML = '';
+      if (isEdit && taskData) {
+        modalTitle.textContent = 'Edit Task';
+        taskIdInput.value = taskData.id;
+        taskTitleInput.value = taskData.title;
+        taskDescInput.value = taskData.description || '';
+        taskDueDateInput.value = taskData.dueDate || '';
+        taskPriorityInput.value = taskData.priority || 'Medium';
+
+        // Render subtasks into modal
+        (taskData.subtasks || []).forEach(sub => {
+          addSubtaskRow(sub.id, sub.title, sub.dueDate, sub.completed);
+        });
+      } else {
+        modalTitle.textContent = 'Add New Task';
+        taskForm.reset();
+        taskIdInput.value = '';
+        // Set default date to today
+        const today = new Date().toISOString().split('T')[0];
+        taskDueDateInput.value = today;
+        taskPriorityInput.value = 'Medium';
+      }
+      updateSubtaskEmptyState();
+      taskModal.classList.remove('hidden');
+      taskTitleInput.focus();
+    }
+
+    function closeModal() {
+      taskModal.classList.add('hidden');
+      taskForm.reset();
+      modalSubtasksContainer.innerHTML = '';
+    }
+
+    // Modal Subtasks Dynamic Row Addition
+    function addSubtaskRow(id = '', title = '', dueDate = '', completed = false) {
+      const subId = id || 'sub-' + Date.now() + '-' + Math.random().toString(36).substr(2, 4);
+      const row = document.createElement('div');
+      row.className = 'subtask-row flex items-center gap-2 bg-white p-2 rounded-lg border border-slate-200';
+      row.dataset.subId = subId;
+      row.dataset.completed = completed ? 'true' : 'false';
+
+      row.innerHTML = `
+        <input 
+          type="text" 
+          placeholder="Subtask title" 
+          value="${escapeHtml(title)}"
+          required
+          class="subtask-title-input flex-1 px-2.5 py-1 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:bg-white focus:outline-none focus:border-indigo-500"
+        />
+        <input 
+          type="date" 
+          value="${dueDate || ''}"
+          required
+          class="subtask-date-input w-36 px-2 py-1 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:bg-white focus:outline-none focus:border-indigo-500"
+        />
+        <button 
+          type="button" 
+          class="remove-subtask-btn p-1 text-slate-400 hover:text-rose-600 rounded-lg transition"
+          title="Remove subtask"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      `;
+
+      row.querySelector('.remove-subtask-btn').addEventListener('click', () => {
+        row.remove();
+        updateSubtaskEmptyState();
+      });
+
+      modalSubtasksContainer.appendChild(row);
+      updateSubtaskEmptyState();
+    }
+
+    function updateSubtaskEmptyState() {
+      if (modalSubtasksContainer.children.length === 0) {
+        subtasksEmptyNote.classList.remove('hidden');
+      } else {
+        subtasksEmptyNote.classList.add('hidden');
+      }
+    }
+
+    // Edit Task Trigger
+    window.editTask = function(taskId) {
+      const task = tasks.find(t => t.id === taskId);
+      if (task) {
+        openModal(true, task);
+      }
+    };
+
+    // Modal Form Submission (Create or Update)
+    taskForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const id = taskIdInput.value;
+      const title = taskTitleInput.value.trim();
+      const description = taskDescInput.value.trim();
+      const dueDate = taskDueDateInput.value;
+      const priority = taskPriorityInput.value;
+
+      if (!title || !dueDate) return;
+
+      // Extract subtasks from modal DOM rows
+      const subtaskRows = modalSubtasksContainer.querySelectorAll('.subtask-row');
+      const subtasks = Array.from(subtaskRows).map(row => {
+        const subId = row.dataset.subId;
+        const subCompleted = row.dataset.completed === 'true';
+        const subTitle = row.querySelector('.subtask-title-input').value.trim();
+        const subDate = row.querySelector('.subtask-date-input').value;
+        return {
+          id: subId,
+          title: subTitle,
+          dueDate: subDate,
+          completed: subCompleted
+        };
+      }).filter(s => s.title !== '');
+
+      if (id) {
+        // Update existing task
+        const taskIdx = tasks.findIndex(t => t.id === id);
+        if (taskIdx !== -1) {
+          tasks[taskIdx] = {
+            ...tasks[taskIdx],
+            title,
+            description,
+            dueDate,
+            priority,
+            subtasks
+          };
+          showToast('Task updated successfully');
+        }
+      } else {
+        // Create new task
+        const newTask = {
+          id: 'task-' + Date.now(),
+          title,
+          description,
+          dueDate,
+          priority,
+          completed: false,
+          subtasks
+        };
+        tasks.unshift(newTask);
+        showToast('New task added');
+      }
+
+      saveTasks();
+      closeModal();
+      renderTasks();
+    });
+
+    // Search & Filter Listeners
+    searchInput.addEventListener('input', () => {
+      if (searchInput.value.trim().length > 0) {
+        clearSearchBtn.classList.remove('hidden');
+      } else {
+        clearSearchBtn.classList.add('hidden');
+      }
+      renderTasks();
+    });
+
+    clearSearchBtn.addEventListener('click', () => {
+      searchInput.value = '';
+      clearSearchBtn.classList.add('hidden');
+      renderTasks();
+      searchInput.focus();
+    });
+
+    priorityFilter.addEventListener('change', renderTasks);
+    statusFilter.addEventListener('change', renderTasks);
+
+    // Modal Trigger Listeners
+    openModalBtn.addEventListener('click', () => openModal(false));
+    openModalBtnMobile.addEventListener('click', () => openModal(false));
+    emptyActionBtn.addEventListener('click', () => openModal(false));
+    closeModalBtn.addEventListener('click', closeModal);
+    cancelModalBtn.addEventListener('click', closeModal);
+    modalOverlay.addEventListener('click', closeModal);
+
+    addSubtaskBtn.addEventListener('click', () => {
+      const today = new Date().toISOString().split('T')[0];
+      addSubtaskRow('', '', today, false);
+    });
+
+    // Close modal on ESC key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !taskModal.classList.contains('hidden')) {
+        closeModal();
+      }
+    });
+
+    // Export Data to JSON File
+    function exportToJSON() {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(tasks, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `taskmaster_export_${new Date().toISOString().split('T')[0]}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+      showToast('Exported tasks to JSON');
+    }
+
+    exportTasksBtn.addEventListener('click', exportToJSON);
+    exportTasksMobileBtn.addEventListener('click', exportToJSON);
+
+    // Initial Execution
+    window.addEventListener('DOMContentLoaded', () => {
+      loadTasks();
+    });
+  </script>
+</body>
+</html>

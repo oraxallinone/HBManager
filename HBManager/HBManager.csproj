@@ -281,6 +281,7 @@
     <Content Include="Scripts\error-logs.js" />
     <Content Include="SQL_Scripts\backup-2026-10-24-schema.sql" />
     <Content Include="SQL_Scripts\backup-2026-10-24-schema-data.sql" />
+    <Content Include="SQL_Scripts\2026-11-10-NoteTaskMaster-migration.sql"></Content>
     <Content Include="theme\img\619752.jpg" />
     <Content Include="theme\img\619755.jpg" />
     <Content Include="theme\img\619756.jpg" />

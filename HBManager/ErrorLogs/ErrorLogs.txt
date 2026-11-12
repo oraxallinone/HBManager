@@ -1,1 +1,895 @@
-﻿
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monthly Bank Tracker</title>
+    <style>
+        :root {
+            --body-sage: #ced3ca;
+            --ghia-cream: #F7F2E2;
+            --ghia-ivory: #EDE3C1;
+            --ghia-sand: #D8CCA3;
+            --mini-maroon: #6E1E2A;
+            --mini-maroon-dark: #54151F;
+            --rally-blue: #1F4B99;
+            --rally-blue-light: #EAF0FA;
+            --turf-green: #3B5E2B;
+            --turf-green-hover: #2C4720;
+            --signal-amber: #D96B14;
+            --racing-gold: #E8B923;
+            --chrome-silver: #C8CFD6;
+            --obsidian-black: #1A1D20;
+            --porcelain-white: #FAF9F5;
+        }
+
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 12px;
+            background-color: #ced3ca;
+            color: var(--obsidian-black);
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            background: var(--porcelain-white);
+            padding: 25px;
+            border-radius: 8px;
+            border: 1px solid #b5bcb0;
+            box-shadow: 0 6px 18px rgba(26, 29, 32, 0.14);
+        }
+
+        /* Top Header Bar */
+        .header-box {
+            background: linear-gradient(135deg, var(--mini-maroon) 0%, var(--mini-maroon-dark) 100%);
+            border-bottom: 3px solid var(--racing-gold);
+            color: #ffffff;
+            padding: 14px 20px;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 10px rgba(110, 30, 42, 0.25);
+        }
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .header-select {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 6px 10px;
+            border-radius: 4px;
+            border: 1px solid var(--chrome-silver);
+            background-color: var(--ghia-cream);
+            color: var(--obsidian-black);
+            cursor: pointer;
+            outline: none;
+        }
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+        .header-right span {
+            font-size: 14px;
+            font-weight: bold;
+            white-space: nowrap;
+            display: inline-block;
+            color: var(--ghia-cream);
+        }
+        .header-box input[type="number"] {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 13px;
+            font-weight: bold;
+            width: 105px;
+            padding: 6px 10px;
+            border: 1px solid var(--chrome-silver);
+            border-radius: 4px;
+            text-align: right;
+            color: var(--obsidian-black);
+            background-color: var(--ghia-cream);
+        }
+
+        /* NewEntry+ Button */
+        .btn-new-entry {
+            font-family: 'Times New Roman', Times, serif;
+            background-color: var(--turf-green);
+            color: #ffffff;
+            border: 1px solid #66CC33;
+            padding: 7px 16px;
+            font-size: 12px;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            white-space: nowrap;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: background 0.2s, transform 0.1s;
+        }
+        .btn-new-entry:hover {
+            background-color: var(--turf-green-hover);
+        }
+        .btn-new-entry:active {
+            transform: scale(0.98);
+        }
+
+        /* Modal / Popup Overlay */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(26, 29, 32, 0.55);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: var(--ghia-cream);
+            border: 2px solid var(--ghia-sand);
+            padding: 20px 25px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 800px;
+            box-shadow: 0 10px 30px rgba(26, 29, 32, 0.35);
+            position: relative;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 2px solid var(--ghia-sand);
+            padding-bottom: 10px;
+        }
+        .modal-title {
+            font-size: 15px;
+            font-weight: bold;
+            color: var(--mini-maroon);
+        }
+        .close-btn {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--obsidian-black);
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+        .close-btn:hover {
+            color: #C42828;
+        }
+
+        /* Frosted Glass Delete Confirm Modal */
+        .glass-overlay {
+            display: none;
+            position: fixed;
+            z-index: 1100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(26, 29, 32, 0.35);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            justify-content: center;
+            align-items: center;
+            animation: fadeInGlass 0.18s ease-out;
+        }
+        .glass-modal {
+            background: rgba(247, 242, 226, 0.72);
+            backdrop-filter: blur(16px) saturate(160%);
+            -webkit-backdrop-filter: blur(16px) saturate(160%);
+            border: 1px solid rgba(255, 255, 255, 0.65);
+            border-top: 3px solid var(--mini-maroon);
+            box-shadow: 0 12px 35px rgba(26, 29, 32, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+            border-radius: 12px;
+            width: 90%;
+            max-width: 360px;
+            padding: 20px 22px;
+            color: var(--obsidian-black);
+            transform: scale(1);
+            animation: popInGlass 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .glass-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(110, 30, 42, 0.18);
+        }
+        .glass-icon {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: rgba(110, 30, 42, 0.14);
+            color: var(--mini-maroon);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+        .glass-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: var(--mini-maroon);
+        }
+        .glass-body {
+            font-size: 12px;
+            line-height: 1.5;
+            color: var(--obsidian-black);
+            margin-bottom: 16px;
+        }
+        .glass-preview {
+            margin-top: 8px;
+            padding: 7px 10px;
+            background: rgba(255, 255, 255, 0.55);
+            border: 1px solid rgba(216, 204, 163, 0.8);
+            border-left: 3px solid var(--signal-amber);
+            border-radius: 5px;
+            font-size: 11px;
+            color: #2E3338;
+        }
+        .glass-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        .btn-glass-cancel {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 6px 16px;
+            border-radius: 5px;
+            border: 1px solid rgba(26, 29, 32, 0.25);
+            background: rgba(255, 255, 255, 0.65);
+            color: var(--obsidian-black);
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+        }
+        .btn-glass-cancel:hover {
+            background: rgba(255, 255, 255, 0.95);
+        }
+        .btn-glass-delete {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 6px 16px;
+            border-radius: 5px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: linear-gradient(135deg, var(--mini-maroon) 0%, #8C2433 100%);
+            color: #ffffff;
+            box-shadow: 0 3px 10px rgba(110, 30, 42, 0.3);
+            cursor: pointer;
+            transition: filter 0.2s, transform 0.1s;
+        }
+        .btn-glass-delete:hover {
+            filter: brightness(1.1);
+        }
+        .btn-glass-cancel:active, .btn-glass-delete:active {
+            transform: scale(0.97);
+        }
+
+        @keyframes fadeInGlass {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes popInGlass {
+            from { opacity: 0; transform: scale(0.93) translateY(-6px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        /* Tables Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+            font-size: 12px;
+        }
+        th, td {
+            border: 1px solid var(--chrome-silver);
+            padding: 10px 12px;
+            text-align: left;
+            vertical-align: middle;
+            font-size: 12px;
+        }
+
+        /* Popup Table Specific Styling */
+        .modal-content table {
+            background-color: var(--porcelain-white);
+        }
+        .modal-content th {
+            background-color: var(--ghia-ivory);
+            color: var(--obsidian-black);
+            border-color: var(--ghia-sand);
+        }
+        .modal-content td {
+            border-color: var(--ghia-sand);
+            color: var(--obsidian-black);
+        }
+        .modal-content .date-cell {
+            background-color: #F2EBD4 !important;
+        }
+        table input[type="number"], table input[type="datetime-local"] {
+            font-family: 'Times New Roman', Times, serif;
+            width: 90%;
+            padding: 6px 8px;
+            border: 1px solid #8E97A0;
+            background-color: #ffffff;
+            color: var(--obsidian-black);
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        table input[type="number"]:focus, table input[type="datetime-local"]:focus {
+            outline: none;
+            border-color: var(--rally-blue);
+            box-shadow: 0 0 5px rgba(31, 75, 153, 0.45);
+        }
+
+        /* Popup Footer Buttons */
+        .btn-container {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        .btn-secondary {
+            font-family: 'Times New Roman', Times, serif;
+            background-color: var(--obsidian-black);
+            color: var(--ghia-cream);
+            border: none;
+            padding: 8px 14px;
+            font-size: 12px;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .btn-secondary:hover {
+            background-color: #2E3338;
+        }
+        .btn-budget {
+            font-family: 'Times New Roman', Times, serif;
+            background-color: var(--rally-blue);
+            color: #ffffff;
+            border: none;
+            padding: 8px 14px;
+            font-size: 12px;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .btn-budget:hover {
+            background-color: #163773;
+        }
+        .btn-add {
+            font-family: 'Times New Roman', Times, serif;
+            background-color: var(--turf-green);
+            color: #ffffff;
+            border: none;
+            padding: 8px 20px;
+            font-size: 12px;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .btn-add:hover {
+            background-color: var(--turf-green-hover);
+        }
+
+        /* Output Summary Table */
+        .summary-table th {
+            background-color: var(--rally-blue);
+            color: #ffffff;
+            letter-spacing: 0.3px;
+            border-color: #163773;
+        }
+        .summary-table tbody tr:nth-child(even) {
+            background-color: var(--ghia-cream);
+        }
+        .summary-table tbody tr:nth-child(odd) {
+            background-color: var(--porcelain-white);
+        }
+
+        /* Left-side Edit/Delete + Date & Time Wrapper */
+        .date-action-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .row-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .btn-row-edit, .btn-row-delete {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 11px;
+            font-weight: bold;
+            padding: 3px 8px;
+            border-radius: 3px;
+            cursor: pointer;
+            border: 1px solid transparent;
+            text-align: center;
+            transition: background 0.2s;
+        }
+        .btn-row-edit {
+            background-color: var(--rally-blue-light);
+            color: var(--rally-blue);
+            border-color: #b8c9ea;
+        }
+        .btn-row-edit:hover {
+            background-color: var(--rally-blue);
+            color: #ffffff;
+        }
+        .btn-row-delete {
+            background-color: #fbeaea;
+            color: var(--mini-maroon);
+            border-color: #e6b8be;
+        }
+        .btn-row-delete:hover {
+            background-color: var(--mini-maroon);
+            color: #ffffff;
+        }
+
+        /* Styled Date & Time Div */
+        .datetime-badge {
+            display: inline-block;
+            background-color: var(--ghia-ivory);
+            border: 1px solid var(--ghia-sand);
+            border-left: 4px solid var(--signal-amber);
+            color: var(--obsidian-black);
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-weight: bold;
+            line-height: 1.4;
+        }
+        .datetime-badge .time-sub {
+            display: block;
+            font-weight: normal;
+            color: var(--mini-maroon);
+            font-size: 11px;
+        }
+
+        /* Separate Bank & Value Columns */
+        .clean-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        .clean-list li {
+            padding: 3px 0;
+            border-bottom: 1px dashed var(--chrome-silver);
+        }
+        .clean-list li:last-child {
+            border-bottom: none;
+        }
+        .val-list li {
+            text-align: right;
+            font-weight: bold;
+            color: var(--obsidian-black);
+        }
+        .highlight-val {
+            font-size: 12px;
+            font-weight: bold;
+            color: var(--rally-blue);
+            text-align: right;
+        }
+        .remaining-val {
+            font-size: 12px;
+            font-weight: bold;
+            color: var(--mini-maroon);
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Top Section: Month & Year Dropdowns + Month Beginning + NewEntry+ -->
+    <div class="header-box">
+        <div class="header-left">
+            <select id="monthSelect" class="header-select" aria-label="Select Month">
+                <option value="0">January</option>
+                <option value="1">February</option>
+                <option value="2">March</option>
+                <option value="3">April</option>
+                <option value="4">May</option>
+                <option value="5">June</option>
+                <option value="6">July</option>
+                <option value="7">August</option>
+                <option value="8">September</option>
+                <option value="9">October</option>
+                <option value="10">November</option>
+                <option value="11">December</option>
+            </select>
+
+            <select id="yearSelect" class="header-select" aria-label="Select Year"></select>
+        </div>
+
+        <div class="header-right">
+            <span>Month Beginning :</span>
+            <input type="number" id="monthBeginning" value="30000" oninput="recalculateAll()">
+            <button class="btn-new-entry" onclick="openModal()">NewEntry+</button>
+        </div>
+    </div>
+
+    <!-- Output Table -->
+    <table class="summary-table" id="outputTable">
+        <thead>
+            <tr>
+                <th style="width: 26%;">Date & Time</th>
+                <th style="width: 19%;">Bank Name</th>
+                <th style="width: 15%; text-align: right;">Values</th>
+                <th style="width: 16%; text-align: right;">Sum of Value</th>
+                <th style="width: 24%; text-align: right;">Month Beginning - Total</th>
+            </tr>
+        </thead>
+        <tbody id="outputBody">
+            <!-- Added rows will appear here (newest first) -->
+        </tbody>
+    </table>
+</div>
+
+<!-- Popup Modal for New / Edit Entry -->
+<div class="modal-overlay" id="entryModal" onclick="outsideClick(event)">
+    <div class="modal-content">
+        <div class="modal-header">
+            <span class="modal-title" id="modalTitle">Add New Bank Entry</span>
+            <button type="button" class="close-btn" tabindex="-1" onclick="closeModal()">&times;</button>
+        </div>
+
+        <!-- Input Section: 5 Textboxes, Bank Names, and Date & Time -->
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 35%;">Bank Name</th>
+                    <th style="width: 35%;">Amount / Value</th>
+                    <th style="width: 30%;">Date & Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong class="bank-label">SBI Bank</strong></td>
+                    <td><input type="number" class="val-input" placeholder="Enter value" value="0"></td>
+                    <td rowspan="5" class="date-cell" style="text-align: center;">
+                        <label for="entryDateTime" style="display:block; margin-bottom:6px; font-weight:bold;">Select Date & Time:</label>
+                        <input type="datetime-local" id="entryDateTime" tabindex="-1" onchange="syncDropdownsFromInput()">
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong class="bank-label">HDFC Bank</strong></td>
+                    <td><input type="number" class="val-input" placeholder="Enter value" value="0"></td>
+                </tr>
+                <tr>
+                    <td><strong class="bank-label">ICICI Bank</strong></td>
+                    <td><input type="number" class="val-input" placeholder="Enter value" value="0"></td>
+                </tr>
+                <tr>
+                    <td><strong class="bank-label">Axis Bank</strong></td>
+                    <td><input type="number" class="val-input" placeholder="Enter value" value="0"></td>
+                </tr>
+                <tr>
+                    <td><strong class="bank-label">Kotak Bank</strong></td>
+                    <td><input type="number" class="val-input" placeholder="Enter value" value="0"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Footer Buttons inside Popup -->
+        <div class="btn-container">
+            <button type="button" class="btn-secondary" tabindex="-1" onclick="loadLastAddedValues()">Load Last Added Values</button>
+            <button type="button" class="btn-budget" tabindex="-1" onclick="loadFromBudgetVerification()">Load from Budget Verification</button>
+            <button type="button" class="btn-add" id="submitEntryBtn" tabindex="-1" onclick="saveEntry()">+ Add</button>
+        </div>
+    </div>
+</div>
+
+<!-- Glass Version Delete Confirmation Modal -->
+<div class="glass-overlay" id="deleteConfirmModal" onclick="outsideDeleteClick(event)">
+    <div class="glass-modal">
+        <div class="glass-header">
+            <div class="glass-icon">!</div>
+            <div class="glass-title">Confirm Delete</div>
+        </div>
+        <div class="glass-body">
+            Are you sure you want to delete this entry?
+            <div class="glass-preview" id="deletePreviewInfo"></div>
+        </div>
+        <div class="glass-actions">
+            <button type="button" class="btn-glass-cancel" id="cancelDeleteBtn" onclick="closeDeleteModal()">Cancel</button>
+            <button type="button" class="btn-glass-delete" id="confirmDeleteBtn" onclick="confirmDeleteRow()">Delete</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let lastAddedValues = null;
+    let editingRow = null;
+    let rowToDelete = null;
+
+    function initDropdowns() {
+        const now = new Date();
+        const currentMonth = now.getMonth();
+        const currentYear = now.getFullYear();
+
+        document.getElementById('monthSelect').value = currentMonth;
+
+        const yearSelect = document.getElementById('yearSelect');
+        for (let y = currentYear - 5; y <= currentYear + 5; y++) {
+            const opt = document.createElement('option');
+            opt.value = y;
+            opt.textContent = y;
+            if (y === currentYear) opt.selected = true;
+            yearSelect.appendChild(opt);
+        }
+    }
+
+    function setCurrentDateTime() {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+
+        const localDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
+        document.getElementById('entryDateTime').value = localDateTime;
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+        initDropdowns();
+        setCurrentDateTime();
+    });
+
+    // Keyboard shortcuts: Tab trap in entry modal + Escape key support for modals
+    document.addEventListener('keydown', function(e) {
+        const entryModal = document.getElementById('entryModal');
+        const deleteModal = document.getElementById('deleteConfirmModal');
+
+        if (e.key === 'Escape') {
+            if (deleteModal.style.display === 'flex') closeDeleteModal();
+            else if (entryModal.style.display === 'flex') closeModal();
+        }
+
+        if (entryModal.style.display === 'flex' && e.key === 'Tab') {
+            e.preventDefault();
+            const inputs = Array.from(entryModal.querySelectorAll('.val-input'));
+            const currentIndex = inputs.indexOf(document.activeElement);
+
+            let nextIndex;
+            if (currentIndex === -1) {
+                nextIndex = 0;
+            } else if (e.shiftKey) {
+                nextIndex = (currentIndex - 1 + inputs.length) % inputs.length;
+            } else {
+                nextIndex = (currentIndex + 1) % inputs.length;
+            }
+
+            inputs[nextIndex].focus();
+            inputs[nextIndex].select();
+        }
+    });
+
+    function openModal() {
+        editingRow = null;
+        document.getElementById('modalTitle').innerText = 'Add New Bank Entry';
+        document.getElementById('submitEntryBtn').innerText = '+ Add';
+
+        const valInputs = document.querySelectorAll('.val-input');
+        valInputs.forEach(input => input.value = 0);
+
+        setCurrentDateTime();
+        const modal = document.getElementById('entryModal');
+        modal.style.display = 'flex';
+
+        const firstInput = modal.querySelector('.val-input');
+        if (firstInput) {
+            firstInput.focus();
+            firstInput.select();
+        }
+    }
+
+    function openEditModal(button) {
+        const tr = button.closest('tr');
+        editingRow = tr;
+
+        document.getElementById('modalTitle').innerText = 'Edit Bank Entry';
+        document.getElementById('submitEntryBtn').innerText = 'Update';
+
+        const storedValues = JSON.parse(tr.getAttribute('data-values'));
+        const storedDateTime = tr.getAttribute('data-datetime');
+
+        const valInputs = document.querySelectorAll('.val-input');
+        for (let i = 0; i < valInputs.length; i++) {
+            valInputs[i].value = storedValues[i] ?? 0;
+        }
+        document.getElementById('entryDateTime').value = storedDateTime;
+
+        const modal = document.getElementById('entryModal');
+        modal.style.display = 'flex';
+
+        const firstInput = modal.querySelector('.val-input');
+        if (firstInput) {
+            firstInput.focus();
+            firstInput.select();
+        }
+    }
+
+    // Open Glass Delete Confirm Modal
+    function openDeleteModal(button) {
+        rowToDelete = button.closest('tr');
+        const dateText = rowToDelete.querySelector('.datetime-badge')?.innerText.replace('\n', ' ') || '';
+        const sumText = rowToDelete.cells[3]?.innerText || '';
+
+        document.getElementById('deletePreviewInfo').innerHTML =
+            `<strong>Entry:</strong> ${dateText} &nbsp;|&nbsp; <strong>Total:</strong> ${sumText}`;
+
+        document.getElementById('deleteConfirmModal').style.display = 'flex';
+        document.getElementById('cancelDeleteBtn').focus();
+    }
+
+    function closeDeleteModal() {
+        rowToDelete = null;
+        document.getElementById('deleteConfirmModal').style.display = 'none';
+    }
+
+    function confirmDeleteRow() {
+        if (rowToDelete) {
+            rowToDelete.remove();
+        }
+        closeDeleteModal();
+    }
+
+    function outsideDeleteClick(event) {
+        if (event.target === document.getElementById('deleteConfirmModal')) {
+            closeDeleteModal();
+        }
+    }
+
+    function closeModal() {
+        editingRow = null;
+        document.getElementById('entryModal').style.display = 'none';
+    }
+
+    function outsideClick(event) {
+        if (event.target === document.getElementById('entryModal')) {
+            closeModal();
+        }
+    }
+
+    function syncDropdownsFromInput() {
+        const dateTimeVal = document.getElementById('entryDateTime').value;
+        if (dateTimeVal) {
+            const dateObj = new Date(dateTimeVal);
+            document.getElementById('monthSelect').value = dateObj.getMonth();
+            document.getElementById('yearSelect').value = dateObj.getFullYear();
+        }
+    }
+
+    function buildDateTimeCellHTML(dateTimeStr) {
+        const dt = new Date(dateTimeStr);
+        const day = String(dt.getDate()).padStart(2, '0');
+        const month = String(dt.getMonth() + 1).padStart(2, '0');
+        const year = dt.getFullYear();
+        const time = dt.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+
+        return `
+            <div class="date-action-wrapper">
+                <div class="row-actions">
+                    <button type="button" class="btn-row-edit" onclick="openEditModal(this)">Edit</button>
+                    <button type="button" class="btn-row-delete" onclick="openDeleteModal(this)">Delete</button>
+                </div>
+                <div class="datetime-badge">${day}-${month}-${year}<span class="time-sub">${time}</span></div>
+            </div>
+        `;
+    }
+
+    function loadLastAddedValues() {
+        if (!lastAddedValues) {
+            alert("No previous entry found!");
+            return;
+        }
+        const valInputs = document.querySelectorAll('.val-input');
+        for (let i = 0; i < valInputs.length; i++) {
+            valInputs[i].value = lastAddedValues[i];
+        }
+        valInputs[0].focus();
+        valInputs[0].select();
+    }
+
+    function loadFromBudgetVerification() {
+        alert("Connect your Budget Verification endpoint or data source inside loadFromBudgetVerification().");
+    }
+
+    function populateRow(tr, entryDateTime, currentValues, monthBeginning) {
+        const bankLabels = document.querySelectorAll('.bank-label');
+        let sumOfValues = 0;
+        let banksHTML = `<ul class="clean-list">`;
+        let valuesHTML = `<ul class="clean-list val-list">`;
+
+        for (let i = 0; i < 5; i++) {
+            const bankName = bankLabels[i].innerText;
+            const amount = currentValues[i];
+            sumOfValues += amount;
+
+            banksHTML += `<li><strong>${bankName}</strong></li>`;
+            valuesHTML += `<li>₹${amount.toLocaleString('en-IN')}</li>`;
+        }
+        banksHTML += `</ul>`;
+        valuesHTML += `</ul>`;
+
+        const remainingBalance = monthBeginning - sumOfValues;
+
+        tr.setAttribute('data-sum', sumOfValues);
+        tr.setAttribute('data-values', JSON.stringify(currentValues));
+        tr.setAttribute('data-datetime', entryDateTime);
+
+        tr.innerHTML = `
+            <td>${buildDateTimeCellHTML(entryDateTime)}</td>
+            <td>${banksHTML}</td>
+            <td>${valuesHTML}</td>
+            <td class="highlight-val">₹${sumOfValues.toLocaleString('en-IN')}</td>
+            <td class="remaining-val">${monthBeginning.toLocaleString('en-IN')} - ${sumOfValues.toLocaleString('en-IN')} = ₹${remainingBalance.toLocaleString('en-IN')}</td>
+        `;
+    }
+
+    function saveEntry() {
+        const monthBeginning = parseFloat(document.getElementById('monthBeginning').value) || 0;
+        const entryDateTime = document.getElementById('entryDateTime').value;
+        
+        if (!entryDateTime) {
+            alert("Please select a date and time!");
+            return;
+        }
+
+        const valInputs = document.querySelectorAll('.val-input');
+        let currentValues = [];
+        for (let i = 0; i < 5; i++) {
+            currentValues.push(parseFloat(valInputs[i].value) || 0);
+        }
+
+        lastAddedValues = currentValues;
+
+        if (editingRow) {
+            populateRow(editingRow, entryDateTime, currentValues, monthBeginning);
+        } else {
+            const tbody = document.getElementById('outputBody');
+            const tr = document.createElement('tr');
+            populateRow(tr, entryDateTime, currentValues, monthBeginning);
+            tbody.prepend(tr);
+        }
+
+        valInputs.forEach(input => input.value = 0);
+        closeModal();
+    }
+
+    function recalculateAll() {
+        const monthBeginning = parseFloat(document.getElementById('monthBeginning').value) || 0;
+        const rows = document.querySelectorAll('#outputBody tr');
+
+        rows.forEach(row => {
+            const sum = parseFloat(row.getAttribute('data-sum')) || 0;
+            const remaining = monthBeginning - sum;
+            row.cells[4].innerText = `${monthBeginning.toLocaleString('en-IN')} - ${sum.toLocaleString('en-IN')} = ₹${remaining.toLocaleString('en-IN')}`;
+        });
+    }
+</script>
+
+</body>
+</html>

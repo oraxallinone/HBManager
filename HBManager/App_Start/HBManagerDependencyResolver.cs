@@ -16,6 +16,7 @@ namespace HBManager
             {
                 { typeof(BirthdayController), () => new BirthdayController(new BirthdayService()) },
                 { typeof(BudgetController), () => new BudgetController(new BudgetService()) },
+                { typeof(BudgetUpdateController), () => new BudgetUpdateController(new BudgetUpdateService(), new BudgetService()) },
                 { typeof(BudgetGroupingController), () => new BudgetGroupingController(new BudgetGroupingService()) },
                 { typeof(BudgetOverviewController), () => new BudgetOverviewController(new BudgetOverviewService()) },
                 { typeof(CalendarController), () => new CalendarController(new CalendarService()) },
@@ -31,6 +32,7 @@ namespace HBManager
                 { typeof(UploadController), () => new UploadController(new UploadService()) },
                 { typeof(IBirthdayService), () => new BirthdayService() },
                 { typeof(IBudgetService), () => new BudgetService() },
+                { typeof(IBudgetUpdateService), () => new BudgetUpdateService() },
                 { typeof(IBudgetGroupingService), () => new BudgetGroupingService() },
                 { typeof(IBudgetOverviewService), () => new BudgetOverviewService() },
                 { typeof(ICalendarService), () => new CalendarService() },

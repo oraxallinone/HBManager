@@ -1,0 +1,191 @@
+@{
+    ViewBag.Title = "Monthly Bank Tracker";
+    Layout = "~/Views/Shared/_WebLayout.cshtml";
+}
+
+<link href="~/Content/budget-update-index.css" rel="stylesheet" />
+
+<main class="bank-tracker-page"
+      id="bankTracker"
+      data-month-url="@Url.Action("GetByMonth", "BudgetUpdate")"
+      data-save-url="@Url.Action("SaveEntry", "BudgetUpdate")"
+      data-save-month-beginning-url="@Url.Action("SaveMonthBeginning", "BudgetUpdate")"
+      data-delete-url="@Url.Action("DeleteEntry", "BudgetUpdate")">
+    <div class="bank-tracker-container">
+        <section class="bank-tracker-header" aria-label="Monthly bank tracker controls">
+            <div class="bank-tracker-period">
+                <label class="sr-only" for="monthSelect">Month</label>
+                <select id="monthSelect" class="bank-tracker-select" aria-label="Select month">
+                    <option value="0">--Month--</option>
+                    <option value="1">January</option>
+                    <option value="2">February</option>
+                    <option value="3">March</option>
+                    <option value="4">April</option>
+                    <option value="5">May</option>
+                    <option value="6">June</option>
+                    <option value="7">July</option>
+                    <option value="8">August</option>
+                    <option value="9">September</option>
+                    <option value="10">October</option>
+                    <option value="11">November</option>
+                    <option value="12">December</option>
+                </select>
+                <label class="sr-only" for="yearSelect">Year</label>
+                <select id="yearSelect" class="bank-tracker-select" aria-label="Select year">
+                    <option value="0">--Year--</option>
+                    <option value="2024">2024</option>
+                    <option value="2025">2025</option>
+                    <option value="2026">2026</option>
+                    <option value="2027">2027</option>
+                </select>
+            </div>
+
+            <div class="bank-tracker-actions">
+                <label for="monthBeginning">Current Month Beginning</label>
+                <div class="bank-tracker-balance">
+                    <span aria-hidden="true">&#8377;</span>
+                    <input type="text" id="monthBeginning" value="0.00" readonly aria-label="Current month beginning from Budget Verification" />
+                </div>
+                <button type="button" class="bank-tracker-button bank-tracker-button-budget" id="editMonthBeginningButton" aria-label="Edit month beginning" title="Edit month beginning">^</button>
+                <label for="currentMonthSalary">Current Month Salary</label>
+                <div class="bank-tracker-balance">
+                    <span aria-hidden="true">&#8377;</span>
+                    <input type="text" id="currentMonthSalary" value="0.00" readonly aria-label="Current month salary from Budget Verification" />
+                </div>
+                <button type="button" class="bank-tracker-new-entry" id="newEntryButton">New Entry <span aria-hidden="true">+</span></button>
+            </div>
+        </section>
+
+        <p class="bank-tracker-status" id="trackerStatus" role="status" aria-live="polite"></p>
+
+        <div class="bank-tracker-table-wrap">
+            <table class="bank-tracker-table" id="outputTable">
+                <thead>
+                    <tr>
+                        <th scope="col" class="date-column">Date &amp; Time</th>
+                        <th scope="col" class="bank-column">Bank Name</th>
+                        <th scope="col" class="values-column">Values</th>
+                        <th scope="col" class="sum-column">M IN - NOW = M OUT</th>
+                        <th scope="col" class="remaining-column">Salary - M OUT = Outstanding</th>
+                    </tr>
+                </thead>
+                <tbody id="outputBody">
+                    <tr class="bank-tracker-empty">
+                        <td colspan="5">No bank entries for this month yet. Select <strong>New Entry</strong> to add one.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+
+<div class="bank-tracker-modal" id="entryModal" aria-hidden="true">
+    <section class="bank-tracker-modal-content" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <header class="bank-tracker-modal-header">
+            <h2 class="bank-tracker-modal-title" id="modalTitle">Add New Bank Entry</h2>
+            <button type="button" class="bank-tracker-close" id="closeEntryButton" aria-label="Close dialog">&times;</button>
+        </header>
+
+        <div class="bank-tracker-entry-table-wrap">
+            <table class="bank-tracker-entry-table">
+                <thead>
+                    <tr>
+                        <th scope="col" class="bank-name-heading">Bank Name</th>
+                        <th scope="col" class="bank-value-heading">Amount / Value</th>
+                        <th scope="col" class="bank-date-heading">Date &amp; Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row"><label for="bankValue0">ICI</label></th>
+                        <td><input type="number" id="bankValue0" class="bank-tracker-value" min="0" step="0.01" value="0" inputmode="decimal" /></td>
+                        <td rowspan="6" class="bank-tracker-date-cell">
+                            <label for="entryDateTime">Select Date &amp; Time:</label>
+                            <input type="datetime-local" id="entryDateTime" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="bankValue1">KOT</label></th>
+                        <td><input type="number" id="bankValue1" class="bank-tracker-value" min="0" step="0.01" value="0" inputmode="decimal" /></td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="bankValue2">SBI</label></th>
+                        <td><input type="number" id="bankValue2" class="bank-tracker-value" min="0" step="0.01" value="0" inputmode="decimal" /></td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="bankValue3">SUR</label></th>
+                        <td><input type="number" id="bankValue3" class="bank-tracker-value" min="0" step="0.01" value="0" inputmode="decimal" /></td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="bankValue4">CAH</label></th>
+                        <td><input type="number" id="bankValue4" class="bank-tracker-value" min="0" step="0.01" value="0" inputmode="decimal" /></td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="bankValue5">BBB</label></th>
+                        <td><input type="number" id="bankValue5" class="bank-tracker-value" min="0" step="0.01" value="0" inputmode="decimal" /></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="bank-tracker-modal-status" id="entryModalStatus" role="status" aria-live="polite"></div>
+        <footer class="bank-tracker-modal-actions">
+            <button type="button" class="bank-tracker-button bank-tracker-button-secondary" id="loadLastEntryButton">Load Last Added Values</button>
+            <button type="button" class="bank-tracker-button bank-tracker-button-budget" id="loadBudgetButton">Load from Budget Verification</button>
+            <button type="button" class="bank-tracker-button bank-tracker-button-add" id="submitEntryButton">+ Add</button>
+        </footer>
+    </section>
+</div>
+
+<div class="bank-tracker-modal" id="monthBeginningModal" aria-hidden="true">
+    <section class="bank-tracker-modal-content bank-tracker-month-modal-content" role="dialog" aria-modal="true" aria-labelledby="monthBeginningTitle">
+        <header class="bank-tracker-modal-header">
+            <h2 class="bank-tracker-modal-title" id="monthBeginningTitle">Update Month Beginning</h2>
+            <button type="button" class="bank-tracker-close" id="closeMonthBeginningButton" aria-label="Close dialog">&times;</button>
+        </header>
+        <p class="bank-tracker-month-modal-description">Choose a month and year, then enter its starting balance. Saving an existing period updates its value; saving a new period creates it.</p>
+        <div class="bank-tracker-month-fields">
+            <div class="bank-tracker-month-field">
+                <label for="beginningMonthSelect">Month</label>
+                <select id="beginningMonthSelect" class="bank-tracker-select"></select>
+            </div>
+            <div class="bank-tracker-month-field">
+                <label for="beginningYearSelect">Year</label>
+                <select id="beginningYearSelect" class="bank-tracker-select"></select>
+            </div>
+            <div class="bank-tracker-month-field bank-tracker-month-amount">
+                <label for="beginningAmountInput">Month Beginning</label>
+                <div class="bank-tracker-balance">
+                    <span aria-hidden="true">&#8377;</span>
+                    <input type="number" id="beginningAmountInput" min="0" step="0.01" value="0.00" inputmode="decimal" />
+                </div>
+            </div>
+        </div>
+        <div class="bank-tracker-modal-status" id="monthBeginningModalStatus" role="status" aria-live="polite"></div>
+        <footer class="bank-tracker-modal-actions">
+            <button type="button" class="bank-tracker-button bank-tracker-button-secondary" id="cancelMonthBeginningButton">Cancel</button>
+            <button type="button" class="bank-tracker-button bank-tracker-button-add" id="saveMonthBeginningButton">Save Month Beginning</button>
+        </footer>
+    </section>
+</div>
+
+<div class="bank-tracker-modal bank-tracker-delete-modal" id="deleteConfirmModal" aria-hidden="true">
+    <section class="bank-tracker-delete-content" role="alertdialog" aria-modal="true" aria-labelledby="deleteTitle" aria-describedby="deleteMessage">
+        <header class="bank-tracker-delete-header">
+            <span class="bank-tracker-delete-icon" aria-hidden="true">!</span>
+            <h2 class="bank-tracker-delete-title" id="deleteTitle">Confirm Delete</h2>
+        </header>
+        <p class="bank-tracker-delete-message" id="deleteMessage">Are you sure you want to delete this entry?</p>
+        <p class="bank-tracker-delete-preview" id="deletePreviewInfo"></p>
+        <footer class="bank-tracker-delete-actions">
+            <button type="button" class="bank-tracker-button bank-tracker-button-cancel" id="cancelDeleteButton">Cancel</button>
+            <button type="button" class="bank-tracker-button bank-tracker-button-delete" id="confirmDeleteButton">Delete</button>
+        </footer>
+    </section>
+</div>
+
+@Html.AntiForgeryToken()
+
+@section scripts {
+    <script src="@Url.Content("~/Scripts/budget-update-index.js")"></script>
+}

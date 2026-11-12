@@ -1,0 +1,651 @@
+.bank-tracker-page {
+    min-height: calc(100vh - 57px);
+    padding: 20px;
+    background: #ced3ca;
+    color: #1a1d20;
+    font-family: "Times New Roman", Times, serif;
+    font-size: 12px;
+}
+
+.bank-tracker-page *,
+.bank-tracker-modal * {
+    box-sizing: border-box;
+}
+
+.bank-tracker-page .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.bank-tracker-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 25px;
+    border: 1px solid #b5bcb0;
+    border-radius: 8px;
+    background: #faf9f5;
+    box-shadow: 0 6px 18px rgba(26, 29, 32, 0.14);
+}
+
+.bank-tracker-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 20px;
+    padding: 14px 20px;
+    border-bottom: 3px solid #e8b923;
+    border-radius: 6px;
+    background: linear-gradient(135deg, #6e1e2a 0%, #54151f 100%);
+    box-shadow: 0 3px 10px rgba(110, 30, 42, 0.25);
+    color: #fff;
+}
+
+.bank-tracker-period,
+.bank-tracker-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.bank-tracker-actions {
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.bank-tracker-actions > label {
+    color: #f7f2e2;
+    font-size: 14px;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.bank-tracker-select,
+.bank-tracker-balance input {
+    min-height: 34px;
+    padding: 6px 10px;
+    border: 1px solid #c8cfd6;
+    border-radius: 4px;
+    background: #f7f2e2;
+    color: #1a1d20;
+    font: bold 12px "Times New Roman", Times, serif;
+}
+
+.bank-tracker-select {
+    cursor: pointer;
+}
+
+.bank-tracker-balance {
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    border: 1px solid #c8cfd6;
+    border-radius: 4px;
+    background: #f7f2e2;
+    color: #1a1d20;
+}
+
+.bank-tracker-balance > span {
+    display: inline-block;
+    padding-left: 9px;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.bank-tracker-balance input {
+    width: 112px;
+    border: 0;
+    text-align: right;
+}
+
+.bank-tracker-select:focus,
+.bank-tracker-balance input:focus,
+.bank-tracker-page button:focus-visible,
+.bank-tracker-modal button:focus-visible,
+.bank-tracker-modal input:focus-visible {
+    outline: 2px solid #1f4b99;
+    outline-offset: 2px;
+}
+
+.bank-tracker-new-entry,
+.bank-tracker-button {
+    min-height: 34px;
+    padding: 7px 16px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    color: #fff;
+    font: bold 12px "Times New Roman", Times, serif;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+.bank-tracker-new-entry {
+    border-color: #66cc33;
+    background: #3b5e2b;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    white-space: nowrap;
+}
+
+.bank-tracker-new-entry:hover,
+.bank-tracker-button-add:hover {
+    background: #2c4720;
+}
+
+.bank-tracker-new-entry:active,
+.bank-tracker-button:active {
+    transform: scale(0.98);
+}
+
+.bank-tracker-new-entry span {
+    font-size: 16px;
+    line-height: 10px;
+    vertical-align: -1px;
+}
+
+.bank-tracker-status {
+    min-height: 18px;
+    margin: -8px 0 10px;
+    color: #3b5e2b;
+}
+
+.bank-tracker-table-wrap,
+.bank-tracker-entry-table-wrap {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.bank-tracker-table,
+.bank-tracker-entry-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+}
+
+.bank-tracker-table {
+    min-width: 850px;
+    margin-bottom: 0;
+}
+
+.bank-tracker-table th,
+.bank-tracker-table td,
+.bank-tracker-entry-table th,
+.bank-tracker-entry-table td {
+    padding: 10px 12px;
+    border: 1px solid #c8cfd6;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.bank-tracker-table thead th {
+    border-color: #163773;
+    background: #1f4b99;
+    color: #fff;
+    letter-spacing: 0.3px;
+}
+
+.bank-tracker-table .date-column { width: 26%; }
+.bank-tracker-table .bank-column { width: 19%; }
+.bank-tracker-table .values-column { width: 15%; text-align: right; }
+.bank-tracker-table .sum-column { width: 16%; text-align: right; }
+.bank-tracker-table .remaining-column { width: 24%; text-align: right; }
+
+.bank-tracker-table tbody tr:nth-child(even) {
+    background: #f7f2e2;
+}
+
+.bank-tracker-table tbody tr:nth-child(odd) {
+    background: #faf9f5;
+}
+
+.bank-tracker-table .bank-tracker-empty td {
+    padding: 28px 12px;
+    color: #59615a;
+    text-align: center;
+}
+
+.bank-tracker-table .bank-tracker-load-error td {
+    color: #6e1e2a;
+}
+
+.bank-tracker-date-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.bank-tracker-row-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.bank-tracker-row-edit,
+.bank-tracker-row-delete {
+    padding: 3px 8px;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    font: bold 11px "Times New Roman", Times, serif;
+    cursor: pointer;
+}
+
+.bank-tracker-row-edit {
+    border-color: #b8c9ea;
+    background: #eaf0fa;
+    color: #1f4b99;
+}
+
+.bank-tracker-row-edit:hover {
+    background: #1f4b99;
+    color: #fff;
+}
+
+.bank-tracker-row-delete {
+    border-color: #e6b8be;
+    background: #fbeaea;
+    color: #6e1e2a;
+}
+
+.bank-tracker-row-delete:hover {
+    background: #6e1e2a;
+    color: #fff;
+}
+
+.bank-tracker-date-badge {
+    display: inline-block;
+    padding: 6px 10px;
+    border: 1px solid #d8cca3;
+    border-left: 4px solid #d96b14;
+    border-radius: 4px;
+    background: #ede3c1;
+    color: #1a1d20;
+    font-weight: bold;
+    line-height: 1.4;
+    white-space: nowrap;
+}
+
+.bank-tracker-time {
+    display: block;
+    color: #6e1e2a;
+    font-size: 11px;
+    font-weight: normal;
+}
+
+.bank-tracker-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.bank-tracker-list li {
+    padding: 3px 0;
+    border-bottom: 1px dashed #c8cfd6;
+}
+
+.bank-tracker-list li:last-child {
+    border-bottom: 0;
+}
+
+.bank-tracker-value-list li,
+.bank-tracker-sum,
+.bank-tracker-remaining {
+    text-align: right;
+}
+
+.bank-tracker-value-list li {
+    font-weight: bold;
+}
+
+.bank-tracker-sum {
+    color: #1f4b99;
+    font-weight: bold;
+}
+
+.bank-tracker-remaining {
+    color: #6e1e2a;
+    font-weight: bold;
+}
+
+.bank-tracker-modal {
+    position: fixed;
+    z-index: 1050;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    overflow-y: auto;
+    padding: 20px;
+    background: rgba(26, 29, 32, 0.55);
+}
+
+.bank-tracker-modal.is-open {
+    display: flex;
+}
+
+.bank-tracker-modal-content {
+    position: relative;
+    width: 100%;
+    max-width: 900px;
+    padding: 20px 25px;
+    border: 2px solid #d8cca3;
+    border-radius: 8px;
+    background: #f7f2e2;
+    box-shadow: 0 10px 30px rgba(26, 29, 32, 0.35);
+}
+
+.bank-tracker-month-modal-content {
+    max-width: 620px;
+}
+
+.bank-tracker-month-modal-description {
+    margin: 0 0 18px;
+    color: #424740;
+    line-height: 1.5;
+}
+
+.bank-tracker-month-fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+.bank-tracker-month-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.bank-tracker-month-field > label {
+    font-weight: bold;
+}
+
+.bank-tracker-month-field .bank-tracker-select,
+.bank-tracker-month-field .bank-tracker-balance {
+    width: 100%;
+}
+
+.bank-tracker-month-amount {
+    grid-column: 1 / -1;
+}
+
+.bank-tracker-month-amount .bank-tracker-balance input {
+    width: 100%;
+    text-align: left;
+}
+
+.bank-tracker-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #d8cca3;
+}
+
+.bank-tracker-modal-title,
+.bank-tracker-delete-title {
+    margin: 0;
+    color: #6e1e2a;
+    font: bold 15px "Times New Roman", Times, serif;
+}
+
+.bank-tracker-close {
+    padding: 0 4px;
+    border: 0;
+    background: transparent;
+    color: #1a1d20;
+    font: bold 24px/1 "Times New Roman", Times, serif;
+    cursor: pointer;
+}
+
+.bank-tracker-entry-table {
+    background: #faf9f5;
+    table-layout: fixed;
+}
+
+.bank-tracker-entry-table .bank-name-heading,
+.bank-tracker-entry-table tbody th {
+    width: 35%;
+}
+
+.bank-tracker-entry-table .bank-value-heading {
+    width: 35%;
+}
+
+.bank-tracker-entry-table .bank-date-heading {
+    width: 30%;
+}
+
+.bank-tracker-entry-table th {
+    border-color: #d8cca3;
+    background: #ede3c1;
+}
+
+.bank-tracker-entry-table td {
+    border-color: #d8cca3;
+}
+
+.bank-tracker-entry-table input {
+    width: 100%;
+    min-height: 36px;
+    padding: 6px 8px;
+    border: 1px solid #8e97a0;
+    border-radius: 4px;
+    background: #fff;
+    color: #1a1d20;
+    font: 12px "Times New Roman", Times, serif;
+}
+
+.bank-tracker-date-cell {
+    background: #f2ebd4;
+    text-align: center !important;
+}
+
+.bank-tracker-date-cell label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: bold;
+}
+
+.bank-tracker-date-cell input {
+    min-width: 0;
+    max-width: 100%;
+}
+
+.bank-tracker-modal-status {
+    min-height: 18px;
+    margin-top: 10px;
+    color: #6e1e2a;
+}
+
+.bank-tracker-modal-actions,
+.bank-tracker-delete-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.bank-tracker-button-secondary {
+    background: #1a1d20;
+    color: #f7f2e2;
+}
+
+.bank-tracker-button-secondary:hover {
+    background: #2e3338;
+}
+
+.bank-tracker-button-budget {
+    background: #1f4b99;
+}
+
+.bank-tracker-button-budget:hover {
+    background: #163773;
+}
+
+.bank-tracker-button-add {
+    padding-right: 20px;
+    padding-left: 20px;
+    background: #3b5e2b;
+}
+
+.bank-tracker-delete-modal {
+    z-index: 1060;
+    background: rgba(26, 29, 32, 0.35);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+
+.bank-tracker-delete-content {
+    width: 100%;
+    max-width: 360px;
+    padding: 20px 22px;
+    border: 1px solid rgba(255, 255, 255, 0.65);
+    border-top: 3px solid #6e1e2a;
+    border-radius: 12px;
+    background: rgba(247, 242, 226, 0.94);
+    box-shadow: 0 12px 35px rgba(26, 29, 32, 0.28);
+}
+
+.bank-tracker-delete-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(110, 30, 42, 0.18);
+}
+
+.bank-tracker-delete-icon {
+    display: flex;
+    width: 26px;
+    height: 26px;
+    flex: 0 0 26px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(110, 30, 42, 0.14);
+    color: #6e1e2a;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.bank-tracker-delete-title {
+    font-size: 14px;
+}
+
+.bank-tracker-delete-message {
+    margin: 0 0 12px;
+    line-height: 1.5;
+}
+
+.bank-tracker-delete-preview {
+    margin: 0 0 16px;
+    padding: 7px 10px;
+    border: 1px solid rgba(216, 204, 163, 0.8);
+    border-left: 3px solid #d96b14;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.65);
+    overflow-wrap: anywhere;
+}
+
+.bank-tracker-button-cancel {
+    border-color: rgba(26, 29, 32, 0.25);
+    background: rgba(255, 255, 255, 0.75);
+    color: #1a1d20;
+}
+
+.bank-tracker-button-delete {
+    background: linear-gradient(135deg, #6e1e2a 0%, #8c2433 100%);
+    box-shadow: 0 3px 10px rgba(110, 30, 42, 0.3);
+}
+
+.bank-tracker-button-delete:hover {
+    filter: brightness(1.1);
+}
+
+body.bank-tracker-modal-open {
+    overflow: hidden;
+}
+
+@media (max-width: 767px) {
+    .bank-tracker-page {
+        padding: 12px;
+    }
+
+    .bank-tracker-container {
+        padding: 14px;
+    }
+
+    .bank-tracker-header,
+    .bank-tracker-actions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .bank-tracker-header {
+        padding: 14px;
+    }
+
+    .bank-tracker-period {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .bank-tracker-actions {
+        gap: 8px;
+    }
+
+    .bank-tracker-actions .bank-tracker-button,
+    .bank-tracker-actions .bank-tracker-new-entry {
+        width: 100%;
+    }
+
+    .bank-tracker-actions > label {
+        font-size: 13px;
+    }
+
+    .bank-tracker-balance input {
+        width: 100%;
+        text-align: left;
+    }
+
+    .bank-tracker-modal {
+        align-items: flex-start;
+        padding: 12px;
+    }
+
+    .bank-tracker-modal-content {
+        padding: 16px;
+    }
+
+    .bank-tracker-entry-table {
+        min-width: 620px;
+    }
+
+    .bank-tracker-modal-actions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .bank-tracker-button {
+        width: 100%;
+    }
+
+    .bank-tracker-month-fields {
+        grid-template-columns: 1fr;
+    }
+
+    .bank-tracker-month-amount {
+        grid-column: auto;
+    }
+}
